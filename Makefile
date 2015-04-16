@@ -13,7 +13,7 @@ PIP_INSTALL = pip install
 RUN_UNITTESTS = python -m unittest clitests.parser_tests
 INSTALL_CLI = ./local-install.sh
 
-.PHONY: setup build test help
+.PHONY: setup build test install help
 
 all: build test install
 
@@ -31,7 +31,8 @@ install:
 
 help:
 	@$(ECHO) "Targets:"
-	@$(ECHO) "all     - setup, build and test"
+	@$(ECHO) "all     - build, test and install"
 	@$(ECHO) "setup   - set up prerequisites for build"
 	@$(ECHO) "build   - perform static analysis"
 	@$(ECHO) "test    - run unittests"
+	@$(ECHO) "install - install alaudacli locally"
