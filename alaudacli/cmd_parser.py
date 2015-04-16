@@ -38,7 +38,7 @@ def _add_service_parser(subparsers):
 
     create_parser = service_subparsers.add_parser('create', help='Create a new service', description='Create a new service')
     create_parser.add_argument('image', help='Docker image used by the service')
-    create_parser.add_argument('-n', '--name', help='Service name')
+    create_parser.add_argument('name', help='Service name')
     create_parser.add_argument('--start', help='Start service containers automatically after creation', action='store_true')
     create_parser.add_argument('-t', '--target-num-instances', help='Target number of instances for the service', type=int, default=1)
     create_parser.add_argument('-s', '--instance-size', help='Service container size', choices=['XS', 'S', 'M', 'L', 'XL'], default='XS')

@@ -58,7 +58,7 @@ class ProcessCmdTest(unittest.TestCase):
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_service_create(self, mock_commands):
         argv = ['service', 'create', 'index.alauda.io/alauda/hello-world:latest',
-                '-n', 'hello', '--start', '-t', '2', '-s', 'XS', '-r', '/run.sh',
+                'hello', '--start', '-t', '2', '-s', 'XS', '-r', '/run.sh',
                 '-e', 'FOO=bar', '-p', '5000/tcp']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
