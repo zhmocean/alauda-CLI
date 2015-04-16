@@ -12,11 +12,11 @@ def parse_image_name_tag(image):
         sys.exit(1)
 
 
-def parse_target_state(start):
-    if start:
-        return 'STARTED'
-    else:
+def parse_target_state(do_not_start):
+    if do_not_start:
         return 'STOPPED'
+    else:
+        return 'STARTED'
 
 
 def parse_instance_ports(port_list):

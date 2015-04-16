@@ -29,9 +29,9 @@ def logout():
     print 'Bye'
 
 
-def service_create(image, name, start, target_num_instances, instance_size, run_command, env, ports):
+def service_create(image, name, do_not_start, target_num_instances, instance_size, run_command, env, ports):
     image_name, image_tag = util.parse_image_name_tag(image)
-    target_state = util.parse_target_state(start)
+    target_state = util.parse_target_state(do_not_start)
     instance_ports = util.parse_instance_ports(ports)
     envvars = util.parse_envvars(env)
     api_endpoint, token = auth.load_token()
