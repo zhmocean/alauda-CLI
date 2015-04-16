@@ -1,7 +1,40 @@
 import unittest
 import mock
 
-from alaudacli import cmd_parser, cmd_processor
+from alaudacli import cmd_parser, cmd_processor, util, auth
+
+
+class UtilTest(unittest.TestCase):
+    def setUp(self):
+        pass
+
+    def test_parse_image_name_tag(self):
+        name, tag = util.parse_image_name_tag('index/user/repo:tag')
+        self.assertEqual('index/user/repo', name)
+        self.assertEqual('tag', tag)
+
+    def test_parse_image_name_no_tag(self):
+        name, tag = util.parse_image_name_tag('index/user/repo')
+        self.assertEqual('index/user/repo', name)
+        self.assertEqual('latest', tag)
+
+    def test_parse_target_state(self):
+        state = util.parse_target_state(True)
+        self.assertEqual('STARTED', state)
+        state = util.parse_target_state(False)
+        self.assertEqual('STOPPED', state)
+
+    def test_parse_instance_ports(self):
+        ports = util.parse_instance_ports(['80/tcp', '22/tcp'])
+        self.assertEqual([{'container_port': 80, 'protocol': 'tcp'}, {'container_port': 22, 'protocol': 'tcp'}], ports)
+
+    def test_parse_envvars(self):
+        envvars = util.parse_envvars(['FOO=foo', 'BAR=bar'])
+        self.assertEqual({'FOO': 'foo', 'BAR': 'bar'}, envvars)
+
+    def test_build_headers(self):
+        headers = auth.build_headers('toooooken')
+        self.assertEqual({'Authorization': 'Token toooooken', 'Content-type': 'application/json'}, headers)
 
 
 class ProcessCmdTest(unittest.TestCase):
