@@ -1,8 +1,8 @@
 Alauda CLI
 =======================
 
-A CLI tool to help you access alauda service.
+The commandline interface for Alauda.io.
 
 
-https://ww.alauda.io
+https://www.alauda.io
 https://www.alauda.cn
