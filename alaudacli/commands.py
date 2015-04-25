@@ -29,7 +29,7 @@ def logout():
     print 'Bye'
 
 
-def service_create(image, name, do_not_start, target_num_instances, instance_size, run_command, env, ports):
+def service_create(image, name, do_not_start, target_num_instances, instance_size, run_command, env, ports, allocation_group):
     image_name, image_tag = util.parse_image_name_tag(image)
     target_state = util.parse_target_state(do_not_start)
     instance_ports = util.parse_instance_ports(ports)
@@ -48,6 +48,7 @@ def service_create(image, name, do_not_start, target_num_instances, instance_siz
         "run_command": run_command,
         "instance_envvars": envvars,
         "instance_ports": instance_ports,
+        "allocation_group": allocation_group,
     }
     r = requests.post(url, headers=headers, data=json.dumps(payload))
     print '[service_create]: ' + r.text

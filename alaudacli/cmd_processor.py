@@ -9,7 +9,8 @@ def process_cmds(args):
     elif args.cmd == 'service':
         if args.subcmd == 'create':
             commands.service_create(image=args.image, name=args.name, do_not_start=args.do_not_start, target_num_instances=args.target_num_instances,
-                                    instance_size=args.instance_size, run_command=args.run_command, env=args.env, ports=args.expose)
+                                    instance_size=args.instance_size, run_command=args.run_command, env=args.env, ports=args.expose,
+                                    allocation_group=args.allocation_group)
         elif args.subcmd == 'update':
             commands.service_update(args.name, target_num_instances=args.target_num_instances)
         elif args.subcmd == 'get':
