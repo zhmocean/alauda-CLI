@@ -60,8 +60,8 @@ def _add_service_parser(subparsers):
     update_parser.add_argument('name', help='Name of the service to update')
     update_parser.add_argument('-t', '--target-num-instances', help='Target number of instances for the service', type=int)
 
-    get_parser = service_subparsers.add_parser('inspect', help='Get details of a service', description='Get details of a service')
-    get_parser.add_argument('name', help='Name of the service to retrieve')
+    inspect_parser = service_subparsers.add_parser('inspect', help='Get details of a service', description='Get details of a service')
+    inspect_parser.add_argument('name', help='Name of the service to retrieve')
 
     start_parser = service_subparsers.add_parser('start', help='Start a service', description='Start a service')
     start_parser.add_argument('name', help='Name of the service to start')
@@ -69,7 +69,7 @@ def _add_service_parser(subparsers):
     stop_parser = service_subparsers.add_parser('stop', help='Stop a service', description='Stop a service')
     stop_parser.add_argument('name', help='Name of the service to stop')
 
-    delete_parser = service_subparsers.add_parser('delete', help='Delete a service', description='Delete a service')
-    delete_parser.add_argument('name', help='Name of the service to delete')
+    rm_parser = service_subparsers.add_parser('rm', help='Remove a service', description='Remove a service')
+    rm_parser.add_argument('name', help='Name of the service to remove')
 
     service_subparsers.add_parser('ps', help='List services', description='List services')

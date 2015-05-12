@@ -90,12 +90,12 @@ def service_stop(name):
     print '[service_stop]: ' + r.text
 
 
-def service_delete(name):
+def service_rm(name):
     api_endpoint, token = auth.load_token()
     url = api_endpoint + 'apps/' + name
     headers = auth.build_headers(token)
     r = requests.delete(url, headers=headers)
-    print '[service_delete]: ' + r.text
+    print '[service_rm]: ' + r.text
 
 
 def service_ps():

@@ -106,11 +106,11 @@ class ProcessCmdTest(unittest.TestCase):
         mock_commands.service_stop.assert_called_with('hello')
 
     @mock.patch('alaudacli.cmd_processor.commands')
-    def test_process_service_delete(self, mock_commands):
-        argv = ['service', 'delete', 'hello']
+    def test_process_service_rm(self, mock_commands):
+        argv = ['service', 'rm', 'hello']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.service_delete.assert_called_with('hello')
+        mock_commands.service_rm.assert_called_with('hello')
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_service_ps(self, mock_commands):

@@ -23,7 +23,7 @@ def process_cmds(args):
             commands.service_start(args.name)
         elif args.subcmd == 'stop':
             commands.service_stop(args.name)
-        elif args.subcmd == 'delete':
-            commands.service_delete(args.name)
+        elif args.subcmd == 'rm':
+            commands.service_rm(args.name)
         elif args.subcmd == 'ps':
             commands.service_ps()

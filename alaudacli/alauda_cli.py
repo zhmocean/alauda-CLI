@@ -16,7 +16,7 @@ def patch_argv(argv):
     elif len(args) == 2 and args[1] in ['service']:
         args.append('-h')
     elif len(args) == 3:
-        if args[1] == 'service' and args[2] in ['create', 'run', 'update', 'inspect', 'start', 'stop', 'delete']:
+        if args[1] == 'service' and args[2] in ['create', 'run', 'update', 'inspect', 'start', 'stop', 'rm']:
             args.append('-h')
 
     return args[1:]
