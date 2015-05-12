@@ -66,12 +66,12 @@ def service_update(name, target_num_instances):
     print '[service_update]: ' + r.text
 
 
-def service_get(name):
+def service_inspect(name):
     api_endpoint, token = auth.load_token()
     url = api_endpoint + 'apps/' + name
     headers = auth.build_headers(token)
     r = requests.get(url, headers=headers)
-    print '[service_get]: ' + json.dumps(json.loads(r.text), indent=2)
+    print '[service_inspect]: ' + json.dumps(json.loads(r.text), indent=2)
 
 
 def service_start(name):

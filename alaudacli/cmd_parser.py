@@ -51,7 +51,7 @@ def _add_service_parser(subparsers):
     update_parser.add_argument('name', help='Name of the service to update')
     update_parser.add_argument('-t', '--target-num-instances', help='Target number of instances for the service', type=int)
 
-    get_parser = service_subparsers.add_parser('get', help='Get details of a service', description='Get details of a service')
+    get_parser = service_subparsers.add_parser('inspect', help='Get details of a service', description='Get details of a service')
     get_parser.add_argument('name', help='Name of the service to retrieve')
 
     start_parser = service_subparsers.add_parser('start', help='Start a service', description='Start a service')

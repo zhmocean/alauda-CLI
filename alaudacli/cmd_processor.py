@@ -13,8 +13,8 @@ def process_cmds(args):
                                     allocation_group=args.allocation_group)
         elif args.subcmd == 'update':
             commands.service_update(args.name, target_num_instances=args.target_num_instances)
-        elif args.subcmd == 'get':
-            commands.service_get(args.name)
+        elif args.subcmd == 'inspect':
+            commands.service_inspect(args.name)
         elif args.subcmd == 'start':
             commands.service_start(args.name)
         elif args.subcmd == 'stop':
