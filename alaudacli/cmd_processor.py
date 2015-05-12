@@ -21,5 +21,5 @@ def process_cmds(args):
             commands.service_stop(args.name)
         elif args.subcmd == 'delete':
             commands.service_delete(args.name)
-        elif args.subcmd == 'list':
-            commands.service_list()
+        elif args.subcmd == 'ps':
+            commands.service_ps()

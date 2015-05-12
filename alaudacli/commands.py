@@ -98,9 +98,9 @@ def service_delete(name):
     print '[service_delete]: ' + r.text
 
 
-def service_list():
+def service_ps():
     api_endpoint, token = auth.load_token()
     url = api_endpoint + 'apps/'
     headers = auth.build_headers(token)
     r = requests.get(url, headers=headers)
-    print '[service_list]: ' + json.dumps(json.loads(r.text), indent=2)
+    print '[service_ps]: ' + json.dumps(json.loads(r.text), indent=2)

@@ -63,4 +63,4 @@ def _add_service_parser(subparsers):
     delete_parser = service_subparsers.add_parser('delete', help='Delete a service', description='Delete a service')
     delete_parser.add_argument('name', help='Name of the service to delete')
 
-    service_subparsers.add_parser('list', help='List services', description='List services')
+    service_subparsers.add_parser('ps', help='List services', description='List services')
