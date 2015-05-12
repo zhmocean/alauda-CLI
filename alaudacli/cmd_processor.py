@@ -8,7 +8,11 @@ def process_cmds(args):
         commands.logout()
     elif args.cmd == 'service':
         if args.subcmd == 'create':
-            commands.service_create(image=args.image, name=args.name, do_not_start=args.do_not_start, target_num_instances=args.target_num_instances,
+            commands.service_create(image=args.image, name=args.name, start=False, target_num_instances=args.target_num_instances,
+                                    instance_size=args.instance_size, run_command=args.run_command, env=args.env, ports=args.expose,
+                                    allocation_group=args.allocation_group)
+        elif args.subcmd == 'run':
+            commands.service_create(image=args.image, name=args.name, start=True, target_num_instances=args.target_num_instances,
                                     instance_size=args.instance_size, run_command=args.run_command, env=args.env, ports=args.expose,
                                     allocation_group=args.allocation_group)
         elif args.subcmd == 'update':

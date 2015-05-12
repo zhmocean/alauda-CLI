@@ -20,9 +20,9 @@ class UtilTest(unittest.TestCase):
 
     def test_parse_target_state(self):
         state = util.parse_target_state(True)
-        self.assertEqual('STOPPED', state)
-        state = util.parse_target_state(False)
         self.assertEqual('STARTED', state)
+        state = util.parse_target_state(False)
+        self.assertEqual('STOPPED', state)
 
     def test_parse_instance_ports(self):
         ports = util.parse_instance_ports(['80/tcp', '22/tcp'])
@@ -58,12 +58,23 @@ class ProcessCmdTest(unittest.TestCase):
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_service_create(self, mock_commands):
         argv = ['service', 'create', 'index.alauda.io/alauda/hello-world:latest',
-                'hello', '--do-not-start', '-t', '2', '-s', 'XS', '-r', '/run.sh',
+                'hello', '-t', '2', '-s', 'XS', '-r', '/run.sh',
                 '-e', 'FOO=bar', '-p', '5000/tcp', '-ag', 'ag1']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
         mock_commands.service_create.assert_called_with(image='index.alauda.io/alauda/hello-world:latest',
-                                                        name='hello', do_not_start=True, target_num_instances=2, instance_size='XS',
+                                                        name='hello', start=False, target_num_instances=2, instance_size='XS',
+                                                        run_command='/run.sh', env=['FOO=bar'], ports=['5000/tcp'], allocation_group='ag1')
+
+    @mock.patch('alaudacli.cmd_processor.commands')
+    def test_process_service_run(self, mock_commands):
+        argv = ['service', 'run', 'index.alauda.io/alauda/hello-world:latest',
+                'hello', '-t', '2', '-s', 'XS', '-r', '/run.sh',
+                '-e', 'FOO=bar', '-p', '5000/tcp', '-ag', 'ag1']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_commands.service_create.assert_called_with(image='index.alauda.io/alauda/hello-world:latest',
+                                                        name='hello', start=True, target_num_instances=2, instance_size='XS',
                                                         run_command='/run.sh', env=['FOO=bar'], ports=['5000/tcp'], allocation_group='ag1')
 
     @mock.patch('alaudacli.cmd_processor.commands')
