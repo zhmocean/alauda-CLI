@@ -4,6 +4,7 @@ import requests
 
 import util
 import auth
+from service import Service
 
 
 def login(username, password, cloud, endpoint):
@@ -31,76 +32,53 @@ def logout():
 
 def service_create(image, name, start, target_num_instances, instance_size, run_command, env, ports, allocation_group):
     image_name, image_tag = util.parse_image_name_tag(image)
-    target_state = util.parse_target_state(start)
     instance_ports = util.parse_instance_ports(ports)
-    envvars = util.parse_envvars(env)
-    api_endpoint, token = auth.load_token()
-    url = api_endpoint + 'apps/'
-    headers = auth.build_headers(token)
-    payload = {
-        "app_name": name,
-        "target_num_instances": target_num_instances,
-        "image_name": image_name,
-        "image_tag": image_tag,
-        "instance_size": instance_size,
-        "scaling_mode": "MANUAL",
-        "target_state": target_state,
-        "run_command": run_command,
-        "instance_envvars": envvars,
-        "instance_ports": instance_ports,
-        "allocation_group": allocation_group,
-    }
-    r = requests.post(url, headers=headers, data=json.dumps(payload))
-    print '[service_create]: ' + r.text
+    instance_envvars = util.parse_envvars(env)
+    service = Service(name=name,
+                      image_name=image_name,
+                      image_tag=image_tag,
+                      target_num_instances=target_num_instances,
+                      instance_size=instance_size,
+                      run_command=run_command,
+                      instance_ports=instance_ports,
+                      instance_envvars=instance_envvars,
+                      allocation_group=allocation_group)
+    if start:
+        r = service.run()
+    else:
+        r = service.create()
+    print '[service_create]: {0} {1}'.format(r.status_code, r.text)
 
 
 def service_update(name, target_num_instances):
-    api_endpoint, token = auth.load_token()
-    url = api_endpoint + 'apps/' + name
-    headers = auth.build_headers(token)
-    payload = {
-        "app_name": name,
-        "target_num_instances": target_num_instances
-    }
-    r = requests.put(url, headers=headers, data=json.dumps(payload))
-    print '[service_update]: ' + r.text
+    service = Service.fetch(name)
+    r = service.update(target_num_instances)
+    print '[service_update]: {0} {1}'.format(r.status_code, r.text)
 
 
 def service_inspect(name):
-    api_endpoint, token = auth.load_token()
-    url = api_endpoint + 'apps/' + name
-    headers = auth.build_headers(token)
-    r = requests.get(url, headers=headers)
-    print '[service_inspect]: ' + json.dumps(json.loads(r.text), indent=2)
+    service = Service.fetch(name)
+    result = service.inspect()
+    print '[service_inspect]: ' + json.dumps(json.loads(result), indent=2)
 
 
 def service_start(name):
-    api_endpoint, token = auth.load_token()
-    url = api_endpoint + 'apps/' + name + '/start/'
-    headers = auth.build_headers(token)
-    r = requests.put(url, headers=headers)
-    print '[service_start]: ' + r.text
+    service = Service.fetch(name)
+    r = service.start()
+    print '[service_start]: {0} {1}'.format(r.status_code, r.text)
 
 
 def service_stop(name):
-    api_endpoint, token = auth.load_token()
-    url = api_endpoint + 'apps/' + name + '/stop/'
-    headers = auth.build_headers(token)
-    r = requests.put(url, headers=headers)
-    print '[service_stop]: ' + r.text
+    service = Service.fetch(name)
+    r = service.stop()
+    print '[service_stop]: {0} {1}'.format(r.status_code, r.text)
 
 
 def service_rm(name):
-    api_endpoint, token = auth.load_token()
-    url = api_endpoint + 'apps/' + name
-    headers = auth.build_headers(token)
-    r = requests.delete(url, headers=headers)
-    print '[service_rm]: ' + r.text
+    r = Service.remove(name)
+    print '[service_rm]: {0} {1}'.format(r.status_code, r.text)
 
 
 def service_ps():
-    api_endpoint, token = auth.load_token()
-    url = api_endpoint + 'apps/'
-    headers = auth.build_headers(token)
-    r = requests.get(url, headers=headers)
+    r = Service.list()
     print '[service_ps]: ' + json.dumps(json.loads(r.text), indent=2)
