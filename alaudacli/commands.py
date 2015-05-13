@@ -19,7 +19,6 @@ def login(username, password, cloud, endpoint):
     url = api_endpoint + 'generate-api-token/'
     payload = {'username': username, 'password': password}
     r = requests.post(url, payload)
-    print r.text
     d = json.loads(r.text)
     token = d['token']
     auth.save_token(api_endpoint, token)
