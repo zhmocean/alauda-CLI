@@ -5,6 +5,7 @@ import requests
 import util
 import auth
 from service import Service
+from django.conf.urls import url
 
 
 def login(username, password, cloud, endpoint):
@@ -30,10 +31,31 @@ def logout():
     print 'Bye'
 
 
-def service_create(image, name, start, target_num_instances, instance_size, run_command, env, ports, allocation_group, volumes):
+def service_link_env(links, instance_envvars):
+    for link in links:
+        service = Service.fetch(link)
+        data = json.loads(service.details)
+        url = data['instance_envvars']
+        url = json.loads(url)
+        url = url['__DEFAULT_DOMAIN_NAME__']
+        key = "%s_PORT" % str(data['service_name']).upper()
+        for instance_port in data['instance_ports']:
+            if key not in instance_envvars.keys():
+                instance_envvars[key] = "%s://%s:%d" % (instance_port['protocol'], url, instance_port['service_port'])
+            pattern = "%s_PORT_%d_%s" % (str(data['service_name']).upper(),
+                                         instance_port['service_port'],
+                                         str(instance_port['protocol']).upper())
+            instance_envvars[pattern] = "%s://%s:%d" % (instance_port['protocol'], url, instance_port['service_port'])
+            instance_envvars[pattern + "_ADDR"] = url
+            instance_envvars[pattern + "_PORT"] = str(instance_port['service_port'])
+            instance_envvars[pattern + "_PROTO"] = instance_port['protocol']
+
+
+def service_create(image, name, start, target_num_instances, instance_size, run_command, env, ports, allocation_group, volumes, links):
     image_name, image_tag = util.parse_image_name_tag(image)
     instance_ports = util.parse_instance_ports(ports)
     instance_envvars = util.parse_envvars(env)
+    service_link_env(links, instance_envvars)
     volumes = util.parse_volumes(volumes)
     service = Service(name=name,
                       image_name=image_name,
