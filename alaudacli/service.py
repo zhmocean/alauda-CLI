@@ -6,8 +6,9 @@ import util
 
 
 class Service(object):
+
     def __init__(self, name, image_name, image_tag, target_num_instances, instance_size, run_command='',
-                 instance_ports=None, instance_envvars=None, allocation_group='', details=''):
+                 instance_ports=None, instance_envvars=None, allocation_group='', details='', volumes='[]'):
         self.name = name
         self.image_name = image_name
         self.image_tag = image_tag
@@ -17,6 +18,7 @@ class Service(object):
         self.instance_envvars = instance_envvars
         self.instance_ports = instance_ports
         self.allocation_group = allocation_group
+        self.volumes = json.loads(volumes)
         self.details = details
 
         self.api_endpoint, self.token = auth.load_token()
@@ -36,6 +38,7 @@ class Service(object):
             "instance_envvars": self.instance_envvars,
             "instance_ports": self.instance_ports,
             "allocation_group": self.allocation_group,
+            "volumes": self.volumes
         }
         r = requests.post(url, headers=self.headers, data=json.dumps(payload))
         return r

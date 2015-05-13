@@ -5,6 +5,7 @@ from alaudacli import cmd_parser, cmd_processor, util, auth
 
 
 class UtilTest(unittest.TestCase):
+
     def setUp(self):
         pass
 
@@ -38,6 +39,7 @@ class UtilTest(unittest.TestCase):
 
 
 class ProcessCmdTest(unittest.TestCase):
+
     def setUp(self):
         pass
 

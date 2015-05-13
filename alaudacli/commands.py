@@ -19,6 +19,7 @@ def login(username, password, cloud, endpoint):
     url = api_endpoint + 'generate-api-token/'
     payload = {'username': username, 'password': password}
     r = requests.post(url, payload)
+    print r.text
     d = json.loads(r.text)
     token = d['token']
     auth.save_token(api_endpoint, token)
@@ -30,7 +31,7 @@ def logout():
     print 'Bye'
 
 
-def service_create(image, name, start, target_num_instances, instance_size, run_command, env, ports, allocation_group):
+def service_create(image, name, start, target_num_instances, instance_size, run_command, env, ports, allocation_group, volumes):
     image_name, image_tag = util.parse_image_name_tag(image)
     instance_ports = util.parse_instance_ports(ports)
     instance_envvars = util.parse_envvars(env)
@@ -42,7 +43,8 @@ def service_create(image, name, start, target_num_instances, instance_size, run_
                       run_command=run_command,
                       instance_ports=instance_ports,
                       instance_envvars=instance_envvars,
-                      allocation_group=allocation_group)
+                      allocation_group=allocation_group,
+                      volumes=volumes)
     if start:
         r = service.run()
     else:
