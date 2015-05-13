@@ -26,7 +26,11 @@ def parse_instance_ports(port_list):
             print 'Invalid port description. (Example of valid description: 80/tcp)'
             sys.exit(1)
 
-        port = int(result[0])
+        try:
+            port = int(result[0])
+        except:
+            print 'Invalid port description. (Example of valid description: 80/tcp)'
+            sys.exit(1)
         protocol = result[1]
 
         if protocol not in ['tcp']:
@@ -70,7 +74,11 @@ def parse_volumes(volume_list):
             sys.exit(1)
 
         path = result[0]
-        size = int(result[1])
+        try:
+            size = int(result[1])
+        except:
+            print 'Invalid volume description. (Example of valid description: /var/lib/data1:10)'
+            sys.exit(1)
         return path, size
 
     parsed_volumes = []
