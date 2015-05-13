@@ -37,8 +37,8 @@ def _add_service_parser(subparsers):
     service_subparsers = service_parser.add_subparsers(title='Alauda service commands', dest='subcmd')
 
     create_parser = service_subparsers.add_parser('create', help='Create a new service', description='Create a new service')
-    create_parser.add_argument('image', help='Docker image used by the service')
     create_parser.add_argument('name', help='Service name')
+    create_parser.add_argument('image', help='Docker image used by the service')
     create_parser.add_argument('-t', '--target-num-instances', help='Target number of instances for the service', type=int, default=1)
     create_parser.add_argument('-s', '--instance-size', help='Service container size', choices=['XS', 'S', 'M', 'L', 'XL'], default='XS')
     create_parser.add_argument('-r', '--run-command', help='The command used to start the service containers', default='')
@@ -49,8 +49,8 @@ def _add_service_parser(subparsers):
     create_parser.add_argument('-v', '--volume', help='Volumes, e.g. /var/lib/mysql:10', action='append')
 
     run_parser = service_subparsers.add_parser('run', help='Create and start a new service', description='Create and start a new service')
-    run_parser.add_argument('image', help='Docker image used by the service')
     run_parser.add_argument('name', help='Service name')
+    run_parser.add_argument('image', help='Docker image used by the service')
     run_parser.add_argument('-t', '--target-num-instances', help='Target number of instances for the service', type=int, default=1)
     run_parser.add_argument('-s', '--instance-size', help='Service container size', choices=['XS', 'S', 'M', 'L', 'XL'], default='XS')
     run_parser.add_argument('-r', '--run-command', help='The command used to start the service containers', default='')

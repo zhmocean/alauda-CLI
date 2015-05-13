@@ -64,8 +64,8 @@ class ProcessCmdTest(unittest.TestCase):
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_service_create(self, mock_commands):
-        argv = ['service', 'create', 'index.alauda.io/alauda/hello-world:latest',
-                'hello', '-t', '2', '-s', 'XS', '-r', '/run.sh',
+        argv = ['service', 'create', 'hello', 'index.alauda.io/alauda/hello-world:latest',
+                '-t', '2', '-s', 'XS', '-r', '/run.sh',
                 '-e', 'FOO=bar', '-p', '5000/tcp', '-ag', 'ag1', '-v', '/var/lib/data1:10', '-l', 'db']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
@@ -76,8 +76,8 @@ class ProcessCmdTest(unittest.TestCase):
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_service_run(self, mock_commands):
-        argv = ['service', 'run', 'index.alauda.io/alauda/hello-world:latest',
-                'hello', '-t', '2', '-s', 'XS', '-r', '/run.sh',
+        argv = ['service', 'run', 'hello', 'index.alauda.io/alauda/hello-world:latest',
+                '-t', '2', '-s', 'XS', '-r', '/run.sh',
                 '-e', 'FOO=bar', '-p', '5000/tcp', '-ag', 'ag1', '-v', '/var/lib/data1:10', '-l', 'db']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
