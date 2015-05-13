@@ -45,7 +45,7 @@ def _add_service_parser(subparsers):
     create_parser.add_argument('-e', '--env', help='Environment variables, e.g. VAR=value', action='append')
     create_parser.add_argument('-p', '--expose', help='Ports to expose, e.g. 5000/tcp', action='append')
     create_parser.add_argument('-ag', '--allocation-group', help='Allocation group', default='')
-    create_parser.add_argument('-v', '--volumes', help='volumes.e.g. [{"app_volume_dir": "/var/lib/mysql","size_gb": 10, "volume_type": "EBS"}]', default='[]')
+    create_parser.add_argument('-v', '--volume', help='Volumes, e.g. /var/lib/mysql:10', action='append')
 
     run_parser = service_subparsers.add_parser('run', help='Create and start a new service', description='Create and start a new service')
     run_parser.add_argument('image', help='Docker image used by the service')
@@ -56,7 +56,7 @@ def _add_service_parser(subparsers):
     run_parser.add_argument('-e', '--env', help='Environment variables, e.g. VAR=value', action='append')
     run_parser.add_argument('-p', '--expose', help='Ports to expose, e.g. 5000/tcp', action='append')
     run_parser.add_argument('-ag', '--allocation-group', help='Allocation group', default='')
-    run_parser.add_argument('-v', '--volumes', help='volumes.e.g. [{"app_volume_dir": "/var/lib/mysql","size_gb": 10, "volume_type": "EBS"}]', default='[]')
+    run_parser.add_argument('-v', '--volume', help='volumes.e.g. /var/lib/mysql:10', action='append')
 
     update_parser = service_subparsers.add_parser('update', help='Update a service', description='Update a service')
     update_parser.add_argument('name', help='Name of the service to update')

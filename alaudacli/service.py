@@ -18,7 +18,7 @@ class Service(object):
         self.instance_envvars = instance_envvars
         self.instance_ports = instance_ports
         self.allocation_group = allocation_group
-        self.volumes = json.loads(volumes)
+        self.volumes = volumes
         self.details = details
 
         self.api_endpoint, self.token = auth.load_token()

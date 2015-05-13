@@ -62,6 +62,25 @@ def parse_envvars(envvar_list):
     return parsed_envvars
 
 
+def parse_volumes(volume_list):
+    def _parse_volume(_volume):
+        result = _volume.split(':')
+        if len(result) != 2:
+            print 'Invalid volume description. (Example of valid description: /var/lib/data1:10)'
+            sys.exit(1)
+
+        path = result[0]
+        size = int(result[1])
+        return path, size
+
+    parsed_volumes = []
+    if volume_list is not None:
+        for volume_desc in volume_list:
+            path, size = _parse_volume(volume_desc)
+            parsed_volumes.append({"app_volume_dir": path, "size_gb": size, "volume_type": "EBS"})
+    return parsed_volumes
+
+
 def failed(status_code):
     return status_code < 200 or status_code >= 300
 
