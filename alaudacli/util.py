@@ -60,3 +60,13 @@ def parse_envvars(envvar_list):
             key, value = _parse_envvar(envvar)
             parsed_envvars[key] = value
     return parsed_envvars
+
+
+def failed(status_code):
+    return status_code < 200 or status_code >= 300
+
+
+def check_response(response):
+    if failed(response.status_code):
+        print '[error]: {0} {1}'.format(response.status_code, response.text)
+        sys.exit(1)

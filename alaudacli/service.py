@@ -2,6 +2,7 @@ import json
 import requests
 
 import auth
+import util
 
 
 class Service(object):
@@ -45,6 +46,7 @@ class Service(object):
         url = api_endpoint + 'apps/' + name
         headers = auth.build_headers(token)
         r = requests.get(url, headers=headers)
+        util.check_response(r)
         data = json.loads(r.text)
         service = cls(name=data['service_name'],
                       image_name=data['image_name'],
@@ -77,6 +79,11 @@ class Service(object):
         return self._create_remote('STARTED')
 
     def inspect(self):
+        if not self.details:
+            url = self.api_endpoint + 'apps/' + self.name
+            r = requests.get(url, headers=self.headers)
+            util.check_response(r)
+            self.details = r.text
         return self.details
 
     def start(self):
