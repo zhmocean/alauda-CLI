@@ -30,31 +30,31 @@ def logout():
     print 'Bye'
 
 
-def service_link_env(links, instance_envvars):
-    for link in links:
-        service = Service.fetch(link)
-        data = json.loads(service.details)
-        url = data['instance_envvars']
-        url = json.loads(url)
-        url = url['__DEFAULT_DOMAIN_NAME__']
-        key = "%s_PORT" % str(data['service_name']).upper()
-        for instance_port in data['instance_ports']:
-            if key not in instance_envvars.keys():
-                instance_envvars[key] = "%s://%s:%d" % (instance_port['protocol'], url, instance_port['service_port'])
-            pattern = "%s_PORT_%d_%s" % (str(data['service_name']).upper(),
-                                         instance_port['service_port'],
-                                         str(instance_port['protocol']).upper())
-            instance_envvars[pattern] = "%s://%s:%d" % (instance_port['protocol'], url, instance_port['service_port'])
-            instance_envvars[pattern + "_ADDR"] = url
-            instance_envvars[pattern + "_PORT"] = str(instance_port['service_port'])
-            instance_envvars[pattern + "_PROTO"] = instance_port['protocol']
+def _update_envvars_with_links(instance_envvars, links):
+    if links is not None:
+        for link in links:
+            linked_service = Service.fetch(link)
+            linked_service_data = json.loads(linked_service.details)
+            linked_service_ports = linked_service_data['instance_ports']
+            linked_service_envvars = json.loads(linked_service_data['instance_envvars'])
+            linked_service_addr = linked_service_envvars['__DEFAULT_DOMAIN_NAME__']
+            key = '{0}_PORT'.format(link).upper()
+            for port in linked_service_ports:
+                url = '{0}://{1}:{2}'.format(port['protocol'], linked_service_addr, port['service_port'])
+                if key not in instance_envvars.keys():
+                    instance_envvars[key] = url
+                pattern = '{0}_PORT_{1}_{2}'.format(link, port['container_port'], port['protocol']).upper()
+                instance_envvars[pattern] = url
+                instance_envvars[pattern + '_ADDR'] = linked_service_addr
+                instance_envvars[pattern + '_PORT'] = str(port['service_port'])
+                instance_envvars[pattern + '_PROTO'] = port['protocol']
 
 
 def service_create(image, name, start, target_num_instances, instance_size, run_command, env, ports, allocation_group, volumes, links):
     image_name, image_tag = util.parse_image_name_tag(image)
     instance_ports = util.parse_instance_ports(ports)
     instance_envvars = util.parse_envvars(env)
-    service_link_env(links, instance_envvars)
+    _update_envvars_with_links(instance_envvars, links)
     volumes = util.parse_volumes(volumes)
     service = Service(name=name,
                       image_name=image_name,
