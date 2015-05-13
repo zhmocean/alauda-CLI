@@ -5,7 +5,6 @@ import requests
 import util
 import auth
 from service import Service
-from django.conf.urls import url
 
 
 def login(username, password, cloud, endpoint):
