@@ -45,16 +45,16 @@ def service_create(image, name, start, target_num_instances, instance_size, run_
                       allocation_group=allocation_group,
                       volumes=volumes)
     if start:
-        r = service.run()
+        service.run()
     else:
-        r = service.create()
-    print '[service_create]: {0} {1}'.format(r.status_code, r.text)
+        service.create()
+    print '[service_create]: OK'
 
 
 def service_update(name, target_num_instances):
     service = Service.fetch(name)
-    r = service.update(target_num_instances)
-    print '[service_update]: {0} {1}'.format(r.status_code, r.text)
+    service.update(target_num_instances)
+    print '[service_update]: OK'
 
 
 def service_inspect(name):
@@ -65,21 +65,21 @@ def service_inspect(name):
 
 def service_start(name):
     service = Service.fetch(name)
-    r = service.start()
-    print '[service_start]: {0} {1}'.format(r.status_code, r.text)
+    service.start()
+    print '[service_start]: OK'
 
 
 def service_stop(name):
     service = Service.fetch(name)
-    r = service.stop()
-    print '[service_stop]: {0} {1}'.format(r.status_code, r.text)
+    service.stop()
+    print '[service_stop]: OK'
 
 
 def service_rm(name):
-    r = Service.remove(name)
-    print '[service_rm]: {0} {1}'.format(r.status_code, r.text)
+    Service.remove(name)
+    print '[service_rm]: OK'
 
 
 def service_ps():
-    r = Service.list()
-    print '[service_ps]: ' + json.dumps(json.loads(r.text), indent=2)
+    result = Service.list()
+    print '[service_ps]: ' + json.dumps(json.loads(result), indent=2)

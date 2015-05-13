@@ -41,7 +41,7 @@ class Service(object):
             "volumes": self.volumes
         }
         r = requests.post(url, headers=self.headers, data=json.dumps(payload))
-        return r
+        util.check_response(r)
 
     @classmethod
     def fetch(cls, name):
@@ -65,7 +65,8 @@ class Service(object):
         url = api_endpoint + 'apps/'
         headers = auth.build_headers(token)
         r = requests.get(url, headers=headers)
-        return r
+        util.check_response(r)
+        return r.text
 
     @classmethod
     def remove(cls, name):
@@ -73,13 +74,13 @@ class Service(object):
         url = api_endpoint + 'apps/' + name
         headers = auth.build_headers(token)
         r = requests.delete(url, headers=headers)
-        return r
+        util.check_response(r)
 
     def create(self):
-        return self._create_remote('STOPPED')
+        self._create_remote('STOPPED')
 
     def run(self):
-        return self._create_remote('STARTED')
+        self._create_remote('STARTED')
 
     def inspect(self):
         if not self.details:
@@ -93,13 +94,13 @@ class Service(object):
         self.target_state = 'STARTED'
         url = self.api_endpoint + 'apps/' + self.name + '/start/'
         r = requests.put(url, headers=self.headers)
-        return r
+        util.check_response(r)
 
     def stop(self):
         self.target_state = 'STOPPED'
         url = self.api_endpoint + 'apps/' + self.name + '/stop/'
         r = requests.put(url, headers=self.headers)
-        return r
+        util.check_response(r)
 
     def update(self, target_num_instances):
         self.target_num_instances = target_num_instances
@@ -109,4 +110,4 @@ class Service(object):
             "target_num_instances": self.target_num_instances
         }
         r = requests.put(url, headers=self.headers, data=json.dumps(payload))
-        return r
+        util.check_response(r)

@@ -66,7 +66,7 @@ class ProcessCmdTest(unittest.TestCase):
         cmd_processor.process_cmds(args)
         mock_commands.service_create.assert_called_with(image='index.alauda.io/alauda/hello-world:latest',
                                                         name='hello', start=False, target_num_instances=2, instance_size='XS',
-                                                        run_command='/run.sh', env=['FOO=bar'], ports=['5000/tcp'], allocation_group='ag1')
+                                                        run_command='/run.sh', env=['FOO=bar'], ports=['5000/tcp'], allocation_group='ag1', volumes='[]')
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_service_run(self, mock_commands):
@@ -77,7 +77,7 @@ class ProcessCmdTest(unittest.TestCase):
         cmd_processor.process_cmds(args)
         mock_commands.service_create.assert_called_with(image='index.alauda.io/alauda/hello-world:latest',
                                                         name='hello', start=True, target_num_instances=2, instance_size='XS',
-                                                        run_command='/run.sh', env=['FOO=bar'], ports=['5000/tcp'], allocation_group='ag1')
+                                                        run_command='/run.sh', env=['FOO=bar'], ports=['5000/tcp'], allocation_group='ag1', volumes='[]')
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_service_update(self, mock_commands):
