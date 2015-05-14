@@ -23,18 +23,28 @@ def load_services(compose_data):
 
 def load_service(service_name, service_data):
     image_name, image_tag = util.parse_image_name_tag(service_data['image'])
-    ports = None
-    if 'ports' in service_data.keys():
-        ports = util.parse_instance_ports(service_data['ports'])
-    run_command = ''
-    if 'command' in service_data.keys():
-        run_command = service_data['command']
+    ports = load_ports(service_data)
+    run_command = load_command(service_data)
     service = Service(name=service_name,
                       image_name=image_name,
                       image_tag=image_tag,
                       run_command=run_command,
                       instance_ports=ports)
     return service
+
+
+def load_ports(service_data):
+    ports = None
+    if 'ports' in service_data.keys():
+        ports = util.parse_instance_ports(service_data['ports'])
+    return ports
+
+
+def load_command(service_data):
+    command = ''
+    if 'command' in service_data.keys():
+        command = service_data['command']
+    return command
 
 
 def _load_yaml(filepath):

@@ -31,34 +31,11 @@ def logout():
     print 'Bye'
 
 
-def _update_envvars_with_links(instance_envvars, links):
-    if links is not None:
-        for link in links:
-            service_name = link[0]
-            alias = link[1]
-            linked_service = Service.fetch(service_name)
-            linked_service_data = json.loads(linked_service.details)
-            linked_service_ports = linked_service_data['instance_ports']
-            linked_service_envvars = json.loads(linked_service_data['instance_envvars'])
-            linked_service_addr = linked_service_envvars['__DEFAULT_DOMAIN_NAME__']
-            key = '{0}_PORT'.format(alias).upper()
-            for port in linked_service_ports:
-                url = '{0}://{1}:{2}'.format(port['protocol'], linked_service_addr, port['service_port'])
-                if key not in instance_envvars.keys():
-                    instance_envvars[key] = url
-                pattern = '{0}_PORT_{1}_{2}'.format(alias, port['container_port'], port['protocol']).upper()
-                instance_envvars[pattern] = url
-                instance_envvars[pattern + '_ADDR'] = linked_service_addr
-                instance_envvars[pattern + '_PORT'] = str(port['service_port'])
-                instance_envvars[pattern + '_PROTO'] = port['protocol']
-
-
 def service_create(image, name, start, target_num_instances, instance_size, run_command, env, ports, allocation_group, volumes, links):
     image_name, image_tag = util.parse_image_name_tag(image)
     instance_ports = util.parse_instance_ports(ports)
     instance_envvars = util.parse_envvars(env)
     links = util.parse_links(links)
-    _update_envvars_with_links(instance_envvars, links)
     volumes = util.parse_volumes(volumes)
     service = Service(name=name,
                       image_name=image_name,
@@ -69,7 +46,8 @@ def service_create(image, name, start, target_num_instances, instance_size, run_
                       instance_ports=instance_ports,
                       instance_envvars=instance_envvars,
                       allocation_group=allocation_group,
-                      volumes=volumes)
+                      volumes=volumes,
+                      links=links)
     if start:
         service.run()
     else:
