@@ -1,5 +1,5 @@
 web:
-  image: cimomo/hello-compose-web
+  image: cimomo/hello-compose-web:latest
   command: python app.py
   ports:
    - "5000"

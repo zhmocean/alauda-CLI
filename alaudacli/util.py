@@ -22,7 +22,7 @@ def parse_target_state(start):
 def parse_instance_ports(port_list):
     def _parse_instance_port(_port):
         result = _port.split('/')
-        if len(result) != 2:
+        if len(result) > 2:
             print 'Invalid port description. (Example of valid description: 80/tcp)'
             sys.exit(1)
 
@@ -31,7 +31,11 @@ def parse_instance_ports(port_list):
         except:
             print 'Invalid port description. (Example of valid description: 80/tcp)'
             sys.exit(1)
-        protocol = result[1]
+
+        if len(result) == 2:
+            protocol = result[1]
+        else:
+            protocol = 'tcp'
 
         if protocol not in ['tcp']:
             print 'Invalid port protocal. Supported protocols: {tcp}'

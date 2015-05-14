@@ -26,7 +26,7 @@ class UtilTest(unittest.TestCase):
         self.assertEqual('STOPPED', state)
 
     def test_parse_instance_ports(self):
-        ports = util.parse_instance_ports(['80/tcp', '22/tcp'])
+        ports = util.parse_instance_ports(['80/tcp', '22'])
         self.assertEqual([{'container_port': 80, 'protocol': 'tcp'}, {'container_port': 22, 'protocol': 'tcp'}], ports)
 
     def test_parse_envvars(self):
