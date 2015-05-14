@@ -58,24 +58,15 @@ def load_service(service_name, service_data):
 
 
 def load_links(service_data):
-    links = None
-    if 'links' in service_data.keys():
-        links = util.parse_links(service_data['links'])
-    return links
+    return util.parse_links(service_data.get('links'))
 
 
 def load_ports(service_data):
-    ports = None
-    if 'ports' in service_data.keys():
-        ports = util.parse_instance_ports(service_data['ports'])
-    return ports
+    return util.parse_instance_ports(service_data.get('ports'))
 
 
 def load_command(service_data):
-    command = ''
-    if 'command' in service_data.keys():
-        command = service_data['command']
-    return command
+    return service_data.get('command', '')
 
 
 def _load_yaml(filepath):
