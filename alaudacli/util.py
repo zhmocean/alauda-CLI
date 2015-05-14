@@ -96,9 +96,11 @@ def parse_volumes(volume_list):
 def parse_links(link_list):
     def _parse_link(_link):
         result = _link.split(':')
-        if len(result) != 2:
+        if len(result) > 2:
             print 'Invalid link description. (Example of valid description: mysql:db)'
             sys.exit(1)
+        if len(result) == 1 or len(result[1]) == 0:
+            return result[0], result[0]
         return result[0], result[1]
 
     parsed_links = []

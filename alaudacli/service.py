@@ -15,7 +15,7 @@ class Service(object):
         self.target_num_instances = target_num_instances
         self.instance_size = instance_size
         self.run_command = run_command
-        self.instance_envvars = instance_envvars
+        self.instance_envvars = util.parse_envvars(instance_envvars)
         self.instance_ports = instance_ports
         self.allocation_group = allocation_group
         self.volumes = volumes
@@ -61,8 +61,10 @@ class Service(object):
             "instance_envvars": self.instance_envvars,
             "instance_ports": self.instance_ports,
             "allocation_group": self.allocation_group,
-            "volumes": self.volumes
+            #             "volumes": self.volumes
         }
+        if self.volumes is not None:
+            payload['volumes'] = self.volumes
         r = requests.post(url, headers=self.headers, data=json.dumps(payload))
         util.check_response(r)
 

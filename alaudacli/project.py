@@ -4,4 +4,6 @@ class Project(object):
         self.services = services
 
     def up(self):
-        pass
+        for service in self.services:
+            print "Creating service: {}".format(service.name)
+            service.run()
