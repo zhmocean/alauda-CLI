@@ -13,31 +13,31 @@ def load_project(filepath):
     return project
 
 
-def services_sort(compose_data):
-    src_dic = compose_data.copy()
-    src_keys = src_dic.keys()
-    sort_list = []
-    while len(src_dic) > 0:
-        for key, value in src_dic.items():
-            link = value.get('links', None)
-            if link is None:
-                sort_list.append(key)
-                del src_dic[key]
-            elif not set(link).issubset(set(src_keys)):
-                print "{} has invalid link name".format(link)
+def sort_services(compose_data):
+    src_dict = compose_data.copy()
+    src_keys = src_dict.keys()
+    sorted_list = []
+    while len(src_dict) > 0:
+        for key, value in src_dict.items():
+            links = value.get('links')
+            if links is None:
+                sorted_list.append(key)
+                del src_dict[key]
+            elif not set(links).issubset(set(src_keys)):
+                print "{} has invalid link name".format(links)
                 sys.exit(1)
-            elif set(link).issubset(set(sort_list)):
-                sort_list.append(key)
-                del src_dic[key]
+            elif set(links).issubset(set(sorted_list)):
+                sorted_list.append(key)
+                del src_dict[key]
             else:
                 continue
-    return sort_list
+    return sorted_list
 
 
 def load_services(compose_data):
     services = []
-    sort_list = services_sort(compose_data)
-    for service_name in sort_list:
+    sorted_list = sort_services(compose_data)
+    for service_name in sorted_list:
         service = load_service(service_name, compose_data[service_name])
         services.append(service)
     return services
