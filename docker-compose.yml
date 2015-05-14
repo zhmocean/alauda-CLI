@@ -1,0 +1,9 @@
+web:
+  image: cimomo/hello-compose-web
+  command: python app.py
+  ports:
+   - "5000"
+  links:
+   - redis
+redis:
+  image: redis

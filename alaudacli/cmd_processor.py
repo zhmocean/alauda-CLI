@@ -27,3 +27,6 @@ def process_cmds(args):
             commands.service_rm(args.name)
         elif args.subcmd == 'ps':
             commands.service_ps()
+    elif args.cmd == 'compose':
+        if args.subcmd == 'up':
+            commands.compose_up()

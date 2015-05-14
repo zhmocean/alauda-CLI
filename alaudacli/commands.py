@@ -4,6 +4,7 @@ import requests
 
 import util
 import auth
+import compose
 from service import Service
 
 
@@ -105,3 +106,9 @@ def service_rm(name):
 def service_ps():
     result = Service.list()
     print '[service_ps]: ' + json.dumps(json.loads(result), indent=2)
+
+
+def compose_up():
+    project = compose.load_project('./docker-compose.yml')
+    project.up()
+    print '[compose]: OK'

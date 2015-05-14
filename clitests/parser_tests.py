@@ -126,4 +126,11 @@ class ProcessCmdTest(unittest.TestCase):
         argv = ['service', 'ps']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.service_ps.assert_called_()
+        mock_commands.service_ps.assert_called()
+
+    @mock.patch('alaudacli.cmd_processor.commands')
+    def test_process_compose_up(self, mock_commands):
+        argv = ['compose', 'up']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_commands.compose_up.assert_called()

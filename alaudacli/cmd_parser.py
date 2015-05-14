@@ -17,6 +17,7 @@ def create_parser():
     _add_login_parser(subparsers)
     _add_logout_parser(subparsers)
     _add_service_parser(subparsers)
+    _add_compose_parser(subparsers)
     return parser
 
 
@@ -77,3 +78,10 @@ def _add_service_parser(subparsers):
     rm_parser.add_argument('name', help='Name of the service to remove')
 
     service_subparsers.add_parser('ps', help='List services', description='List services')
+
+
+def _add_compose_parser(subparsers):
+    compose_parser = subparsers.add_parser('compose', help='Compose multi-container app', description='Compose multi-container app')
+    compose_subparsers = compose_parser.add_subparsers(title='Alauda compose commands', dest='subcmd')
+
+    compose_subparsers.add_parser('up', help='Create and start all service containers', description='Create and start all service containers')
