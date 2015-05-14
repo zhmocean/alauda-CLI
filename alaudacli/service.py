@@ -8,7 +8,7 @@ import util
 class Service(object):
 
     def __init__(self, name, image_name, image_tag, target_num_instances=1, instance_size='XS', run_command='',
-                 instance_ports=None, instance_envvars=None, allocation_group='', details='', volumes='[]'):
+                 instance_ports=None, instance_envvars=None, allocation_group='', details='', volumes=None):
         self.name = name
         self.image_name = image_name
         self.image_tag = image_tag
