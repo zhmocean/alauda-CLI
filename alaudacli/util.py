@@ -93,6 +93,24 @@ def parse_volumes(volume_list):
     return parsed_volumes
 
 
+def parse_links(link_list):
+    def _parse_link(_link):
+        result = _link.split(':')
+        if len(result) != 2:
+            print 'Invalid link description. (Example of valid description: mysql:db)'
+            sys.exit(1)
+        return result[0], result[1]
+
+    parsed_links = []
+    if link_list is not None:
+        for link in link_list:
+            service_name, alias = _parse_link(link)
+            parsed_links.append((service_name, alias))
+    else:
+        return None
+    return parsed_links
+
+
 def failed(status_code):
     return status_code < 200 or status_code >= 300
 
