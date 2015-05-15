@@ -54,9 +54,18 @@ def parse_instance_ports(port_list):
     return parsed_ports
 
 
-def parse_envvars(envvar_list):
+def parse_envvars(envvar_list, split_flag):
     def _parse_envvar(_envvar):
-        result = _envvar.split('=')
+        if isinstance(_envvar, dict):
+            if len(_envvar) != 1:
+                print 'Invalid environment variable'
+                sys.exit(1)
+            key = _envvar.keys()[0]
+            value = _envvar[key]
+            if value is None:
+                value = ''
+            return key, str(value)
+        result = _envvar.split(split_flag)
         if len(result) != 2:
             print 'Invalid environment variable'
             sys.exit(1)
@@ -72,6 +81,17 @@ def parse_envvars(envvar_list):
 
 def parse_volumes(volume_list):
     def _parse_volume(_volume):
+        if isinstance(_volume, dict):
+            if len(_volume) != 1:
+                print 'Invalid environment variable'
+                sys.exit(1)
+            path = _volume.keys()[0]
+            try:
+                size = int(_volume[path])
+            except:
+                print 'Invalid volume description. (Example of valid description: /var/lib/data1:10)'
+                sys.exit(1)
+            return path, size
         result = _volume.split(':')
         if len(result) != 2:
             print 'Invalid volume description. (Example of valid description: /var/lib/data1:10)'
