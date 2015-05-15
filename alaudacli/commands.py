@@ -117,3 +117,10 @@ def compose_rm():
     project = compose.load_project('./docker-compose.yml')
     project.rm()
     print '[compose_rm]: OK'
+
+
+def compose_scale(servers):
+    project = compose.load_project('./docker-compose.yml')
+    scale_dict = util.parse_scale(servers)
+    project.scale(scale_dict)
+    print '[compose_scale]: OK'

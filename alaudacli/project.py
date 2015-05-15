@@ -52,3 +52,8 @@ class Project(object):
     def rm(self):
         for name in self.sorted_name:
             Service.remove(name)
+
+    def scale(self, scale_dict):
+        for name, number in scale_dict.items():
+            service = Service.fetch(name)
+            service.update(number)

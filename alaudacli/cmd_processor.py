@@ -38,3 +38,5 @@ def process_cmds(args):
             commands.compose_stop()
         elif args.subcmd == 'rm':
             commands.compose_rm()
+        elif args.subcmd == 'scale':
+            commands.compose_scale(args.service_name)

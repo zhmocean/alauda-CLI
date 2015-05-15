@@ -89,3 +89,8 @@ def _add_compose_parser(subparsers):
     compose_subparsers.add_parser('start', help='Start all service containers', description='Start all service containers')
     compose_subparsers.add_parser('stop', help='Stop all service containers', description='Stop all service containers')
     compose_subparsers.add_parser('rm', help='Remove all service containers', description='Remove all service containers')
+    scale_parser = compose_subparsers.add_parser(
+        'scale',
+        help='Set the number of containers to run for a service',
+        description='Set the number of containers to run for a service')
+    scale_parser.add_argument("service_name", nargs='*', help='Service_name1=scale_number1 Serivce_name2=scale_number2')
