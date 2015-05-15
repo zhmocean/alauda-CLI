@@ -111,3 +111,9 @@ def compose_stop():
     project = compose.load_project('./docker-compose.yml')
     project.stop()
     print '[compose_stop]: OK'
+
+
+def compose_rm():
+    project = compose.load_project('./docker-compose.yml')
+    project.rm()
+    print '[compose_rm]: OK'

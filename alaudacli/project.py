@@ -48,3 +48,7 @@ class Project(object):
     def stop(self):
         for service in self.services:
             service.stop()
+
+    def rm(self):
+        for name in self.sorted_name:
+            Service.remove(name)

@@ -36,3 +36,5 @@ def process_cmds(args):
             commands.compose_start()
         elif args.subcmd == 'stop':
             commands.compose_stop()
+        elif args.subcmd == 'rm':
+            commands.compose_rm()
