@@ -99,3 +99,15 @@ def compose_ps():
     project = compose.load_project('./docker-compose.yml')
     project.ps()
     print '[compose_ps]: OK'
+
+
+def compose_start():
+    project = compose.load_project('./docker-compose.yml')
+    project.start()
+    print '[compose_start]: OK'
+
+
+def compose_stop():
+    project = compose.load_project('./docker-compose.yml')
+    project.stop()
+    print '[compose_stop]: OK'

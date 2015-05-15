@@ -32,3 +32,7 @@ def process_cmds(args):
             commands.compose_up()
         elif args.subcmd == 'ps':
             commands.compose_ps()
+        elif args.subcmd == 'start':
+            commands.compose_start()
+        elif args.subcmd == 'stop':
+            commands.compose_stop()

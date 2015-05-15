@@ -86,3 +86,5 @@ def _add_compose_parser(subparsers):
 
     compose_subparsers.add_parser('up', help='Create and start all service containers', description='Create and start all service containers')
     compose_subparsers.add_parser('ps', help='List containers', description='Lists container')
+    compose_subparsers.add_parser('start', help='Start all service containers', description='Start all service containers')
+    compose_subparsers.add_parser('stop', help='Stop all service containers', description='Stop all service containers')

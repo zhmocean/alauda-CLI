@@ -96,6 +96,13 @@ class Service(object):
         return r.text
 
     @classmethod
+    def get_service_list(cls, name_list):
+        service_list = []
+        for name in name_list:
+            service_list.append(Service.fetch(name))
+        return service_list
+
+    @classmethod
     def remove(cls, name):
         api_endpoint, token = auth.load_token()
         url = api_endpoint + 'apps/' + name
@@ -138,3 +145,34 @@ class Service(object):
         }
         r = requests.put(url, headers=self.headers, data=json.dumps(payload))
         util.check_response(r)
+
+    def get_run_command(self):
+        data = json.loads(self.details)
+        run_command = str(data['run_command'])
+        if len(run_command) == 0:
+            run_command = ' '
+        return run_command
+
+    def get_state(self):
+        data = json.loads(self.details)
+        if data['is_deploying']:
+            return 'Deploying'
+        if data['current_num_instances'] == data['target_num_instances']:
+            return 'Running'
+        elif data['target_state'] == 'STOPPED':
+            return 'Stopped'
+        else:
+            return 'Error'
+
+    def get_ports(self):
+        ports = ''
+        data = json.loads(self.details)
+        if len(data['instance_ports']) == 0:
+            return ' '
+        for port in data['instance_ports']:
+            instance_envvars = json.loads(data['instance_envvars'])
+            ports = ports + '{0}:{1}->{2}/{3}, '.format(instance_envvars['__DEFAULT_DOMAIN_NAME__'],
+                                                        port['service_port'],
+                                                        port['container_port'],
+                                                        port['protocol'])
+        return ports[:len(ports) - 2]
