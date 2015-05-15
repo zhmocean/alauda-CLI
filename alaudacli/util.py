@@ -55,21 +55,31 @@ def parse_instance_ports(port_list):
 
 
 def parse_envvars(envvar_list, split_flag):
-    def _parse_envvar(_envvar):
-        if isinstance(_envvar, dict):
-            if len(_envvar) != 1:
-                print 'Invalid environment variable'
-                sys.exit(1)
-            key = _envvar.keys()[0]
-            value = _envvar[key]
-            if value is None:
-                value = ''
-            return key, str(value)
+    def _parse_envvar_dict(_envvar):
+        if len(_envvar) != 1:
+            print 'Invalid environment variable'
+            sys.exit(1)
+        key = _envvar.keys()[0]
+        value = _envvar[key]
+        if value is None:
+            value = ''
+        return key, str(value)
+
+    def _parse_envvar_str(_envvar, split_flag):
         result = _envvar.split(split_flag)
         if len(result) != 2:
             print 'Invalid environment variable'
             sys.exit(1)
         return result[0], result[1]
+
+    def _parse_envvar(_envvar):
+        if isinstance(_envvar, dict):
+            return _parse_envvar_dict(_envvar)
+        elif isinstance(_envvar, str):
+            return _parse_envvar_str(_envvar, split_flag)
+        else:
+            print 'Invalid environment variable'
+            sys.exit(1)
 
     parsed_envvars = {}
     if envvar_list is not None:
