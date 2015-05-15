@@ -13,23 +13,9 @@ def load_project(filepath):
     return project
 
 
-def _get_links(values):
-    def _get_link(value):
-        if isinstance(value, str):
-            result = value.split(':')
-            return result[0]
-        elif isinstance(value, dict):
-            if len(value) == 1:
-                return value.keys()[0]
-        return None
-    if values is None:
-        return values
-    link_list = []
-    for value in values:
-        link = _get_link(value)
-        if link is not None:
-            link_list.append(link)
-    return link_list
+def _get_linked_services(link_list):
+    parsed_links = util.parse_links(link_list)
+    return [x[0] for x in parsed_links]
 
 
 def sort_services(compose_data):
@@ -38,7 +24,7 @@ def sort_services(compose_data):
     sorted_list = []
     while len(src_dict) > 0:
         for key, value in src_dict.items():
-            links = _get_links(value.get('links'))
+            links = _get_linked_services(value.get('links'))
             if links is None:
                 sorted_list.append(key)
                 del src_dict[key]

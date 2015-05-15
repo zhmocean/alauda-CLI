@@ -128,8 +128,6 @@ def parse_links(link_list):
         for link in link_list:
             service_name, alias = _parse_link(link)
             parsed_links.append((service_name, alias))
-    else:
-        return None
     return parsed_links
 
 
