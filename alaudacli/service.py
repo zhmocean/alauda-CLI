@@ -26,12 +26,12 @@ class Service(object):
         self.headers = auth.build_headers(self.token)
 
     def _update_envvars_with_links(self, instance_envvars, links):
-        link_to = {}
+        linked_to = {}
         if links is not None:
             for link in links:
                 service_name = link[0]
                 alias = link[1]
-                link_to[service_name] = alias
+                linked_to[service_name] = alias
                 linked_service = Service.fetch(service_name)
                 linked_service_data = json.loads(linked_service.details)
                 linked_service_ports = linked_service_data['instance_ports']
@@ -47,10 +47,10 @@ class Service(object):
                     instance_envvars[pattern + '_ADDR'] = linked_service_addr
                     instance_envvars[pattern + '_PORT'] = str(port['service_port'])
                     instance_envvars[pattern + '_PROTO'] = port['protocol']
-        return link_to
+        return linked_to
 
     def _create_remote(self, target_state):
-        link_to = self._update_envvars_with_links(self.instance_envvars, self.links)
+        linked_to = self._update_envvars_with_links(self.instance_envvars, self.links)
         url = self.api_endpoint + 'apps/'
         payload = {
             "app_name": self.name,
@@ -64,7 +64,7 @@ class Service(object):
             "instance_envvars": self.instance_envvars,
             "instance_ports": self.instance_ports,
             "allocation_group": self.allocation_group,
-            'linked_to': link_to,
+            'linked_to_apps': linked_to,
             "volumes": self.volumes
         }
         r = requests.post(url, headers=self.headers, data=json.dumps(payload))
