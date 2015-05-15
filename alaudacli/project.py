@@ -1,4 +1,5 @@
 from service import Service
+import util
 
 
 class Project(object):
@@ -37,14 +38,7 @@ class Project(object):
 
     def ps(self):
         service_list = Service.get_service_list(self.sorted_name)
-        name_len, command_len, state_len, ports_len, instance_count_len = self._format_ps_output(service_list)
-        print '{0}    {1}    {2}    {3}    {4}'.format('Name'.center(name_len), 'Command'.center(command_len), 'State'.center(state_len),
-                                                       'Ports'.center(ports_len), 'Instance Count'.center(instance_count_len))
-        print '{0}'.format('-' * (name_len + command_len + state_len + ports_len + instance_count_len + 4 * 4))
-        for service in service_list:
-            print '{0}    {1}    {2}    {3}    {4}'.format(service.name.ljust(name_len), service.get_run_command().ljust(command_len),
-                                                           service.get_state().ljust(state_len), service.get_ports().ljust(ports_len),
-                                                           str(service.target_num_instances).ljust(instance_count_len))
+        util.format_ps_output(service_list)
 
     def start(self):
         for service in self.services:

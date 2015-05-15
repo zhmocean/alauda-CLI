@@ -93,7 +93,13 @@ class Service(object):
         headers = auth.build_headers(token)
         r = requests.get(url, headers=headers)
         util.check_response(r)
-        return r.text
+        service_list = []
+        services = json.loads(r.text)
+        services = services.get('results', [])
+        for data in services:
+            service = Service.fetch(data['service_name'])
+            service_list.append(service)
+        return service_list
 
     @classmethod
     def get_service_list(cls, name_list):
@@ -172,7 +178,7 @@ class Service(object):
         for port in data['instance_ports']:
             instance_envvars = json.loads(data['instance_envvars'])
             ports = ports + '{0}:{1}->{2}/{3}, '.format(instance_envvars['__DEFAULT_DOMAIN_NAME__'],
-                                                        port['service_port'],
+                                                        port.get('service_port', ''),
                                                         port['container_port'],
                                                         port['protocol'])
         return ports[:len(ports) - 2]

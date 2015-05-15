@@ -85,8 +85,9 @@ def service_rm(name):
 
 
 def service_ps():
-    result = Service.list()
-    print '[service_ps]: ' + json.dumps(json.loads(result), indent=2)
+    service_list = Service.list()
+    util.format_ps_output(service_list)
+    print '[service_ps]: OK'
 
 
 def compose_up(file):

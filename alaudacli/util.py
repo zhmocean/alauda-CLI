@@ -164,3 +164,34 @@ def check_response(response):
     if failed(response.status_code):
         print '[error]: {0} {1}'.format(response.status_code, response.text)
         sys.exit(1)
+
+
+def format_ps_output(service_list):
+    max_name_len = len('Name')
+    max_command_len = len('Command')
+    max_state_len = len('State')
+    max_ports_len = len('Ports')
+    max_instance_count_len = len('Instance Count')
+
+    for service in service_list:
+        if max_name_len < len(service.name):
+            max_name_len = len(service.name)
+        run_command = service.get_run_command()
+        if max_command_len < len(run_command):
+            max_command_len = len(run_command)
+        state = service.get_state()
+        if max_state_len < len(state):
+            max_state_len = len(state)
+        ports = service.get_ports()
+        if max_ports_len < len(ports):
+            max_ports_len = len(ports)
+        if max_instance_count_len < len(str(service.target_num_instances)):
+            max_instance_count_len = len(str(service.target_num_instances))
+
+    print '{0}    {1}    {2}    {3}    {4}'.format('Name'.center(max_name_len), 'Command'.center(max_command_len), 'State'.center(max_state_len),
+                                                   'Ports'.center(max_ports_len), 'Instance Count'.center(max_instance_count_len))
+    print '{0}'.format('-' * (max_name_len + max_command_len + max_state_len + max_ports_len + max_instance_count_len + 4 * 4))
+    for service in service_list:
+        print '{0}    {1}    {2}    {3}    {4}'.format(service.name.ljust(max_name_len), service.get_run_command().ljust(max_command_len),
+                                                       service.get_state().ljust(max_state_len), service.get_ports().ljust(max_ports_len),
+                                                       str(service.target_num_instances).ljust(max_instance_count_len))
