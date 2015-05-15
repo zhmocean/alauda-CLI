@@ -89,38 +89,38 @@ def service_ps():
     print '[service_ps]: ' + json.dumps(json.loads(result), indent=2)
 
 
-def compose_up():
-    project = compose.load_project('./docker-compose.yml')
+def compose_up(file):
+    project = compose.load_project(file)
     project.up()
     print '[compose_up]: OK'
 
 
-def compose_ps():
-    project = compose.load_project('./docker-compose.yml')
+def compose_ps(file):
+    project = compose.load_project(file)
     project.ps()
     print '[compose_ps]: OK'
 
 
-def compose_start():
-    project = compose.load_project('./docker-compose.yml')
+def compose_start(file):
+    project = compose.load_project(file)
     project.start()
     print '[compose_start]: OK'
 
 
-def compose_stop():
-    project = compose.load_project('./docker-compose.yml')
+def compose_stop(file):
+    project = compose.load_project(file)
     project.stop()
     print '[compose_stop]: OK'
 
 
-def compose_rm():
-    project = compose.load_project('./docker-compose.yml')
+def compose_rm(file):
+    project = compose.load_project(file)
     project.rm()
     print '[compose_rm]: OK'
 
 
-def compose_scale(servers):
-    project = compose.load_project('./docker-compose.yml')
+def compose_scale(servers, file):
+    project = compose.load_project(file)
     scale_dict = util.parse_scale(servers)
     project.scale(scale_dict)
     print '[compose_scale]: OK'

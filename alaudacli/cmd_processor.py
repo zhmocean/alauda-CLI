@@ -29,14 +29,14 @@ def process_cmds(args):
             commands.service_ps()
     elif args.cmd == 'compose':
         if args.subcmd == 'up':
-            commands.compose_up()
+            commands.compose_up(args.file)
         elif args.subcmd == 'ps':
-            commands.compose_ps()
+            commands.compose_ps(args.file)
         elif args.subcmd == 'start':
-            commands.compose_start()
+            commands.compose_start(args.file)
         elif args.subcmd == 'stop':
-            commands.compose_stop()
+            commands.compose_stop(args.file)
         elif args.subcmd == 'rm':
-            commands.compose_rm()
+            commands.compose_rm(args.file)
         elif args.subcmd == 'scale':
-            commands.compose_scale(args.service_name)
+            commands.compose_scale(args.service_name, args.file)
