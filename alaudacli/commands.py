@@ -86,7 +86,7 @@ def service_rm(name):
 
 def service_ps():
     service_list = Service.list()
-    util.format_ps_output(service_list)
+    util.print_ps_output(service_list)
     print '[service_ps]: OK'
 
 

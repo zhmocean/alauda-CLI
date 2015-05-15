@@ -168,7 +168,7 @@ def check_response(response):
         sys.exit(1)
 
 
-def format_ps_output(service_list):
+def print_ps_output(service_list):
     max_name_len = len('Name')
     max_command_len = len('Command')
     max_state_len = len('State')
