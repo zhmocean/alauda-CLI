@@ -4,9 +4,8 @@ import util
 
 class Project(object):
 
-    def __init__(self, services, sorted_name):
+    def __init__(self, services):
         self.services = services
-        self.sorted_name = sorted_name
 
     def up(self):
         for service in self.services:
@@ -37,32 +36,39 @@ class Project(object):
         return max_name_len, max_command_len, max_state_len, max_ports_len, max_instance_count_len
 
     def ps(self):
-        service_list = Service.get_service_list(self.sorted_name)
+        service_list = self._get_service_list()
         util.format_ps_output(service_list)
 
     def start(self):
         for service in self.services:
-            print "Starting services: {}".format(service.name)
+            print "Starting service: {}".format(service.name)
             service.start()
 
     def stop(self):
         for service in self.services:
-            print "Stoping services: {}".format(service.name)
+            print "Stoping service: {}".format(service.name)
             service.stop()
 
     def restart(self):
         for service in self.services:
-            print "Stoping services: {}".format(service.name)
+            print "Stoping service: {}".format(service.name)
             service.stop()
         for service in self.services:
-            print "Starting services: {}".format(service.name)
+            print "Starting service: {}".format(service.name)
             service.start()
 
     def rm(self):
-        for name in self.sorted_name:
-            Service.remove(name)
+        for service in self.services:
+            print "Removing service: {}".format(service.name)
+            Service.remove(service.name)
 
     def scale(self, scale_dict):
         for name, number in scale_dict.items():
             service = Service.fetch(name)
             service.update(number)
+
+    def _get_service_list(self):
+        service_list = []
+        for service in self.services:
+            service_list.append(service.fetch(service.name))
+        return service_list

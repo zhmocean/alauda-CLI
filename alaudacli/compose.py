@@ -8,8 +8,8 @@ from service import Service
 
 def load_project(filepath):
     compose_data = _load_yaml(filepath)
-    services, services_sorted_name = load_services(compose_data)
-    project = Project(services, services_sorted_name)
+    services = load_services(compose_data)
+    project = Project(services)
     return project
 
 
@@ -59,7 +59,7 @@ def load_services(compose_data):
     for service_name in sorted_list:
         service = load_service(service_name, compose_data[service_name])
         services.append(service)
-    return services, sorted_list
+    return services
 
 
 def load_service(service_name, service_data):

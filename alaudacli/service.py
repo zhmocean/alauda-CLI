@@ -102,13 +102,6 @@ class Service(object):
         return service_list
 
     @classmethod
-    def get_service_list(cls, name_list):
-        service_list = []
-        for name in name_list:
-            service_list.append(Service.fetch(name))
-        return service_list
-
-    @classmethod
     def remove(cls, name):
         api_endpoint, token = auth.load_token()
         url = api_endpoint + 'apps/' + name
@@ -154,8 +147,8 @@ class Service(object):
 
     def get_run_command(self):
         data = json.loads(self.details)
-        run_command = str(data['run_command'])
-        if len(run_command) == 0:
+        run_command = data['run_command']
+        if not run_command:
             run_command = ' '
         return run_command
 
@@ -163,7 +156,7 @@ class Service(object):
         data = json.loads(self.details)
         if data['is_deploying']:
             return 'Deploying'
-        if data['current_num_instances'] == data['target_num_instances']:
+        elif data['current_num_instances'] == data['target_num_instances']:
             return 'Running'
         elif data['target_state'] == 'STOPPED':
             return 'Stopped'
@@ -173,7 +166,7 @@ class Service(object):
     def get_ports(self):
         ports = ''
         data = json.loads(self.details)
-        if len(data['instance_ports']) == 0:
+        if not data['instance_ports']:
             return ' '
         for port in data['instance_ports']:
             instance_envvars = json.loads(data['instance_envvars'])
