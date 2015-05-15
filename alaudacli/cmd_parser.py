@@ -85,3 +85,4 @@ def _add_compose_parser(subparsers):
     compose_subparsers = compose_parser.add_subparsers(title='Alauda compose commands', dest='subcmd')
 
     compose_subparsers.add_parser('up', help='Create and start all service containers', description='Create and start all service containers')
+    compose_subparsers.add_parser('ps', help='List containers', description='Lists container')

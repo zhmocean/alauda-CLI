@@ -92,4 +92,10 @@ def service_ps():
 def compose_up():
     project = compose.load_project('./docker-compose.yml')
     project.up()
-    print '[compose]: OK'
+    print '[compose_up]: OK'
+
+
+def compose_ps():
+    project = compose.load_project('./docker-compose.yml')
+    project.ps()
+    print '[compose_ps]: OK'
