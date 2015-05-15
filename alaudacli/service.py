@@ -8,14 +8,14 @@ import util
 class Service(object):
 
     def __init__(self, name, image_name, image_tag, target_num_instances=1, instance_size='XS', run_command='',
-                 instance_ports=None, instance_envvars=None, allocation_group='', volumes=None, links=None, details=''):
+                 instance_ports=[], instance_envvars={}, allocation_group='', volumes=[], links=[], details=''):
         self.name = name
         self.image_name = image_name
         self.image_tag = image_tag
         self.target_num_instances = target_num_instances
         self.instance_size = instance_size
         self.run_command = run_command
-        self.instance_envvars = util.parse_envvars(instance_envvars)
+        self.instance_envvars = instance_envvars
         self.instance_ports = instance_ports
         self.allocation_group = allocation_group
         self.volumes = volumes
@@ -64,11 +64,9 @@ class Service(object):
             "instance_envvars": self.instance_envvars,
             "instance_ports": self.instance_ports,
             "allocation_group": self.allocation_group,
-            'linked_to': link_to
-            #             "volumes": self.volumes
+            'linked_to': link_to,
+            "volumes": self.volumes
         }
-        if self.volumes is not None:
-            payload['volumes'] = self.volumes
         r = requests.post(url, headers=self.headers, data=json.dumps(payload))
         util.check_response(r)
 
