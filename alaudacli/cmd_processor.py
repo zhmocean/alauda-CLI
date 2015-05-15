@@ -30,5 +30,5 @@ def process_cmds(args):
     elif args.cmd == 'compose':
         if args.subcmd == 'up':
             commands.compose_up()
-        if args.subcmd == 'ps':
+        elif args.subcmd == 'ps':
             commands.compose_ps()
