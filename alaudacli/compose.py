@@ -79,11 +79,11 @@ def load_command(service_data):
 
 
 def load_volumes(service_data):
-    return util.parse_volumes(service_data.get('volumes', None))
+    return util.parse_volumes(service_data.get('volumes'))
 
 
 def load_envvars(service_data):
-    return util.parse_envvars(service_data.get('environment', {}), ':')
+    return util.parse_envvars(service_data.get('environment'))
 
 
 def _load_yaml(filepath):

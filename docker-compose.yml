@@ -7,7 +7,7 @@ web:
    - redis:redis
   environment:
    - FOO: foo
-   - BAR: bar
+   - BAR=bar
 redis:
   image: redis
   ports:
