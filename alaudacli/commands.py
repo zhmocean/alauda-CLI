@@ -113,6 +113,12 @@ def compose_stop(file):
     print '[compose_stop]: OK'
 
 
+def compose_restart(file):
+    project = compose.load_project(file)
+    project.restart()
+    print '[compose_restart]: OK'
+
+
 def compose_rm(file):
     project = compose.load_project(file)
     project.rm()

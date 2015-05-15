@@ -96,6 +96,9 @@ def _add_compose_parser(subparsers):
     stop_parser = compose_subparsers.add_parser('stop', help='Stop all service containers', description='Stop all service containers')
     stop_parser.add_argument('-f', '--file', help='Compose file name', default='./docker-compose.yml')
 
+    restart_parser = compose_subparsers.add_parser('restart', help='Restart all service containers', description='Restart all service containers')
+    restart_parser.add_argument('-f', '--file', help='Compose file name', default='./docker-compose.yml')
+
     rm_parser = compose_subparsers.add_parser('rm', help='Remove all service containers', description='Remove all service containers')
     rm_parser.add_argument('-f', '--file', help='Compose file name', default='./docker-compose.yml')
 

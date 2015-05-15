@@ -48,11 +48,21 @@ class Project(object):
 
     def start(self):
         for service in self.services:
+            print "Starting services: {}".format(service.name)
             service.start()
 
     def stop(self):
         for service in self.services:
+            print "Stoping services: {}".format(service.name)
             service.stop()
+
+    def restart(self):
+        for service in self.services:
+            print "Stoping services: {}".format(service.name)
+            service.stop()
+        for service in self.services:
+            print "Starting services: {}".format(service.name)
+            service.start()
 
     def rm(self):
         for name in self.sorted_name:

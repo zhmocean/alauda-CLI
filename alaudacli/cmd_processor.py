@@ -36,6 +36,8 @@ def process_cmds(args):
             commands.compose_start(args.file)
         elif args.subcmd == 'stop':
             commands.compose_stop(args.file)
+        elif args.subcmd == 'restart':
+            commands.compose_restart(args.file)
         elif args.subcmd == 'rm':
             commands.compose_rm(args.file)
         elif args.subcmd == 'scale':
