@@ -9,7 +9,7 @@ class Project(object):
 
     def up(self):
         for service in self.services:
-            print "Creating service: {}".format(service.name)
+            print "Creating and starting service: {}".format(service.name)
             service.run()
 
     def _format_ps_output(self, service_list):
@@ -64,6 +64,7 @@ class Project(object):
 
     def scale(self, scale_dict):
         for name, number in scale_dict.items():
+            print "Scaling service: {0} -> {1}".format(name, number)
             service = Service.fetch(name)
             service.update(number)
 

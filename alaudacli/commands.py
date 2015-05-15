@@ -126,8 +126,8 @@ def compose_rm(file):
     print '[compose_rm]: OK'
 
 
-def compose_scale(servers, file):
+def compose_scale(descriptor, file):
     project = compose.load_project(file)
-    scale_dict = util.parse_scale(servers)
+    scale_dict = util.parse_scale(descriptor)
     project.scale(scale_dict)
     print '[compose_scale]: OK'

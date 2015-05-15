@@ -104,7 +104,7 @@ def _add_compose_parser(subparsers):
 
     scale_parser = compose_subparsers.add_parser(
         'scale',
-        help='Scale the number of container instances for a service',
-        description='Scale the number of container instances for a service')
-    scale_parser.add_argument("service_name", nargs='*', help='Service_name1=scale_number1 Serivce_name2=scale_number2')
+        help='Set number of containers to run for a service',
+        description='Set number of containers to run for a service')
+    scale_parser.add_argument('descriptor', nargs='*', help='E.g. web=2 db=1')
     scale_parser.add_argument('-f', '--file', help='Compose file name', default='./docker-compose.yml')

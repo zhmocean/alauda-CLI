@@ -134,7 +134,6 @@ def parse_links(link_list):
 
 
 def parse_scale(name_number_list):
-
     def _parse_scale(_name_number):
         result = _name_number.split('=')
         if len(result) != 2:

@@ -41,4 +41,4 @@ def process_cmds(args):
         elif args.subcmd == 'rm':
             commands.compose_rm(args.file)
         elif args.subcmd == 'scale':
-            commands.compose_scale(args.service_name, args.file)
+            commands.compose_scale(args.descriptor, args.file)
