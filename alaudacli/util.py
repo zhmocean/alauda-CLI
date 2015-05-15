@@ -118,14 +118,14 @@ def parse_scale(name_number_list):
     def _parse_scale(_name_number):
         result = _name_number.split('=')
         if len(result) != 2:
-            print 'Invalid scale description. (Example of valid description: mysql:3)'
+            print 'Invalid scale description. (Example of valid description: mysql=3)'
             sys.exit(1)
 
         name = result[0]
         try:
             number = int(result[1])
         except:
-            print 'Invalid scale description. (Example of valid description: mysql:3)'
+            print 'Invalid scale description. (Example of valid description: mysql=3)'
             sys.exit(1)
         return name, number
 
