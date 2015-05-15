@@ -17,6 +17,7 @@ class Project(object):
         max_command_len = len('Command')
         max_state_len = len('State')
         max_ports_len = len('Ports')
+        max_instance_count_len = len('Instance Count')
 
         for service in service_list:
             if max_name_len < len(service.name):
@@ -30,16 +31,20 @@ class Project(object):
             ports = service.get_ports()
             if max_ports_len < len(ports):
                 max_ports_len = len(ports)
-        return max_name_len, max_command_len, max_state_len, max_ports_len
+            if max_instance_count_len < len(str(service.target_num_instances)):
+                max_instance_count_len = len(str(service.target_num_instances))
+        return max_name_len, max_command_len, max_state_len, max_ports_len, max_instance_count_len
 
     def ps(self):
         service_list = Service.get_service_list(self.sorted_name)
-        name_len, command_len, state_len, ports_len = self._format_ps_output(service_list)
-        print '{0}    {1}    {2}    {3}'.format('Name'.center(name_len), 'Command'.center(command_len), 'State'.center(state_len), 'Ports'.center(ports_len))
-        print '{0}'.format('-' * (name_len + command_len + state_len + ports_len + 3 * 4))
+        name_len, command_len, state_len, ports_len, instance_count_len = self._format_ps_output(service_list)
+        print '{0}    {1}    {2}    {3}    {4}'.format('Name'.center(name_len), 'Command'.center(command_len), 'State'.center(state_len),
+                                                       'Ports'.center(ports_len), 'Instance Count'.center(instance_count_len))
+        print '{0}'.format('-' * (name_len + command_len + state_len + ports_len + instance_count_len + 4 * 4))
         for service in service_list:
-            print '{0}    {1}    {2}    {3}'.format(service.name.ljust(name_len), service.get_run_command().ljust(command_len),
-                                                    service.get_state().ljust(state_len), service.get_ports().ljust(ports_len))
+            print '{0}    {1}    {2}    {3}    {4}'.format(service.name.ljust(name_len), service.get_run_command().ljust(command_len),
+                                                           service.get_state().ljust(state_len), service.get_ports().ljust(ports_len),
+                                                           str(service.target_num_instances).ljust(instance_count_len))
 
     def start(self):
         for service in self.services:
