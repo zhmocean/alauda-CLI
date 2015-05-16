@@ -164,8 +164,9 @@ def failed(status_code):
 
 def check_response(response):
     if failed(response.status_code):
-        print '[error]: {0} {1}'.format(response.status_code, response.text)
-        sys.exit(1)
+        error = '[error]: {0} {1}'.format(response.status_code, response.text)
+        raise ValueError(error)
+#         sys.exit(1)
 
 
 def print_ps_output(service_list):

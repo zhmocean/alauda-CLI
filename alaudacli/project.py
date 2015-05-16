@@ -1,5 +1,6 @@
 from service import Service
 import util
+import time
 
 
 class Project(object):
@@ -11,6 +12,7 @@ class Project(object):
         for service in self.services:
             print "Creating and starting service: {}".format(service.name)
             service.run()
+            time.sleep(1)
 
     def ps(self):
         service_list = self._get_service_list()
@@ -48,5 +50,8 @@ class Project(object):
     def _get_service_list(self):
         service_list = []
         for service in self.services:
-            service_list.append(service.fetch(service.name))
+            try:
+                service_list.append(service.fetch(service.name))
+            except ValueError:
+                continue
         return service_list

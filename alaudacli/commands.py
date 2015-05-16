@@ -1,7 +1,7 @@
 import getpass
 import json
 import requests
-
+import sys
 import util
 import auth
 import compose
@@ -48,40 +48,64 @@ def service_create(image, name, start, target_num_instances, instance_size, run_
                       allocation_group=allocation_group,
                       volumes=volumes,
                       links=links)
-    if start:
-        service.run()
-    else:
-        service.create()
-    print '[service_create]: OK'
+    try:
+        if start:
+            service.run()
+        else:
+            service.create()
+        print '[service_create]: OK'
+    except ValueError as ex:
+        print ex
+        sys.exit(1)
 
 
 def service_update(name, target_num_instances):
-    service = Service.fetch(name)
-    service.update(target_num_instances)
-    print '[service_update]: OK'
+    try:
+        service = Service.fetch(name)
+        service.update(target_num_instances)
+        print '[service_update]: OK'
+    except ValueError as ex:
+        print ex
+        sys.exit(1)
 
 
 def service_inspect(name):
-    service = Service.fetch(name)
-    result = service.inspect()
-    print '[service_inspect]: ' + json.dumps(json.loads(result), indent=2)
+    try:
+        service = Service.fetch(name)
+        result = service.inspect()
+        print '[service_inspect]: ' + json.dumps(json.loads(result), indent=2)
+    except ValueError as ex:
+        print ex
+        sys.exit(1)
 
 
 def service_start(name):
-    service = Service.fetch(name)
-    service.start()
-    print '[service_start]: OK'
+    try:
+        service = Service.fetch(name)
+        service.start()
+        print '[service_start]: OK'
+    except ValueError as ex:
+        print ex
+        sys.exit(1)
 
 
 def service_stop(name):
-    service = Service.fetch(name)
-    service.stop()
-    print '[service_stop]: OK'
+    try:
+        service = Service.fetch(name)
+        service.stop()
+        print '[service_stop]: OK'
+    except ValueError as ex:
+        print ex
+        sys.exit(1)
 
 
 def service_rm(name):
-    Service.remove(name)
-    print '[service_rm]: OK'
+    try:
+        Service.remove(name)
+        print '[service_rm]: OK'
+    except ValueError as ex:
+        print ex
+        sys.exit(1)
 
 
 def service_ps():
@@ -91,9 +115,13 @@ def service_ps():
 
 
 def compose_up(file):
-    project = compose.load_project(file)
-    project.up()
-    print '[compose_up]: OK'
+    try:
+        project = compose.load_project(file)
+        project.up()
+        print '[compose_up]: OK'
+    except ValueError as ex:
+        print ex
+        sys.exit(1)
 
 
 def compose_ps(file):
@@ -103,31 +131,51 @@ def compose_ps(file):
 
 
 def compose_start(file):
-    project = compose.load_project(file)
-    project.start()
-    print '[compose_start]: OK'
+    try:
+        project = compose.load_project(file)
+        project.start()
+        print '[compose_start]: OK'
+    except ValueError as ex:
+        print ex
+        sys.exit(1)
 
 
 def compose_stop(file):
-    project = compose.load_project(file)
-    project.stop()
-    print '[compose_stop]: OK'
+    try:
+        project = compose.load_project(file)
+        project.stop()
+        print '[compose_stop]: OK'
+    except ValueError as ex:
+        print ex
+        sys.exit(1)
 
 
 def compose_restart(file):
-    project = compose.load_project(file)
-    project.restart()
-    print '[compose_restart]: OK'
+    try:
+        project = compose.load_project(file)
+        project.restart()
+        print '[compose_restart]: OK'
+    except ValueError as ex:
+        print ex
+        sys.exit(1)
 
 
 def compose_rm(file):
-    project = compose.load_project(file)
-    project.rm()
-    print '[compose_rm]: OK'
+    try:
+        project = compose.load_project(file)
+        project.rm()
+        print '[compose_rm]: OK'
+    except ValueError as ex:
+        print ex
+        sys.exit(1)
 
 
 def compose_scale(descriptor, file):
-    project = compose.load_project(file)
-    scale_dict = util.parse_scale(descriptor)
-    project.scale(scale_dict)
-    print '[compose_scale]: OK'
+    try:
+        project = compose.load_project(file)
+        scale_dict = util.parse_scale(descriptor)
+        project.scale(scale_dict)
+        print '[compose_scale]: OK'
+    except ValueError as ex:
+        print ex
+        sys.exit(1)

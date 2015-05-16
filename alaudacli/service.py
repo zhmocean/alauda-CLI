@@ -97,8 +97,11 @@ class Service(object):
         services = json.loads(r.text)
         services = services.get('results', [])
         for data in services:
-            service = Service.fetch(data['service_name'])
-            service_list.append(service)
+            try:
+                service = Service.fetch(data['service_name'])
+                service_list.append(service)
+            except ValueError:
+                continue
         return service_list
 
     @classmethod
