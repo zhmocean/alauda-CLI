@@ -1,7 +1,9 @@
 import sys
 import copy
 
-from alaudacli import cmd_parser, cmd_processor
+import cmd_parser
+import cmd_processor
+from exceptions import AlaudaServerError
 
 
 def patch_argv(argv):
@@ -25,9 +27,14 @@ def patch_argv(argv):
 
 
 def main():
-    argv = patch_argv(sys.argv)
-    args = cmd_parser.parse_cmds(argv)
-    cmd_processor.process_cmds(args)
+    try:
+        argv = patch_argv(sys.argv)
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+    except AlaudaServerError as ex:
+        print ex
+        sys.exit(1)
+    print '[alauda] OK'
 
 if __name__ == '__main__':
     main()

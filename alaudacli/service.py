@@ -1,8 +1,10 @@
 import json
 import requests
 import time
+
 import auth
 import util
+from exceptions import AlaudaServerError
 
 MAX_RETRY_NUM = 10
 
@@ -60,7 +62,7 @@ class Service(object):
                         instance_envvars[pattern + '_PORT'] = str(service_port)
                         instance_envvars[pattern + '_PROTO'] = port['protocol']
                 if retry_num == MAX_RETRY_NUM:
-                    raise KeyError('[error]: Timed out waiting for {} to acquire service port'.format(service_name))
+                    raise AlaudaServerError(500, 'Timed out waiting for {} to acquire service port'.format(service_name))
         return linked_to
 
     def _create_remote(self, target_state):
@@ -114,22 +116,31 @@ class Service(object):
             try:
                 service = Service.fetch(data['service_name'])
                 service_list.append(service)
-            except ValueError:
+            except AlaudaServerError:
                 continue
         return service_list
 
     @classmethod
     def remove(cls, name):
+        print '[alauda] Removing service "{}"'.format(name)
         api_endpoint, token = auth.load_token()
         url = api_endpoint + 'apps/' + name
         headers = auth.build_headers(token)
-        r = requests.delete(url, headers=headers)
-        util.check_response(r)
+        try:
+            r = requests.delete(url, headers=headers)
+            util.check_response(r)
+        except AlaudaServerError as ex:
+            if ex.status_code == 404:
+                print '[alauda] Service "{}" does not exist'.format(name)
+            else:
+                raise ex
 
     def create(self):
+        print '[alauda] Creating service "{}"'.format(self.name)
         self._create_remote('STOPPED')
 
     def run(self):
+        print '[alauda] Creating and starting service "{}"'.format(self.name)
         self._create_remote('STARTED')
 
     def inspect(self):
@@ -141,18 +152,21 @@ class Service(object):
         return self.details
 
     def start(self):
+        print '[alauda] Starting service "{}"'.format(self.name)
         self.target_state = 'STARTED'
         url = self.api_endpoint + 'apps/' + self.name + '/start/'
         r = requests.put(url, headers=self.headers)
         util.check_response(r)
 
     def stop(self):
+        print '[alauda] Stopping service "{}"'.format(self.name)
         self.target_state = 'STOPPED'
         url = self.api_endpoint + 'apps/' + self.name + '/stop/'
         r = requests.put(url, headers=self.headers)
         util.check_response(r)
 
     def update(self, target_num_instances):
+        print '[alauda] Scaling service: {0} -> {1}'.format(self.name, target_num_instances)
         self.target_num_instances = target_num_instances
         url = self.api_endpoint + 'apps/' + self.name
         payload = {

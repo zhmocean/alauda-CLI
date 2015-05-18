@@ -1,5 +1,7 @@
 import sys
 
+from exceptions import AlaudaServerError
+
 
 def parse_image_name_tag(image):
     result = image.split(':')
@@ -172,8 +174,7 @@ def failed(status_code):
 
 def check_response(response):
     if failed(response.status_code):
-        error = '[error]: {0} {1}'.format(response.status_code, response.text)
-        raise ValueError(error)
+        raise AlaudaServerError(response.status_code, response.text)
 
 
 def print_ps_output(service_list):
