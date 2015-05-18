@@ -57,7 +57,7 @@ def parse_instance_ports(port_list):
 def parse_envvars(envvar_list):
     def _parse_envvar_dict(_envvar):
         if len(_envvar) != 1:
-            print 'Invalid environment variable'
+            print 'Invalid environment variable. e.g. FOO: foo(with space after ":") or BAR=bar(no space before/after "=")'
             sys.exit(1)
         key = _envvar.keys()[0]
         value = _envvar[key]
@@ -68,7 +68,7 @@ def parse_envvars(envvar_list):
     def _parse_envvar_str(_envvar):
         result = _envvar.split('=')
         if len(result) != 2:
-            print 'Invalid environment variable'
+            print 'Invalid environment variable. e.g. FOO: foo(with space after ":") or BAR=bar(no space before/after "=")'
             sys.exit(1)
         return result[0], result[1]
 
@@ -78,7 +78,7 @@ def parse_envvars(envvar_list):
         elif isinstance(_envvar, str):
             return _parse_envvar_str(_envvar)
         else:
-            print 'Invalid environment variable'
+            print 'Invalid environment variable. e.g. FOO: foo(with space after ":") or BAR=bar(no space before/after "=")'
             sys.exit(1)
 
     parsed_envvars = {}

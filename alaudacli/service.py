@@ -45,6 +45,7 @@ class Service(object):
                     linked_service_addr = linked_service_envvars['__DEFAULT_DOMAIN_NAME__']
                     key = '{0}_PORT'.format(alias).upper()
                     for port in linked_service_ports:
+                        #                         print "{0} port: {1}".format(service_name, port)
                         service_port = port.get('service_port', None)
                         if service_port is None:
                             retry_num = retry_num + 1
