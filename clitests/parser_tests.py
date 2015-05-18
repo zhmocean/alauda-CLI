@@ -30,8 +30,8 @@ class UtilTest(unittest.TestCase):
         self.assertEqual([{'container_port': 80, 'protocol': 'tcp'}, {'container_port': 22, 'protocol': 'tcp'}], ports)
 
     def test_parse_envvars(self):
-        envvars = util.parse_envvars(['FOO=foo', 'BAR=bar'])
-        self.assertEqual({'FOO': 'foo', 'BAR': 'bar'}, envvars)
+        envvars = util.parse_envvars(['FOO=foo', 'BAR:bar', {'BAZ': 'baz'}, 'A=', 'A= '])
+        self.assertEqual({'FOO': 'foo', 'BAR': 'bar', 'BAZ': 'baz', 'A': '', 'A': ' '}, envvars)
 
     def test_parse_volumes(self):
         volumes = util.parse_volumes(['/var/lib/data1:10', '/var/lib/data2:20'])

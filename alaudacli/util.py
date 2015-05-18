@@ -69,7 +69,7 @@ def parse_envvars(envvar_list):
         pos = _envvar.find('=')
         if pos != -1:
             key = _envvar[:pos]
-            value = _envvar[pos:]
+            value = _envvar[pos+1:]
             return key, value
         else:
             pos = _envvar.find(':')
@@ -77,7 +77,7 @@ def parse_envvars(envvar_list):
                 print 'Invalid environment variable. e.g. FOO=foo'
                 sys.exit(1)
             key = _envvar[:pos]
-            value = _envvar[pos:]
+            value = _envvar[pos+1:]
             return key, value
 
     def _parse_envvar(_envvar):
@@ -174,7 +174,6 @@ def check_response(response):
     if failed(response.status_code):
         error = '[error]: {0} {1}'.format(response.status_code, response.text)
         raise ValueError(error)
-#         sys.exit(1)
 
 
 def print_ps_output(service_list):

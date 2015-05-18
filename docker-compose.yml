@@ -8,6 +8,7 @@ web:
   environment:
    - FOO: foo
    - BAR=bar
+   - BAZ:baz
 redis:
   image: redis
   ports:
