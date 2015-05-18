@@ -1,8 +1,10 @@
 import json
 import requests
-
+import time
 import auth
 import util
+
+MAX_RETRY_NUM = 5
 
 
 class Service(object):
@@ -32,21 +34,33 @@ class Service(object):
                 service_name = link[0]
                 alias = link[1]
                 linked_to[service_name] = alias
-                linked_service = Service.fetch(service_name)
-                linked_service_data = json.loads(linked_service.details)
-                linked_service_ports = linked_service_data['instance_ports']
-                linked_service_envvars = json.loads(linked_service_data['instance_envvars'])
-                linked_service_addr = linked_service_envvars['__DEFAULT_DOMAIN_NAME__']
-                key = '{0}_PORT'.format(alias).upper()
-                for port in linked_service_ports:
-                    url = '{0}://{1}:{2}'.format(port['protocol'], linked_service_addr, port['service_port'])
-                    if key not in instance_envvars.keys():
-                        instance_envvars[key] = url
-                    pattern = '{0}_PORT_{1}_{2}'.format(alias, port['container_port'], port['protocol']).upper()
-                    instance_envvars[pattern] = url
-                    instance_envvars[pattern + '_ADDR'] = linked_service_addr
-                    instance_envvars[pattern + '_PORT'] = str(port['service_port'])
-                    instance_envvars[pattern + '_PROTO'] = port['protocol']
+                retry_num = 0
+                while retry_num < MAX_RETRY_NUM:
+                    linked_service = Service.fetch(service_name)
+                    linked_service_data = json.loads(linked_service.details)
+                    linked_service_ports = linked_service_data['instance_ports']
+                    if len(linked_service_ports) == 0:
+                        break
+                    linked_service_envvars = json.loads(linked_service_data['instance_envvars'])
+                    linked_service_addr = linked_service_envvars['__DEFAULT_DOMAIN_NAME__']
+                    key = '{0}_PORT'.format(alias).upper()
+                    for port in linked_service_ports:
+                        service_port = port.get('service_port', None)
+                        if service_port is None:
+                            retry_num = retry_num + 1
+                            time.sleep(2)
+                            break
+                        url = '{0}://{1}:{2}'.format(port['protocol'], linked_service_addr, service_port)
+                        if key not in instance_envvars.keys():
+                            instance_envvars[key] = url
+                        pattern = '{0}_PORT_{1}_{2}'.format(alias, port['container_port'], port['protocol']).upper()
+                        instance_envvars[pattern] = url
+                        instance_envvars[pattern + '_ADDR'] = linked_service_addr
+                        instance_envvars[pattern + '_PORT'] = str(service_port)
+                        instance_envvars[pattern + '_PROTO'] = port['protocol']
+                        retry_num = MAX_RETRY_NUM + 1
+                if retry_num == MAX_RETRY_NUM:
+                    raise KeyError('[error]: get {} service_port fail!'.format(service_name))
         return linked_to
 
     def _create_remote(self, target_state):

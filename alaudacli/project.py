@@ -1,6 +1,5 @@
 from service import Service
 import util
-import time
 
 
 class Project(object):
@@ -12,7 +11,6 @@ class Project(object):
         for service in self.services:
             print "Creating and starting service: {}".format(service.name)
             service.run()
-            time.sleep(1)
 
     def ps(self):
         service_list = self._get_service_list()

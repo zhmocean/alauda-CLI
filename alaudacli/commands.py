@@ -122,6 +122,9 @@ def compose_up(file):
     except ValueError as ex:
         print ex
         sys.exit(1)
+    except KeyError as ex:
+        print ex
+        sys.exit(1)
 
 
 def compose_ps(file):
