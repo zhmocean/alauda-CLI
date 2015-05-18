@@ -1,8 +1,8 @@
 import json
 import os
-import sys
 
 import settings
+from exceptions import AlaudaInputError
 
 
 def get_api_endpoint(cloud):
@@ -28,15 +28,14 @@ def load_token():
             token = config[api_endpoint]['token']
             return api_endpoint, token
     except:
-        print 'Please login first'
-        sys.exit(1)
+        raise AlaudaInputError('Please login first')
 
 
 def delete_token():
     try:
         os.remove(settings.ALAUDACFG)
     except:
-        print 'Already logged out'
+        print '[alauda] Already logged out'
 
 
 def build_headers(token):

@@ -1,6 +1,4 @@
-import sys
-
-from exceptions import AlaudaServerError
+from exceptions import AlaudaInputError, AlaudaServerError
 
 
 def parse_image_name_tag(image):
@@ -10,8 +8,7 @@ def parse_image_name_tag(image):
     elif len(result) == 2:
         return result[0], result[1]
     else:
-        print 'Invalid image name'
-        sys.exit(1)
+        raise AlaudaInputError('Invalid image name')
 
 
 def parse_target_state(start):
@@ -25,14 +22,12 @@ def parse_instance_ports(port_list):
     def _parse_instance_port(_port):
         result = _port.split('/')
         if len(result) > 2:
-            print 'Invalid port description. (Example of valid description: 80/tcp)'
-            sys.exit(1)
+            raise AlaudaInputError('Invalid port description. (Example of valid description: 80/tcp)')
 
         try:
             port = int(result[0])
         except:
-            print 'Invalid port description. (Example of valid description: 80/tcp)'
-            sys.exit(1)
+            raise AlaudaInputError('Invalid port description. (Example of valid description: 80/tcp)')
 
         if len(result) == 2:
             protocol = result[1]
@@ -40,11 +35,9 @@ def parse_instance_ports(port_list):
             protocol = 'tcp'
 
         if protocol not in ['tcp']:
-            print 'Invalid port protocal. Supported protocols: {tcp}'
-            sys.exit(1)
+            raise AlaudaInputError('Invalid port protocal. Supported protocols: {tcp}')
         if port < 0 or port > 65535:
-            print 'Invalid port number'
-            sys.exit(1)
+            raise AlaudaInputError('Invalid port number')
 
         return port, protocol
 
@@ -59,8 +52,7 @@ def parse_instance_ports(port_list):
 def parse_envvars(envvar_list):
     def _parse_envvar_dict(_envvar):
         if len(_envvar) != 1:
-            print 'Invalid environment variable. e.g. FOO=foo'
-            sys.exit(1)
+            raise AlaudaInputError('Invalid environment variable. (Example of valid description: FOO=foo)')
         key = _envvar.keys()[0]
         value = _envvar[key]
         if value is None:
@@ -76,8 +68,7 @@ def parse_envvars(envvar_list):
         else:
             pos = _envvar.find(':')
             if pos == -1:
-                print 'Invalid environment variable. e.g. FOO=foo'
-                sys.exit(1)
+                raise AlaudaInputError('Invalid environment variable. (Example of valid description: FOO=foo)')
             key = _envvar[:pos]
             value = _envvar[pos+1:]
             return key, value
@@ -88,8 +79,7 @@ def parse_envvars(envvar_list):
         elif isinstance(_envvar, str):
             return _parse_envvar_str(_envvar)
         else:
-            print 'Invalid environment variable. e.g. FOO=foo'
-            sys.exit(1)
+            raise AlaudaInputError('Invalid environment variable. (Example of valid description: FOO=foo)')
 
     parsed_envvars = {}
     if envvar_list is not None:
@@ -102,19 +92,16 @@ def parse_envvars(envvar_list):
 def parse_volumes(volume_list):
     def _parse_volume(_volume):
         if not isinstance(_volume, str):
-            print 'Invalid volume description. (Example of valid description: /var/lib/data1:10)'
-            sys.exit(1)
+            raise AlaudaInputError('Invalid volume description. (Example of valid description: /var/lib/data1:10)')
         result = _volume.split(':')
         if len(result) != 2:
-            print 'Invalid volume description. (Example of valid description: /var/lib/data1:10)'
-            sys.exit(1)
+            raise AlaudaInputError('Invalid volume description. (Example of valid description: /var/lib/data1:10)')
 
         path = result[0]
         try:
             size = int(result[1])
         except:
-            print 'Invalid volume description. (Example of valid description: /var/lib/data1:10)'
-            sys.exit(1)
+            raise AlaudaInputError('Invalid volume description. (Example of valid description: /var/lib/data1:10)')
         return path, size
 
     parsed_volumes = []
@@ -128,12 +115,10 @@ def parse_volumes(volume_list):
 def parse_links(link_list):
     def _parse_link(_link):
         if not isinstance(_link, str):
-            print 'Invalid link description. (Example of valid description: mysql:db)'
-            sys.exit(1)
+            raise AlaudaInputError('Invalid link description. (Example of valid description: mysql:db)')
         result = _link.split(':')
         if len(result) > 2:
-            print 'Invalid link description. (Example of valid description: mysql:db)'
-            sys.exit(1)
+            raise AlaudaInputError('Invalid link description. (Example of valid description: mysql:db)')
         if len(result) == 1 or len(result[1]) == 0:
             return result[0], result[0]
         return result[0], result[1]
@@ -150,15 +135,13 @@ def parse_scale(name_number_list):
     def _parse_scale(_name_number):
         result = _name_number.split('=')
         if len(result) != 2:
-            print 'Invalid scale description. (Example of valid description: mysql=3)'
-            sys.exit(1)
+            raise AlaudaInputError('Invalid scale description. (Example of valid description: mysql=3)')
 
         name = result[0]
         try:
             number = int(result[1])
         except:
-            print 'Invalid scale description. (Example of valid description: mysql=3)'
-            sys.exit(1)
+            raise AlaudaInputError('Invalid scale description. (Example of valid description: mysql=3)')
         return name, number
 
     scale_dict = {}

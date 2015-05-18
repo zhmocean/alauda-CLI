@@ -1,9 +1,9 @@
-import sys
 import yaml
 
 import util
 from project import Project
 from service import Service
+from exceptions import AlaudaInputError
 
 
 def load_project(filepath):
@@ -29,8 +29,7 @@ def sort_services(compose_data):
                 sorted_list.append(key)
                 del src_dict[key]
             elif not set(links).issubset(set(src_keys)):
-                print "{} has invalid link name".format(links)
-                sys.exit(1)
+                raise AlaudaInputError("{} has invalid link name".format(links))
             elif set(links).issubset(set(sorted_list)):
                 sorted_list.append(key)
                 del src_dict[key]
@@ -91,5 +90,4 @@ def _load_yaml(filepath):
         with open(filepath, 'r') as f:
             return yaml.safe_load(f)
     except:
-        print 'Missing or invalid compose yaml file. (Do you have docker-compose.yml in the current directory?)'
-        sys.exit(1)
+        raise AlaudaInputError('Missing or invalid compose yaml file. (Do you have docker-compose.yml in the current directory?)')

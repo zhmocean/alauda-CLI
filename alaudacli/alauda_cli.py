@@ -3,15 +3,14 @@ import copy
 
 import cmd_parser
 import cmd_processor
-from exceptions import AlaudaServerError
+from exceptions import AlaudaInputError, AlaudaServerError
 
 
 def patch_argv(argv):
     args = copy.copy(argv)
 
     if not args:
-        print 'Arguments cannot be empty.'
-        sys.exit(1)
+        raise AlaudaInputError('Arguments cannot be empty')
 
     if len(args) == 1:
         args.append('-h')
@@ -31,6 +30,9 @@ def main():
         argv = patch_argv(sys.argv)
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
+    except AlaudaInputError as ex:
+        print ex
+        sys.exit(1)
     except AlaudaServerError as ex:
         print ex
         sys.exit(1)
