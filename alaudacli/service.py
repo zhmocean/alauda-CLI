@@ -4,7 +4,7 @@ import time
 import auth
 import util
 
-MAX_RETRY_NUM = 5
+MAX_RETRY_NUM = 10
 
 
 class Service(object):
@@ -45,12 +45,12 @@ class Service(object):
                     linked_service_addr = linked_service_envvars['__DEFAULT_DOMAIN_NAME__']
                     key = '{0}_PORT'.format(alias).upper()
                     for port in linked_service_ports:
-                        #                         print "{0} port: {1}".format(service_name, port)
-                        service_port = port.get('service_port', None)
+                        service_port = port.get('service_port')
                         if service_port is None:
                             retry_num = retry_num + 1
-                            time.sleep(2)
+                            time.sleep(1)
                             break
+                        retry_num = MAX_RETRY_NUM + 1
                         url = '{0}://{1}:{2}'.format(port['protocol'], linked_service_addr, service_port)
                         if key not in instance_envvars.keys():
                             instance_envvars[key] = url
@@ -59,9 +59,8 @@ class Service(object):
                         instance_envvars[pattern + '_ADDR'] = linked_service_addr
                         instance_envvars[pattern + '_PORT'] = str(service_port)
                         instance_envvars[pattern + '_PROTO'] = port['protocol']
-                        retry_num = MAX_RETRY_NUM + 1
                 if retry_num == MAX_RETRY_NUM:
-                    raise KeyError('[error]: get {} service_port fail!'.format(service_name))
+                    raise KeyError('[error]: Timed out waiting for {} to acquire service port'.format(service_name))
         return linked_to
 
     def _create_remote(self, target_state):
