@@ -102,10 +102,9 @@ def service_stop(name):
 def service_rm(name):
     try:
         Service.remove(name)
-        print '[service_rm]: OK'
-    except ValueError as ex:
-        print ex
-        sys.exit(1)
+    except ValueError:
+        pass
+    print '[service_rm]: OK'
 
 
 def service_ps():
@@ -167,10 +166,9 @@ def compose_rm(file):
     try:
         project = compose.load_project(file)
         project.rm()
-        print '[compose_rm]: OK'
-    except ValueError as ex:
-        print ex
-        sys.exit(1)
+    except ValueError:
+        pass
+    print '[compose_rm]: OK'
 
 
 def compose_scale(descriptor, file):
