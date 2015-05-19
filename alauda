@@ -1,0 +1,98 @@
+#
+#  Completion for alauda:
+#
+#  alauda active [argument]
+#
+_alauda()
+{
+    local cur prev opts
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    opts="login -v -h logout service compose"
+
+    case "${prev}" in
+        login)
+            local login_args="-u -p -c -e"
+            COMPREPLY=( $(compgen -W "${login_args}" -- ${cur}) )
+            return 0
+            ;;
+       logout)
+#            COMPREPLY=( $(compgen -W "${running}" -- ${cur}) )
+            return 0
+            ;;
+       -v)
+#            COMPREPLY=( $(compgen -W "${running}" -- ${cur}) )
+            return 0
+            ;;
+       -h)
+#            COMPREPLY=( $(compgen -W "${running}" -- ${cur}) )
+            return 0
+            ;;
+       service)
+            local service_args="create run update inspect start stop rm ps snapshot"
+            COMPREPLY=( $(compgen -W "${service_args}" -- ${cur}) )
+            return 0
+            ;;
+       create)
+            local create_args="{name} {image} -t -s -r -e -l -p -ag -v -n -a -f"
+            COMPREPLY=( $(compgen -W "${create_args}" -- ${cur}) )
+            return 0
+            ;;
+       run)
+            local run_args="{name} {image} -t -s -r -e -l -p -ag -v -n -a -f"
+            COMPREPLY=( $(compgen -W "${run_args}" -- ${cur}) )
+            return 0
+            ;;
+       update)
+            local update_args="{name} -t -n -a -f"
+            COMPREPLY=( $(compgen -W "${update_args}" -- ${cur}) )
+            return 0
+            ;;
+       inspect)
+            local inspect_args="{name} -n"
+            COMPREPLY=( $(compgen -W "${inspect_args}" -- ${cur}) )
+            return 0
+            ;;
+       start)
+            local start_args="{name} -n"
+            COMPREPLY=( $(compgen -W "${start_args}" -- ${cur}) )
+            return 0
+            ;;
+       stop)
+            local stop_args="{name} -n"
+            COMPREPLY=( $(compgen -W "${stop_args}" -- ${cur}) )
+            return 0
+            ;;
+       rm)
+            local rm_args="{name} -n"
+            COMPREPLY=( $(compgen -W "${rm_args}" -- ${cur}) )
+            return 0
+            ;;
+       ps)
+            local ps_args="{name} -n"
+            COMPREPLY=( $(compgen -W "${ps_args}" -- ${cur}) )
+            return 0
+            ;;
+       compose)
+            local compose_args="up ps start stop restart rm scale"
+            COMPREPLY=( $(compgen -W "${compose_args}" -- ${cur}) )
+            return 0
+            ;;
+       scale)
+            local scale_args="{descriptor} -f"
+            COMPREPLY=( $(compgen -W "${scale_args}" -- ${cur}) )
+            return 0
+            ;;
+       snapshot)
+            local snapshot_args="create ps inspect rm -n"
+            COMPREPLY=( $(compgen -W "${snapshot_args}" -- ${cur}) )
+            return 0
+            ;;
+        *)
+        ;;
+    esac
+
+    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+}
+complete -F _alauda alauda
