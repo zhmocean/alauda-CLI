@@ -70,60 +70,64 @@ class ProcessCmdTest(unittest.TestCase):
     def test_process_service_create(self, mock_commands):
         argv = ['service', 'create', 'hello', 'index.alauda.io/alauda/hello-world:latest',
                 '-t', '2', '-s', 'XS', '-r', '/run.sh',
-                '-e', 'FOO=bar', '-p', '5000/tcp', '-ag', 'ag1', '-v', '/var/lib/data1:10', '-l', 'myql:db']
+                '-e', 'FOO=bar', '-p', '5000/tcp', '-ag', 'ag1', '-v', '/var/lib/data1:10', '-l', 'myql:db',
+                '-a', 'MANUAL', '-f', './auto-scaling.cfg', '-n', '']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
         mock_commands.service_create.assert_called_with(image='index.alauda.io/alauda/hello-world:latest',
                                                         name='hello', start=False, target_num_instances=2, instance_size='XS',
                                                         run_command='/run.sh', env=['FOO=bar'], ports=['5000/tcp'], allocation_group='ag1',
-                                                        volumes=['/var/lib/data1:10'], links=['myql:db'])
+                                                        volumes=['/var/lib/data1:10'], links=['myql:db'], scaling_info=('MANUAL', './auto-scaling.cfg'),
+                                                        namespace='')
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_service_run(self, mock_commands):
         argv = ['service', 'run', 'hello', 'index.alauda.io/alauda/hello-world:latest',
                 '-t', '2', '-s', 'XS', '-r', '/run.sh',
-                '-e', 'FOO=bar', '-p', '5000/tcp', '-ag', 'ag1', '-v', '/var/lib/data1:10', '-l', 'db']
+                '-e', 'FOO=bar', '-p', '5000/tcp', '-ag', 'ag1', '-v', '/var/lib/data1:10', '-l', 'db',
+                '-a', 'MANUAL', '-f', './auto-scaling.cfg', '-n', '']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
         mock_commands.service_create.assert_called_with(image='index.alauda.io/alauda/hello-world:latest',
                                                         name='hello', start=True, target_num_instances=2, instance_size='XS',
                                                         run_command='/run.sh', env=['FOO=bar'], ports=['5000/tcp'], allocation_group='ag1',
-                                                        volumes=['/var/lib/data1:10'], links=['db'])
+                                                        volumes=['/var/lib/data1:10'], links=['db'], scaling_info=('MANUAL', './auto-scaling.cfg'),
+                                                        namespace='')
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_service_update(self, mock_commands):
         argv = ['service', 'update', 'hello', '-t', '2']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.service_update.assert_called_with('hello', target_num_instances=2)
+        mock_commands.service_update.assert_called_with('hello', target_num_instances=2, namespace='', scaling_info=('DEFAULT', './auto-scaling.cfg'))
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_service_inspect(self, mock_commands):
         argv = ['service', 'inspect', 'hello']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.service_inspect.assert_called_with('hello')
+        mock_commands.service_inspect.assert_called_with('hello', namespace='')
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_service_start(self, mock_commands):
         argv = ['service', 'start', 'hello']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.service_start.assert_called_with('hello')
+        mock_commands.service_start.assert_called_with('hello', namespace='')
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_service_stop(self, mock_commands):
         argv = ['service', 'stop', 'hello']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.service_stop.assert_called_with('hello')
+        mock_commands.service_stop.assert_called_with('hello', namespace='')
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_service_rm(self, mock_commands):
         argv = ['service', 'rm', 'hello']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.service_rm.assert_called_with('hello')
+        mock_commands.service_rm.assert_called_with('hello', namespace='')
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_service_ps(self, mock_commands):

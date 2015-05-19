@@ -1,4 +1,5 @@
 from exceptions import AlaudaInputError, AlaudaServerError
+import json
 
 
 def parse_image_name_tag(image):
@@ -149,6 +150,26 @@ def parse_scale(name_number_list):
         name, number = _parse_scale(name_number)
         scale_dict[name] = number
     return scale_dict
+
+
+def parse_autoscale_info(info):
+    if info is None:
+        return 'MANUAL', {}
+    mode = info[0]
+    cfg_file = info[1]
+    if mode == 'AUTO':
+        try:
+            fp = file(cfg_file)
+        except:
+            raise AlaudaInputError('can not open auto-scaling config file-> {}.'.format(cfg_file))
+        try:
+            cfg_json = json.load(fp)
+            fp.close()
+        except:
+            fp.close()
+            raise AlaudaInputError('Parse {} fail! The format refer to ./auto-scaling.example'.format(cfg_file))
+        return 'AUTO', json.dumps(cfg_json)
+    return mode, {}
 
 
 def failed(status_code):

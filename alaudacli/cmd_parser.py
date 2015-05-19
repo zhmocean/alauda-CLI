@@ -49,6 +49,8 @@ def _add_service_parser(subparsers):
     create_parser.add_argument('-ag', '--allocation-group', help='Allocation group', default='')
     create_parser.add_argument('-v', '--volume', help='Volumes, e.g. /var/lib/mysql:10', action='append')
     create_parser.add_argument('-n', '--namespace', help='Namespace which service belongs to', default='')
+    create_parser.add_argument('-a', '--autoscale', help='Auto scale up/down your services', choices=['AUTO', 'MANUAL'], default='MANUAL')
+    create_parser.add_argument('-f', '--file', help='Auto-scaling config file name', default='./auto-scaling.cfg')
 
     run_parser = service_subparsers.add_parser('run', help='Create and start a new service', description='Create and start a new service')
     run_parser.add_argument('name', help='Service name')
@@ -62,11 +64,15 @@ def _add_service_parser(subparsers):
     run_parser.add_argument('-ag', '--allocation-group', help='Allocation group', default='')
     run_parser.add_argument('-v', '--volume', help='volumes.e.g. /var/lib/mysql:10', action='append')
     run_parser.add_argument('-n', '--namespace', help='Namespace which service belongs to', default='')
+    run_parser.add_argument('-a', '--autoscale', help='Auto scale up/down your services', choices=['AUTO', 'MANUAL'], default='MANUAL')
+    run_parser.add_argument('-f', '--file', help='Auto-scaling config file name', default='./auto-scaling.cfg')
 
     update_parser = service_subparsers.add_parser('update', help='Update a service', description='Update a service')
     update_parser.add_argument('name', help='Name of the service to update')
     update_parser.add_argument('-t', '--target-num-instances', help='Target number of instances for the service', type=int)
     update_parser.add_argument('-n', '--namespace', help='Namespace which service belongs to', default='')
+    update_parser.add_argument('-a', '--autoscale', help='Auto scale up/down your services', choices=['AUTO', 'MANUAL', 'DEFAULT'], default='DEFAULT')
+    update_parser.add_argument('-f', '--file', help='Auto-scaling config file name', default='./auto-scaling.cfg')
 
     inspect_parser = service_subparsers.add_parser('inspect', help='Get details of a service', description='Get details of a service')
     inspect_parser.add_argument('name', help='Name of the service to retrieve')

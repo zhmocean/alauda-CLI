@@ -31,12 +31,13 @@ def logout():
     print '[alauda] Bye'
 
 
-def service_create(image, name, start, target_num_instances, instance_size, run_command, env, ports, allocation_group, volumes, links, namespace):
+def service_create(image, name, start, target_num_instances, instance_size, run_command, env, ports, allocation_group, volumes, links, namespace, scaling_info):
     image_name, image_tag = util.parse_image_name_tag(image)
     instance_ports = util.parse_instance_ports(ports)
     instance_envvars = util.parse_envvars(env)
     links = util.parse_links(links)
     volumes = util.parse_volumes(volumes)
+    scaling_mode, scaling_cfg = util.parse_autoscale_info(scaling_info)
     service = Service(name=name,
                       image_name=image_name,
                       image_tag=image_tag,
@@ -48,16 +49,21 @@ def service_create(image, name, start, target_num_instances, instance_size, run_
                       allocation_group=allocation_group,
                       volumes=volumes,
                       links=links,
-                      namespace=namespace)
+                      namespace=namespace,
+                      scaling_mode=scaling_mode,
+                      autoscaling_config=scaling_cfg)
     if start:
         service.run()
     else:
         service.create()
 
 
-def service_update(name, target_num_instances, namespace):
+def service_update(name, target_num_instances, namespace, scaling_info):
+    scaling_mode, scaling_cfg = util.parse_autoscale_info(scaling_info)
     service = Service.fetch(name, namespace)
-    service.update(target_num_instances)
+    if target_num_instances is None:
+        target_num_instances = service.target_num_instances
+    service.update(target_num_instances, scaling_mode, scaling_cfg)
 
 
 def service_inspect(name, namespace):

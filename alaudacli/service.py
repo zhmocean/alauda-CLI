@@ -12,7 +12,8 @@ MAX_RETRY_NUM = 10
 class Service(object):
 
     def __init__(self, name, image_name, image_tag, target_num_instances=1, instance_size='XS', run_command='',
-                 instance_ports=[], instance_envvars={}, allocation_group='', volumes=[], links=[], details='', namespace=None):
+                 instance_ports=[], instance_envvars={}, allocation_group='', volumes=[], links=[], details='', namespace=None,
+                 scaling_mode='MANUAL', autoscaling_config={}):
         self.name = name
         self.image_name = image_name
         self.image_tag = image_tag
@@ -29,6 +30,8 @@ class Service(object):
         self.api_endpoint, self.token, self.username = auth.load_token()
         self.headers = auth.build_headers(self.token)
         self.namespace = namespace or self.username
+        self.scaling_mode = scaling_mode
+        self.autoscaling_config = autoscaling_config
 
     def _update_envvars_with_links(self, instance_envvars, links, namespace=None):
         linked_to = {}
@@ -82,7 +85,9 @@ class Service(object):
             "instance_ports": self.instance_ports,
             "allocation_group": self.allocation_group,
             'linked_to_apps': linked_to,
-            "volumes": self.volumes
+            "volumes": self.volumes,
+            'scaling_mode': self.scaling_mode,
+            'autoscaling_config': self.autoscaling_config
         }
         r = requests.post(url, headers=self.headers, data=json.dumps(payload))
         util.check_response(r)
@@ -167,14 +172,25 @@ class Service(object):
         r = requests.put(url, headers=self.headers)
         util.check_response(r)
 
-    def update(self, target_num_instances):
-        print '[alauda] Scaling service: {0} -> {1}'.format(self.name, target_num_instances)
+    def update(self, target_num_instances, scaling_mode, scaling_cfg):
         self.target_num_instances = target_num_instances
         url = self.api_endpoint + 'services/{}/'.format(self.namespace) + self.name
-        payload = {
-            "app_name": self.name,
-            "target_num_instances": self.target_num_instances
-        }
+        payload = {}
+        if scaling_mode == 'AUTO':
+            print '[alauda] Update {0} scaling mode to AUTO'.format(self.name)
+            payload['scaling_mode'] = scaling_mode
+            payload['autoscaling_config'] = scaling_cfg
+            payload['app_name'] = self.name
+        else:
+            if scaling_mode == 'DEFAULT':
+                print '[alauda] Scaling service: {0} -> {1}'.format(self.name, target_num_instances)
+            else:
+                print '[alauda] Update {0} scaling mode to MANUAL'.format(self.name)
+            payload = {
+                "app_name": self.name,
+                "target_num_instances": self.target_num_instances,
+                'scaling_mode': 'MANUAL'
+            }
         r = requests.put(url, headers=self.headers, data=json.dumps(payload))
         util.check_response(r)
 
