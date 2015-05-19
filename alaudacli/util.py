@@ -63,14 +63,14 @@ def parse_envvars(envvar_list):
         pos = _envvar.find('=')
         if pos != -1:
             key = _envvar[:pos]
-            value = _envvar[pos+1:]
+            value = _envvar[pos + 1:]
             return key, value
         else:
             pos = _envvar.find(':')
             if pos == -1:
                 raise AlaudaInputError('Invalid environment variable. (Example of valid description: FOO=foo)')
             key = _envvar[:pos]
-            value = _envvar[pos+1:]
+            value = _envvar[pos + 1:]
             return key, value
 
     def _parse_envvar(_envvar):
