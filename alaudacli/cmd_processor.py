@@ -30,6 +30,15 @@ def process_cmds(args):
             commands.service_rm(args.name, namespace=args.namespace)
         elif args.subcmd == 'ps':
             commands.service_ps(namespace=args.namespace)
+        elif args.subcmd == 'snapshot':
+            if args.sptcmd == 'create':
+                commands.snapshot_create(args.service_name, args.mounted_dir, args.snapshot_name, args.namespace)
+            elif args.sptcmd == 'ps':
+                commands.snapshot_ps(args.namespace)
+            elif args.sptcmd == 'inspect':
+                commands.snapshot_inspect(args.id, args.namespace)
+            elif args.sptcmd == 'rm':
+                commands.snapshot_rm(args.id, args.namespace)
     elif args.cmd == 'compose':
         if args.subcmd == 'up':
             commands.compose_up(args.file)

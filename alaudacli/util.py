@@ -210,3 +210,33 @@ def print_ps_output(service_list):
         print '{0}    {1}    {2}    {3}    {4}'.format(service.name.ljust(max_name_len), service.get_run_command().ljust(max_command_len),
                                                        service.get_state().ljust(max_state_len), service.get_ports().ljust(max_ports_len),
                                                        str(service.target_num_instances).ljust(max_instance_count_len))
+
+
+def print_snapshot_ps_output(snapshot_list):
+    max_name_len = len('Name')
+    max_id_len = len('Id')
+    max_state_len = len('State')
+    max_time_len = len('Created time')
+    max_size_len = len('Size')
+
+    for snapshot in snapshot_list:
+        if max_name_len < len(snapshot['name']):
+            max_name_len = len(snapshot['name'])
+        if max_id_len < len(snapshot['backup_id']):
+            max_id_len = len(snapshot['backup_id'])
+        if max_state_len < len(snapshot['status']):
+            max_state_len = len(snapshot['status'])
+        if max_time_len < len(snapshot['created_datetime']):
+            max_time_len = len(snapshot['created_datetime'])
+        size_byte = snapshot.get('size_byte', ' ')
+        if max_size_len < len(str(size_byte)):
+            max_size_len = len(str(size_byte))
+
+    print '{0}    {1}    {2}    {3}    {4}'.format('Id'.center(max_id_len), 'Name'.center(max_name_len), 'State'.center(max_state_len),
+                                                   'Size'.center(max_size_len), 'Created time'.center(max_time_len))
+    print '{0}'.format('-' * (max_id_len + max_name_len + max_state_len + max_time_len + max_size_len + 4 * 4))
+
+    for snapshot in snapshot_list:
+        print '{0}    {1}    {2}    {3}    {4}'.format(str(snapshot['backup_id']).ljust(max_id_len), str(snapshot['name']).ljust(max_name_len),
+                                                       str(snapshot['status']).ljust(max_state_len), str(snapshot.get('size_byte', ' ')).ljust(max_size_len),
+                                                       str(snapshot['created_datetime']).ljust(max_time_len))

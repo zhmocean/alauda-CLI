@@ -106,7 +106,7 @@ class Service(object):
                       target_num_instances=data['target_num_instances'],
                       instance_size=data['instance_size'],
                       details=r.text,
-                      namespace=namespace)
+                      namespace=data['namespace'])
         return service
 
     @classmethod
@@ -193,6 +193,58 @@ class Service(object):
             }
         r = requests.put(url, headers=self.headers, data=json.dumps(payload))
         util.check_response(r)
+
+    def create_snapshot(self, mounted_dir, snapshot_name):
+        print '[alauda] Creating snapshot "{}"'.format(snapshot_name)
+        data = json.loads(self.details)
+        uuid = data['unique_name']
+        url = self.api_endpoint + 'backups/{}/'.format(self.namespace)
+        payload = {
+            'app_id': uuid,
+            'name': snapshot_name,
+            'app_volume_dir': mounted_dir
+        }
+        r = requests.post(url, headers=self.headers, data=json.dumps(payload))
+        util.check_response(r)
+
+    @classmethod
+    def list_snapshots(cls, namespace=None):
+        api_endpoint, token, username = auth.load_token()
+        url = api_endpoint + 'backups/{}/'.format(namespace or username)
+        headers = auth.build_headers(token)
+        r = requests.get(url, headers=headers)
+        util.check_response(r)
+        snapshot_list = json.loads(r.text)
+        return snapshot_list
+
+    @classmethod
+    def inspect_snapshot(cls, id, namespace=None):
+        api_endpoint, token, username = auth.load_token()
+        url = api_endpoint + 'backups/{0}/{1}/'.format(namespace or username, id)
+        headers = auth.build_headers(token)
+        r = requests.get(url, headers=headers)
+        try:
+            util.check_response(r)
+            return r.text
+        except AlaudaServerError as ex:
+            if ex.status_code == 400:
+                print '[alauda] snapshot "{}" does not exist'.format(id)
+            else:
+                raise ex
+
+    @classmethod
+    def remove_snapshot(cls, id, namespace=None):
+        api_endpoint, token, username = auth.load_token()
+        url = api_endpoint + 'backups/{0}/{1}/'.format(namespace or username, id)
+        headers = auth.build_headers(token)
+        r = requests.delete(url, headers=headers)
+        try:
+            util.check_response(r)
+        except AlaudaServerError as ex:
+            if ex.status_code == 400:
+                print '[alauda] snapshot "{}" does not exist'.format(id)
+            else:
+                raise ex
 
     def get_run_command(self):
         data = json.loads(self.details)

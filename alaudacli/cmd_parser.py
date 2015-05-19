@@ -93,6 +93,26 @@ def _add_service_parser(subparsers):
     ps_parser = service_subparsers.add_parser('ps', help='List services', description='List services')
     ps_parser.add_argument('-n', '--namespace', help='Namespace which service belongs to', default=None)
 
+    snapshot_parser = service_subparsers.add_parser('snapshot', help='Service snapshot operations', description='Service snapshot operations')
+    snapshot_subparsers = snapshot_parser.add_subparsers(title='Alauda service snapshot commands', dest='sptcmd')
+
+    spt_create_parser = snapshot_subparsers.add_parser('create', help='Create a new snapshot', description='Create a new snapshot')
+    spt_create_parser.add_argument('service_name', help='Name of the service to create snapshot')
+    spt_create_parser.add_argument('mounted_dir', help='directory of the service mounted')
+    spt_create_parser.add_argument('snapshot_name', help='snapshot name')
+    spt_create_parser.add_argument('-n', '--namespace', help='Namespace which service belongs to', default=None)
+
+    spt_ps_parser = snapshot_subparsers.add_parser('ps', help='list snapshots', description='list snapshots')
+    spt_ps_parser.add_argument('-n', '--namespace', help='Namespace which service belongs to', default=None)
+
+    spt_inspect_parser = snapshot_subparsers.add_parser('inspect', help='Get details of a snapshot', description='Get details of a snapshot')
+    spt_inspect_parser.add_argument('id', help='uuid of the snapshot')
+    spt_inspect_parser.add_argument('-n', '--namespace', help='Namespace which service belongs to', default=None)
+
+    spt_rm_parser = snapshot_subparsers.add_parser('rm', help='Remove a snapshot', description='Remove a snapshot')
+    spt_rm_parser.add_argument('id', help='uuid of the snapshot')
+    spt_rm_parser.add_argument('-n', '--namespace', help='Namespace which service belongs to', default=None)
+
 
 def _add_compose_parser(subparsers):
     compose_parser = subparsers.add_parser('compose', help='Compose multi-container app', description='Compose multi-container app')

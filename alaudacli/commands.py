@@ -125,3 +125,22 @@ def compose_scale(descriptor, file):
     project = compose.load_project(file)
     scale_dict = util.parse_scale(descriptor)
     project.scale(scale_dict)
+
+
+def snapshot_create(service_name, mounted_dir, snapshot_name, namespace):
+    service = Service.fetch(service_name, namespace)
+    service.create_snapshot(mounted_dir, snapshot_name)
+
+
+def snapshot_ps(namespace):
+    snapshot_list = Service.list_snapshots(namespace)
+    util.print_snapshot_ps_output(snapshot_list)
+
+
+def snapshot_inspect(id, namespace):
+    result = Service.inspect_snapshot(id, namespace)
+    print '[alauda] ' + json.dumps(json.loads(result), indent=2)
+
+
+def snapshot_rm(id, namespace):
+    Service.remove_snapshot(id, namespace)
