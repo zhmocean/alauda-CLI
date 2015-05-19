@@ -31,7 +31,7 @@ def logout():
     print '[alauda] Bye'
 
 
-def service_create(image, name, start, target_num_instances, instance_size, run_command, env, ports, allocation_group, volumes, links):
+def service_create(image, name, start, target_num_instances, instance_size, run_command, env, ports, allocation_group, volumes, links, namespace):
     image_name, image_tag = util.parse_image_name_tag(image)
     instance_ports = util.parse_instance_ports(ports)
     instance_envvars = util.parse_envvars(env)
@@ -47,40 +47,41 @@ def service_create(image, name, start, target_num_instances, instance_size, run_
                       instance_envvars=instance_envvars,
                       allocation_group=allocation_group,
                       volumes=volumes,
-                      links=links)
+                      links=links,
+                      namespace=namespace)
     if start:
         service.run()
     else:
         service.create()
 
 
-def service_update(name, target_num_instances):
-    service = Service.fetch(name)
+def service_update(name, target_num_instances, namespace):
+    service = Service.fetch(name, namespace)
     service.update(target_num_instances)
 
 
-def service_inspect(name):
-    service = Service.fetch(name)
+def service_inspect(name, namespace):
+    service = Service.fetch(name, namespace)
     result = service.inspect()
     print '[alauda] ' + json.dumps(json.loads(result), indent=2)
 
 
-def service_start(name):
-    service = Service.fetch(name)
+def service_start(name, namespace):
+    service = Service.fetch(name, namespace)
     service.start()
 
 
-def service_stop(name):
-    service = Service.fetch(name)
+def service_stop(name, namespace):
+    service = Service.fetch(name, namespace)
     service.stop()
 
 
-def service_rm(name):
-    Service.remove(name)
+def service_rm(name, namespace):
+    Service.remove(name, namespace)
 
 
-def service_ps():
-    service_list = Service.list()
+def service_ps(namespace):
+    service_list = Service.list(namespace)
     util.print_ps_output(service_list)
 
 

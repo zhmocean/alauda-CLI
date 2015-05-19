@@ -48,6 +48,7 @@ def _add_service_parser(subparsers):
     create_parser.add_argument('-p', '--expose', help='Ports to expose, e.g. 5000/tcp', action='append')
     create_parser.add_argument('-ag', '--allocation-group', help='Allocation group', default='')
     create_parser.add_argument('-v', '--volume', help='Volumes, e.g. /var/lib/mysql:10', action='append')
+    create_parser.add_argument('-n', '--namespace', help='Namespace which service belongs to', default='')
 
     run_parser = service_subparsers.add_parser('run', help='Create and start a new service', description='Create and start a new service')
     run_parser.add_argument('name', help='Service name')
@@ -60,24 +61,31 @@ def _add_service_parser(subparsers):
     run_parser.add_argument('-p', '--expose', help='Ports to expose, e.g. 5000/tcp', action='append')
     run_parser.add_argument('-ag', '--allocation-group', help='Allocation group', default='')
     run_parser.add_argument('-v', '--volume', help='volumes.e.g. /var/lib/mysql:10', action='append')
+    run_parser.add_argument('-n', '--namespace', help='Namespace which service belongs to', default='')
 
     update_parser = service_subparsers.add_parser('update', help='Update a service', description='Update a service')
     update_parser.add_argument('name', help='Name of the service to update')
     update_parser.add_argument('-t', '--target-num-instances', help='Target number of instances for the service', type=int)
+    update_parser.add_argument('-n', '--namespace', help='Namespace which service belongs to', default='')
 
     inspect_parser = service_subparsers.add_parser('inspect', help='Get details of a service', description='Get details of a service')
     inspect_parser.add_argument('name', help='Name of the service to retrieve')
+    inspect_parser.add_argument('-n', '--namespace', help='Namespace which service belongs to', default='')
 
     start_parser = service_subparsers.add_parser('start', help='Start a service', description='Start a service')
     start_parser.add_argument('name', help='Name of the service to start')
+    start_parser.add_argument('-n', '--namespace', help='Namespace which service belongs to', default='')
 
     stop_parser = service_subparsers.add_parser('stop', help='Stop a service', description='Stop a service')
     stop_parser.add_argument('name', help='Name of the service to stop')
+    stop_parser.add_argument('-n', '--namespace', help='Namespace which service belongs to', default='')
 
     rm_parser = service_subparsers.add_parser('rm', help='Remove a service', description='Remove a service')
     rm_parser.add_argument('name', help='Name of the service to remove')
+    rm_parser.add_argument('-n', '--namespace', help='Namespace which service belongs to', default='')
 
-    service_subparsers.add_parser('ps', help='List services', description='List services')
+    ps_parser = service_subparsers.add_parser('ps', help='List services', description='List services')
+    ps_parser.add_argument('-n', '--namespace', help='Namespace which service belongs to', default=None)
 
 
 def _add_compose_parser(subparsers):

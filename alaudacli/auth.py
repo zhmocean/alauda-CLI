@@ -9,12 +9,14 @@ def get_api_endpoint(cloud):
     return settings.API_ENDPOINTS[cloud]
 
 
-def save_token(api_endpoint, token):
+def save_token(api_endpoint, token, username):
     auth = {
+        'endpoint': api_endpoint,
         "token": token
     }
     config = {
-        api_endpoint: auth
+        'auth': auth,
+        'username': username
     }
     with open(settings.ALAUDACFG, 'w') as f:
         json.dump(config, f, indent=2)
@@ -24,9 +26,10 @@ def load_token():
     try:
         with open(settings.ALAUDACFG, 'r') as f:
             config = json.load(f)
-            api_endpoint = config.keys()[0]
-            token = config[api_endpoint]['token']
-            return api_endpoint, token
+            api_endpoint = config['auth']['endpoint']
+            token = config['auth']['token']
+            username = config['username']
+            return api_endpoint, token, username
     except:
         raise AlaudaInputError('Please login first')
 

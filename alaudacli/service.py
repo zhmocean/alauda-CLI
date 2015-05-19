@@ -12,7 +12,7 @@ MAX_RETRY_NUM = 10
 class Service(object):
 
     def __init__(self, name, image_name, image_tag, target_num_instances=1, instance_size='XS', run_command='',
-                 instance_ports=[], instance_envvars={}, allocation_group='', volumes=[], links=[], details=''):
+                 instance_ports=[], instance_envvars={}, allocation_group='', volumes=[], links=[], details='', namespace=None):
         self.name = name
         self.image_name = image_name
         self.image_tag = image_tag
@@ -26,8 +26,9 @@ class Service(object):
         self.links = links
         self.details = details
 
-        self.api_endpoint, self.token = auth.load_token()
+        self.api_endpoint, self.token, self.username = auth.load_token()
         self.headers = auth.build_headers(self.token)
+        self.namespace = namespace or self.username
 
     def _update_envvars_with_links(self, instance_envvars, links):
         linked_to = {}
@@ -67,7 +68,7 @@ class Service(object):
 
     def _create_remote(self, target_state):
         linked_to = self._update_envvars_with_links(self.instance_envvars, self.links)
-        url = self.api_endpoint + 'apps/'
+        url = self.api_endpoint + 'services/{}/'.format(self.namespace)
         payload = {
             "app_name": self.name,
             "target_num_instances": self.target_num_instances,
@@ -87,9 +88,9 @@ class Service(object):
         util.check_response(r)
 
     @classmethod
-    def fetch(cls, name):
-        api_endpoint, token = auth.load_token()
-        url = api_endpoint + 'apps/' + name
+    def fetch(cls, name, namespace=None):
+        api_endpoint, token, username = auth.load_token()
+        url = api_endpoint + 'services/{}/'.format(namespace or username) + name
         headers = auth.build_headers(token)
         r = requests.get(url, headers=headers)
         util.check_response(r)
@@ -103,9 +104,9 @@ class Service(object):
         return service
 
     @classmethod
-    def list(cls):
-        api_endpoint, token = auth.load_token()
-        url = api_endpoint + 'apps/'
+    def list(cls, namespace=None):
+        api_endpoint, token, username = auth.load_token()
+        url = api_endpoint + 'services/{}/'.format(namespace or username)
         headers = auth.build_headers(token)
         r = requests.get(url, headers=headers)
         util.check_response(r)
@@ -121,10 +122,10 @@ class Service(object):
         return service_list
 
     @classmethod
-    def remove(cls, name):
+    def remove(cls, name, namespace=None):
         print '[alauda] Removing service "{}"'.format(name)
-        api_endpoint, token = auth.load_token()
-        url = api_endpoint + 'apps/' + name
+        api_endpoint, token, username = auth.load_token()
+        url = api_endpoint + 'services/{}/'.format(namespace or username) + name
         headers = auth.build_headers(token)
         try:
             r = requests.delete(url, headers=headers)
@@ -145,7 +146,7 @@ class Service(object):
 
     def inspect(self):
         if not self.details:
-            url = self.api_endpoint + 'apps/' + self.name
+            url = self.api_endpoint + 'services/{}/'.format(self.namespace) + self.name
             r = requests.get(url, headers=self.headers)
             util.check_response(r)
             self.details = r.text
@@ -154,21 +155,21 @@ class Service(object):
     def start(self):
         print '[alauda] Starting service "{}"'.format(self.name)
         self.target_state = 'STARTED'
-        url = self.api_endpoint + 'apps/' + self.name + '/start/'
+        url = self.api_endpoint + 'services/{}/'.format(self.namespace) + self.name + '/start/'
         r = requests.put(url, headers=self.headers)
         util.check_response(r)
 
     def stop(self):
         print '[alauda] Stopping service "{}"'.format(self.name)
         self.target_state = 'STOPPED'
-        url = self.api_endpoint + 'apps/' + self.name + '/stop/'
+        url = self.api_endpoint + 'services/{}/'.format(self.namespace) + self.name + '/stop/'
         r = requests.put(url, headers=self.headers)
         util.check_response(r)
 
     def update(self, target_num_instances):
         print '[alauda] Scaling service: {0} -> {1}'.format(self.name, target_num_instances)
         self.target_num_instances = target_num_instances
-        url = self.api_endpoint + 'apps/' + self.name
+        url = self.api_endpoint + 'services/{}/'.format(self.namespace) + self.name
         payload = {
             "app_name": self.name,
             "target_num_instances": self.target_num_instances
