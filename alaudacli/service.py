@@ -30,7 +30,7 @@ class Service(object):
         self.headers = auth.build_headers(self.token)
         self.namespace = namespace or self.username
 
-    def _update_envvars_with_links(self, instance_envvars, links):
+    def _update_envvars_with_links(self, instance_envvars, links, namespace=None):
         linked_to = {}
         if links is not None:
             for link in links:
@@ -39,7 +39,7 @@ class Service(object):
                 linked_to[service_name] = alias
                 retry_num = 0
                 while retry_num < MAX_RETRY_NUM:
-                    linked_service = Service.fetch(service_name)
+                    linked_service = Service.fetch(service_name, namespace)
                     linked_service_data = json.loads(linked_service.details)
                     linked_service_ports = linked_service_data['instance_ports']
                     if len(linked_service_ports) == 0:
@@ -67,7 +67,7 @@ class Service(object):
         return linked_to
 
     def _create_remote(self, target_state):
-        linked_to = self._update_envvars_with_links(self.instance_envvars, self.links)
+        linked_to = self._update_envvars_with_links(self.instance_envvars, self.links, self.namespace)
         url = self.api_endpoint + 'services/{}/'.format(self.namespace)
         payload = {
             "app_name": self.name,
@@ -100,7 +100,8 @@ class Service(object):
                       image_tag=data['image_tag'],
                       target_num_instances=data['target_num_instances'],
                       instance_size=data['instance_size'],
-                      details=r.text)
+                      details=r.text,
+                      namespace=namespace)
         return service
 
     @classmethod
@@ -115,7 +116,7 @@ class Service(object):
         services = services.get('results', [])
         for data in services:
             try:
-                service = Service.fetch(data['service_name'])
+                service = Service.fetch(data['service_name'], namespace)
                 service_list.append(service)
             except AlaudaServerError:
                 continue

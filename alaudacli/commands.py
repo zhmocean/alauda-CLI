@@ -22,7 +22,7 @@ def login(username, password, cloud, endpoint):
     r = requests.post(url, payload)
     d = json.loads(r.text)
     token = d['token']
-    auth.save_token(api_endpoint, token)
+    auth.save_token(api_endpoint, token, username)
     print '[alauda] Successfully logged in as {}.'.format(username)
 
 
