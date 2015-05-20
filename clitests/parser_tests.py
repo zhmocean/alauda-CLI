@@ -71,13 +71,13 @@ class ProcessCmdTest(unittest.TestCase):
         argv = ['service', 'create', 'hello', 'index.alauda.io/alauda/hello-world:latest',
                 '-t', '2', '-s', 'XS', '-r', '/run.sh',
                 '-e', 'FOO=bar', '-p', '5000/tcp', '-ag', 'ag1', '-v', '/var/lib/data1:10', '-l', 'myql:db',
-                '-a', 'MANUAL', '-f', './auto-scaling.cfg', '-n', '']
+                '-a', 'False', '-f', './auto-scaling.cfg', '-n', '']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
         mock_commands.service_create.assert_called_with(image='index.alauda.io/alauda/hello-world:latest',
                                                         name='hello', start=False, target_num_instances=2, instance_size='XS',
                                                         run_command='/run.sh', env=['FOO=bar'], ports=['5000/tcp'], allocation_group='ag1',
-                                                        volumes=['/var/lib/data1:10'], links=['myql:db'], scaling_info=('MANUAL', './auto-scaling.cfg'),
+                                                        volumes=['/var/lib/data1:10'], links=['myql:db'], scaling_info=(False, './auto-scaling.cfg'),
                                                         namespace='')
 
     @mock.patch('alaudacli.cmd_processor.commands')
@@ -85,13 +85,13 @@ class ProcessCmdTest(unittest.TestCase):
         argv = ['service', 'run', 'hello', 'index.alauda.io/alauda/hello-world:latest',
                 '-t', '2', '-s', 'XS', '-r', '/run.sh',
                 '-e', 'FOO=bar', '-p', '5000/tcp', '-ag', 'ag1', '-v', '/var/lib/data1:10', '-l', 'db',
-                '-a', 'MANUAL', '-f', './auto-scaling.cfg', '-n', '']
+                '-a', 'False', '-f', './auto-scaling.cfg', '-n', '']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
         mock_commands.service_create.assert_called_with(image='index.alauda.io/alauda/hello-world:latest',
                                                         name='hello', start=True, target_num_instances=2, instance_size='XS',
                                                         run_command='/run.sh', env=['FOO=bar'], ports=['5000/tcp'], allocation_group='ag1',
-                                                        volumes=['/var/lib/data1:10'], links=['db'], scaling_info=('MANUAL', './auto-scaling.cfg'),
+                                                        volumes=['/var/lib/data1:10'], links=['db'], scaling_info=(False, './auto-scaling.cfg'),
                                                         namespace='')
 
     @mock.patch('alaudacli.cmd_processor.commands')
@@ -99,7 +99,7 @@ class ProcessCmdTest(unittest.TestCase):
         argv = ['service', 'update', 'hello', '-t', '2']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.service_update.assert_called_with('hello', target_num_instances=2, namespace='', scaling_info=('DEFAULT', './auto-scaling.cfg'))
+        mock_commands.service_update.assert_called_with('hello', target_num_instances=2, namespace='', scaling_info=(None, './auto-scaling.cfg'))
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_service_inspect(self, mock_commands):

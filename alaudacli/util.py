@@ -93,23 +93,30 @@ def parse_envvars(envvar_list):
 def parse_volumes(volume_list):
     def _parse_volume(_volume):
         if not isinstance(_volume, str):
-            raise AlaudaInputError('Invalid volume description. (Example of valid description: /var/lib/data1:10)')
+            raise AlaudaInputError('Invalid volume description. (Example of valid description: /var/lib/data1:10:[backup_id])')
         result = _volume.split(':')
-        if len(result) != 2:
-            raise AlaudaInputError('Invalid volume description. (Example of valid description: /var/lib/data1:10)')
+        if len(result) != 2 and len(result) != 3:
+            raise AlaudaInputError('Invalid volume description. (Example of valid description: /var/lib/data1:10:[backup_id])')
 
         path = result[0]
         try:
             size = int(result[1])
+            backup_id = None
+            if len(result) == 3:
+                backup_id = result[2]
         except:
-            raise AlaudaInputError('Invalid volume description. (Example of valid description: /var/lib/data1:10)')
-        return path, size
+            print "except"
+            raise AlaudaInputError('Invalid volume description. (Example of valid description: /var/lib/data1:10:[backup_id])')
+        return path, size, backup_id
 
     parsed_volumes = []
     if volume_list is not None:
         for volume_desc in volume_list:
-            path, size = _parse_volume(volume_desc)
-            parsed_volumes.append({"app_volume_dir": path, "size_gb": size, "volume_type": "EBS"})
+            path, size, backup_id = _parse_volume(volume_desc)
+            volume = {"app_volume_dir": path, "size_gb": size, "volume_type": "EBS"}
+            if backup_id is not None:
+                volume['backup_id'] = backup_id
+            parsed_volumes.append(volume)
     return parsed_volumes
 
 
