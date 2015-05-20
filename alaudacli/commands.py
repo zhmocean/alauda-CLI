@@ -39,6 +39,8 @@ def service_create(image, name, start, target_num_instances, instance_size, run_
     links = util.parse_links(links)
     volumes = util.parse_volumes(volumes)
     scaling_mode, scaling_cfg = util.parse_autoscale_info(scaling_info)
+    if scaling_mode is None:
+        scaling_mode = 'MANUAL'
     service = Service(name=name,
                       image_name=image_name,
                       image_tag=image_tag,

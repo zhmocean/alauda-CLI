@@ -157,7 +157,7 @@ def parse_autoscale_info(info):
         return 'MANUAL', {}
     mode = info[0]
     cfg_file = info[1]
-    if mode == 'AUTO':
+    if mode:
         try:
             fp = file(cfg_file)
         except:
@@ -169,7 +169,10 @@ def parse_autoscale_info(info):
             fp.close()
             raise AlaudaInputError('Parse {} fail! The format refer to ./auto-scaling.example'.format(cfg_file))
         return 'AUTO', json.dumps(cfg_json)
-    return mode, {}
+    elif mode is None:
+        return None, {}
+    else:
+        return 'MANUAL', {}
 
 
 def failed(status_code):

@@ -182,7 +182,7 @@ class Service(object):
             payload['autoscaling_config'] = scaling_cfg
             payload['app_name'] = self.name
         else:
-            if scaling_mode == 'DEFAULT':
+            if scaling_mode is None:
                 print '[alauda] Scaling service: {0} -> {1}'.format(self.name, target_num_instances)
             else:
                 print '[alauda] Update {0} scaling mode to MANUAL'.format(self.name)
