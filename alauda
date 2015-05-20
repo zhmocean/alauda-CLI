@@ -9,7 +9,7 @@ _alauda()
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
-    opts="login -v -h logout service compose"
+    opts="login -v -h logout service compose backup"
 
     case "${prev}" in
         login)
@@ -30,7 +30,7 @@ _alauda()
             return 0
             ;;
        service)
-            local service_args="create run update inspect start stop rm ps snapshot"
+            local service_args="create run update inspect start stop rm ps"
             COMPREPLY=( $(compgen -W "${service_args}" -- ${cur}) )
             return 0
             ;;
@@ -50,7 +50,7 @@ _alauda()
             return 0
             ;;
        inspect)
-            local inspect_args="{name} -n"
+            local inspect_args="{name/id} -n"
             COMPREPLY=( $(compgen -W "${inspect_args}" -- ${cur}) )
             return 0
             ;;
@@ -84,9 +84,14 @@ _alauda()
             COMPREPLY=( $(compgen -W "${scale_args}" -- ${cur}) )
             return 0
             ;;
-       snapshot)
-            local snapshot_args="create ps inspect rm -n"
-            COMPREPLY=( $(compgen -W "${snapshot_args}" -- ${cur}) )
+       backup)
+            local backup_args="create list inspect rm -n"
+            COMPREPLY=( $(compgen -W "${backup_args}" -- ${cur}) )
+            return 0
+            ;;
+       list)
+            local list_args="{name} -n"
+            COMPREPLY=( $(compgen -W "${list_args}" -- ${cur}) )
             return 0
             ;;
         *)
