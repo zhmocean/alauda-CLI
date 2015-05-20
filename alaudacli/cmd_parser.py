@@ -3,10 +3,6 @@ import argparse
 from alaudacli import __version__
 
 
-def str2bool(v):
-    return v.lower() in ("yes", "true", "t", "1")
-
-
 def parse_cmds(argv):
     parser = create_parser()
     args = parser.parse_args(argv)
@@ -43,7 +39,6 @@ def _add_service_parser(subparsers):
     service_subparsers = service_parser.add_subparsers(title='Alauda service commands', dest='subcmd')
 
     create_parser = service_subparsers.add_parser('create', help='Create a new service', description='Create a new service')
-    create_parser.register('type', 'bool', str2bool)
     create_parser.add_argument('name', help='Service name')
     create_parser.add_argument('image', help='Docker image used by the service')
     create_parser.add_argument('-t', '--target-num-instances', help='Target number of instances for the service', type=int, default=1)
@@ -55,11 +50,10 @@ def _add_service_parser(subparsers):
     create_parser.add_argument('-ag', '--allocation-group', help='Allocation group', default='')
     create_parser.add_argument('-v', '--volume', help='Volumes, e.g. /var/lib/mysql:10', action='append')
     create_parser.add_argument('-n', '--namespace', help='Namespace which service belongs to', default='')
-    create_parser.add_argument('-a', '--autoscale', help='Auto scale up/down your services', type='bool')
+    create_parser.add_argument('-a', '--autoscale', help='Auto scale up/down your services', action='store_true')
     create_parser.add_argument('-f', '--autoscaling_config', help='Auto-scaling config file name', default='./auto-scaling.cfg')
 
     run_parser = service_subparsers.add_parser('run', help='Create and start a new service', description='Create and start a new service')
-    run_parser.register('type', 'bool', str2bool)
     run_parser.add_argument('name', help='Service name')
     run_parser.add_argument('image', help='Docker image used by the service')
     run_parser.add_argument('-t', '--target-num-instances', help='Target number of instances for the service', type=int, default=1)
@@ -71,16 +65,8 @@ def _add_service_parser(subparsers):
     run_parser.add_argument('-ag', '--allocation-group', help='Allocation group', default='')
     run_parser.add_argument('-v', '--volume', help='volumes.e.g. /var/lib/mysql:10', action='append')
     run_parser.add_argument('-n', '--namespace', help='Namespace which service belongs to', default='')
-    run_parser.add_argument('-a', '--autoscale', help='Auto scale up/down your services', type='bool')
+    run_parser.add_argument('-a', '--autoscale', help='Auto scale up/down your services', action='store_true')
     run_parser.add_argument('-f', '--autoscaling_config', help='Auto-scaling config file name', default='./auto-scaling.cfg')
-
-    update_parser = service_subparsers.add_parser('update', help='Update a service', description='Update a service')
-    update_parser.register('type', 'bool', str2bool)
-    update_parser.add_argument('name', help='Name of the service to update')
-    update_parser.add_argument('-t', '--target-num-instances', help='Target number of instances for the service', type=int)
-    update_parser.add_argument('-n', '--namespace', help='Namespace which service belongs to', default='')
-    update_parser.add_argument('-a', '--autoscale', help='Auto scale up/down your services', type='bool')
-    update_parser.add_argument('-f', '--autoscaling_config', help='Auto-scaling config file name', default='./auto-scaling.cfg')
 
     inspect_parser = service_subparsers.add_parser('inspect', help='Get details of a service', description='Get details of a service')
     inspect_parser.add_argument('name', help='Name of the service to retrieve')
@@ -100,6 +86,20 @@ def _add_service_parser(subparsers):
 
     ps_parser = service_subparsers.add_parser('ps', help='List services', description='List services')
     ps_parser.add_argument('-n', '--namespace', help='Namespace which service belongs to', default=None)
+
+    scale_parser = service_subparsers.add_parser('scale', help='Scale a service', description='Scale a service')
+    scale_parser.add_argument('descriptor', nargs='*', help='E.g. web=2')
+    scale_parser.add_argument('-n', '--namespace', help='Namespace which service belongs to', default='')
+
+    enable_autoscaling = service_subparsers.add_parser('enable-autoscaling', help='Auto-scaling a service', description='Auto-scaling a service')
+    enable_autoscaling.add_argument('name', help='Name of the service to scale')
+    enable_autoscaling.add_argument('-n', '--namespace', help='Namespace which service belongs to', default='')
+    enable_autoscaling.add_argument('-f', '--autoscaling_config', help='Auto-scaling config file name', default='./auto-scaling.cfg')
+
+    disable_autoscaling = service_subparsers.add_parser('disable-autoscaling', help='Manual-scaling a service', description='Manual-scaling a service')
+    disable_autoscaling.add_argument('name', help='Name of the service to scale')
+    disable_autoscaling.add_argument('-n', '--namespace', help='Namespace which service belongs to', default='')
+    disable_autoscaling.add_argument('-t', '--target-num-instances', help='Target number of instances for the service', type=int)
 
 
 def _add_backups_parser(subparsers):

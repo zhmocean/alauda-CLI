@@ -17,9 +17,6 @@ def process_cmds(args):
                                     instance_size=args.instance_size, run_command=args.run_command, env=args.env, ports=args.expose,
                                     allocation_group=args.allocation_group, volumes=args.volume, links=args.link, namespace=args.namespace,
                                     scaling_info=(args.autoscale, args.autoscaling_config))
-        elif args.subcmd == 'update':
-            commands.service_update(args.name, target_num_instances=args.target_num_instances, namespace=args.namespace,
-                                    scaling_info=(args.autoscale, args.autoscaling_config))
         elif args.subcmd == 'inspect':
             commands.service_inspect(args.name, namespace=args.namespace)
         elif args.subcmd == 'start':
@@ -30,6 +27,12 @@ def process_cmds(args):
             commands.service_rm(args.name, namespace=args.namespace)
         elif args.subcmd == 'ps':
             commands.service_ps(namespace=args.namespace)
+        elif args.subcmd == 'scale':
+            commands.service_scale(args.descriptor, args.namespace)
+        elif args.subcmd == 'enable-autoscaling':
+            commands.service_enable_autoscale(args.name, args.namespace, args.autoscaling_config)
+        elif args.subcmd == 'disable-autoscaling':
+            commands.service_disable_autoscale(args.name, args.namespace, args.target_num_instances)
     elif args.cmd == 'backup':
         if args.subcmd == 'create':
             commands.backup_create(args.service_name, args.mounted_dir, args.snapshot_name, args.namespace)

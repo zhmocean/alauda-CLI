@@ -176,8 +176,6 @@ def parse_autoscale_info(info):
             fp.close()
             raise AlaudaInputError('Parse {} fail! The format refer to ./auto-scaling.example'.format(cfg_file))
         return 'AUTO', json.dumps(cfg_json)
-    elif mode is None:
-        return None, {}
     else:
         return 'MANUAL', {}
 

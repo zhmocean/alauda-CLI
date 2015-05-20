@@ -61,14 +61,6 @@ def service_create(image, name, start, target_num_instances, instance_size, run_
         service.create()
 
 
-def service_update(name, target_num_instances, namespace, scaling_info):
-    scaling_mode, scaling_cfg = util.parse_autoscale_info(scaling_info)
-    service = Service.fetch(name, namespace)
-    if target_num_instances is None:
-        target_num_instances = service.target_num_instances
-    service.update(target_num_instances, scaling_mode, scaling_cfg)
-
-
 def service_inspect(name, namespace):
     service = Service.fetch(name, namespace)
     result = service.inspect()
@@ -92,6 +84,24 @@ def service_rm(name, namespace):
 def service_ps(namespace):
     service_list = Service.list(namespace)
     util.print_ps_output(service_list)
+
+
+def service_scale(descriptor, namespace):
+    scale_dict = util.parse_scale(descriptor)
+    for service_name, service_num in scale_dict.items():
+        service = Service.fetch(service_name, namespace)
+        service.scale(service_num)
+
+
+def service_enable_autoscale(service_name, namespace, autoscaling_config):
+    _, scaling_cfg = util.parse_autoscale_info(('AUTO', autoscaling_config))
+    service = Service.fetch(service_name, namespace)
+    service.enable_autoscale(scaling_cfg)
+
+
+def service_disable_autoscale(service_name, namespace, target_num_instances):
+    service = Service.fetch(service_name, namespace)
+    service.disable_autoscale(target_num_instances)
 
 
 def compose_up(file):

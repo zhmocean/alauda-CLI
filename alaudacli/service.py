@@ -172,25 +172,38 @@ class Service(object):
         r = requests.put(url, headers=self.headers)
         util.check_response(r)
 
-    def update(self, target_num_instances, scaling_mode, scaling_cfg):
+    def scale(self, target_num_instances):
         self.target_num_instances = target_num_instances
+        print '[alauda] Scaling service: {0} -> {1}'.format(self.name, self.target_num_instances)
         url = self.api_endpoint + 'services/{}/'.format(self.namespace) + self.name
-        payload = {}
-        if scaling_mode == 'AUTO':
-            print '[alauda] Update {0} scaling mode to AUTO'.format(self.name)
-            payload['scaling_mode'] = scaling_mode
-            payload['autoscaling_config'] = scaling_cfg
-            payload['app_name'] = self.name
-        else:
-            if scaling_mode is None:
-                print '[alauda] Scaling service: {0} -> {1}'.format(self.name, target_num_instances)
-            else:
-                print '[alauda] Update {0} scaling mode to MANUAL'.format(self.name)
-            payload = {
-                "app_name": self.name,
-                "target_num_instances": self.target_num_instances,
-                'scaling_mode': 'MANUAL'
-            }
+        payload = {
+            "app_name": self.name,
+            "target_num_instances": self.target_num_instances,
+        }
+        r = requests.put(url, headers=self.headers, data=json.dumps(payload))
+        util.check_response(r)
+
+    def enable_autoscale(self, autoscaling_config):
+        print '[alauda] Update {0} scaling mode to AUTO'.format(self.name)
+        url = self.api_endpoint + 'services/{}/'.format(self.namespace) + self.name
+        payload = {
+            "scaling_mode": 'AUTO',
+            "autoscaling_config": autoscaling_config,
+            'app_name': self.name
+        }
+        r = requests.put(url, headers=self.headers, data=json.dumps(payload))
+        util.check_response(r)
+
+    def disable_autoscale(self, target_num_instances):
+        if target_num_instances is not None:
+            self.target_num_instances = target_num_instances
+        print '[alauda] Update {0} scaling mode to MANUAL! Instance number is: {1}'.format(self.name, self.target_num_instances)
+        url = self.api_endpoint + 'services/{}/'.format(self.namespace) + self.name
+        payload = {
+            "app_name": self.name,
+            "target_num_instances": self.target_num_instances,
+            'scaling_mode': 'MANUAL'
+        }
         r = requests.put(url, headers=self.headers, data=json.dumps(payload))
         util.check_response(r)
 
