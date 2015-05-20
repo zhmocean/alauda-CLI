@@ -6,6 +6,7 @@ import util
 import auth
 import compose
 from service import Service
+from backup import Backup
 
 
 def login(username, password, cloud, endpoint):
@@ -127,20 +128,21 @@ def compose_scale(descriptor, file):
     project.scale(scale_dict)
 
 
-def snapshot_create(service_name, mounted_dir, snapshot_name, namespace):
+def backup_create(service_name, mounted_dir, backup_name, namespace):
     service = Service.fetch(service_name, namespace)
-    service.create_snapshot(mounted_dir, snapshot_name)
+    backup = Backup(service)
+    backup.create(mounted_dir, backup_name)
 
 
-def snapshot_ps(namespace):
-    snapshot_list = Service.list_snapshots(namespace)
-    util.print_snapshot_ps_output(snapshot_list)
+def backup_list(namespace):
+    backup_list = Backup.list(namespace)
+    util.print_backup_ps_output(backup_list)
 
 
-def snapshot_inspect(id, namespace):
-    result = Service.inspect_snapshot(id, namespace)
+def backup_inspect(id, namespace):
+    result = Backup.inspect(id, namespace)
     print '[alauda] ' + json.dumps(json.loads(result), indent=2)
 
 
-def snapshot_rm(id, namespace):
-    Service.remove_snapshot(id, namespace)
+def backup_rm(id, namespace):
+    Backup.remove_snapshot(id, namespace)

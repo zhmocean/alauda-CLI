@@ -18,6 +18,7 @@ def create_parser():
     _add_logout_parser(subparsers)
     _add_service_parser(subparsers)
     _add_compose_parser(subparsers)
+    _add_backups_parser(subparsers)
     return parser
 
 
@@ -93,25 +94,27 @@ def _add_service_parser(subparsers):
     ps_parser = service_subparsers.add_parser('ps', help='List services', description='List services')
     ps_parser.add_argument('-n', '--namespace', help='Namespace which service belongs to', default=None)
 
-    snapshot_parser = service_subparsers.add_parser('snapshot', help='Service snapshot operations', description='Service snapshot operations')
-    snapshot_subparsers = snapshot_parser.add_subparsers(title='Alauda service snapshot commands', dest='sptcmd')
 
-    spt_create_parser = snapshot_subparsers.add_parser('create', help='Create a new snapshot', description='Create a new snapshot')
-    spt_create_parser.add_argument('service_name', help='Name of the service to create snapshot')
-    spt_create_parser.add_argument('mounted_dir', help='directory of the service mounted')
-    spt_create_parser.add_argument('snapshot_name', help='snapshot name')
-    spt_create_parser.add_argument('-n', '--namespace', help='Namespace which service belongs to', default=None)
+def _add_backups_parser(subparsers):
+    backups_parser = subparsers.add_parser('backup', help='Backup operations', description='Backup operations')
+    backup_subparsers = backups_parser.add_subparsers(title='Alauda backup commands', dest='subcmd')
 
-    spt_ps_parser = snapshot_subparsers.add_parser('ps', help='list snapshots', description='list snapshots')
-    spt_ps_parser.add_argument('-n', '--namespace', help='Namespace which service belongs to', default=None)
+    create_parser = backup_subparsers.add_parser('create', help='Create a new backup', description='Create a new backup')
+    create_parser.add_argument('service_name', help='Name of the service to create backup')
+    create_parser.add_argument('mounted_dir', help='directory of the service mounted')
+    create_parser.add_argument('snapshot_name', help='backup name')
+    create_parser.add_argument('-n', '--namespace', help='Namespace which service belongs to', default=None)
 
-    spt_inspect_parser = snapshot_subparsers.add_parser('inspect', help='Get details of a snapshot', description='Get details of a snapshot')
-    spt_inspect_parser.add_argument('id', help='uuid of the snapshot')
-    spt_inspect_parser.add_argument('-n', '--namespace', help='Namespace which service belongs to', default=None)
+    list_parser = backup_subparsers.add_parser('list', help='list backups', description='list backups')
+    list_parser.add_argument('-n', '--namespace', help='Namespace which service belongs to', default=None)
 
-    spt_rm_parser = snapshot_subparsers.add_parser('rm', help='Remove a snapshot', description='Remove a snapshot')
-    spt_rm_parser.add_argument('id', help='uuid of the snapshot')
-    spt_rm_parser.add_argument('-n', '--namespace', help='Namespace which service belongs to', default=None)
+    inspect_parser = backup_subparsers.add_parser('inspect', help='Get details of a backup', description='Get details of a backup')
+    inspect_parser.add_argument('id', help='uuid of the backup')
+    inspect_parser.add_argument('-n', '--namespace', help='Namespace which service belongs to', default=None)
+
+    rm_parser = backup_subparsers.add_parser('rm', help='Remove a backup', description='Remove a backup')
+    rm_parser.add_argument('id', help='uuid of the backup')
+    rm_parser.add_argument('-n', '--namespace', help='Namespace which service belongs to', default=None)
 
 
 def _add_compose_parser(subparsers):

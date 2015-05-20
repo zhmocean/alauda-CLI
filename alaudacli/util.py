@@ -212,23 +212,23 @@ def print_ps_output(service_list):
                                                        str(service.target_num_instances).ljust(max_instance_count_len))
 
 
-def print_snapshot_ps_output(snapshot_list):
+def print_backup_ps_output(backup_list):
     max_name_len = len('Name')
     max_id_len = len('Id')
     max_state_len = len('State')
     max_time_len = len('Created time')
     max_size_len = len('Size')
 
-    for snapshot in snapshot_list:
-        if max_name_len < len(snapshot['name']):
-            max_name_len = len(snapshot['name'])
-        if max_id_len < len(snapshot['backup_id']):
-            max_id_len = len(snapshot['backup_id'])
-        if max_state_len < len(snapshot['status']):
-            max_state_len = len(snapshot['status'])
-        if max_time_len < len(snapshot['created_datetime']):
-            max_time_len = len(snapshot['created_datetime'])
-        size_byte = snapshot.get('size_byte', ' ')
+    for backup in backup_list:
+        if max_name_len < len(backup['name']):
+            max_name_len = len(backup['name'])
+        if max_id_len < len(backup['backup_id']):
+            max_id_len = len(backup['backup_id'])
+        if max_state_len < len(backup['status']):
+            max_state_len = len(backup['status'])
+        if max_time_len < len(backup['created_datetime']):
+            max_time_len = len(backup['created_datetime'])
+        size_byte = backup.get('size_byte', ' ')
         if max_size_len < len(str(size_byte)):
             max_size_len = len(str(size_byte))
 
@@ -236,7 +236,7 @@ def print_snapshot_ps_output(snapshot_list):
                                                    'Size'.center(max_size_len), 'Created time'.center(max_time_len))
     print '{0}'.format('-' * (max_id_len + max_name_len + max_state_len + max_time_len + max_size_len + 4 * 4))
 
-    for snapshot in snapshot_list:
-        print '{0}    {1}    {2}    {3}    {4}'.format(str(snapshot['backup_id']).ljust(max_id_len), str(snapshot['name']).ljust(max_name_len),
-                                                       str(snapshot['status']).ljust(max_state_len), str(snapshot.get('size_byte', ' ')).ljust(max_size_len),
-                                                       str(snapshot['created_datetime']).ljust(max_time_len))
+    for backup in backup_list:
+        print '{0}    {1}    {2}    {3}    {4}'.format(str(backup['backup_id']).ljust(max_id_len), str(backup['name']).ljust(max_name_len),
+                                                       str(backup['status']).ljust(max_state_len), str(backup.get('size_byte', ' ')).ljust(max_size_len),
+                                                       str(backup['created_datetime']).ljust(max_time_len))
