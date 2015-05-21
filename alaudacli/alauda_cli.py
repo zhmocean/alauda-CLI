@@ -14,12 +14,14 @@ def patch_argv(argv):
 
     if len(args) == 1:
         args.append('-h')
-    elif len(args) == 2 and args[1] in ['service', 'compose']:
+    elif len(args) == 2 and args[1] in ['service', 'compose', 'backup']:
         args.append('-h')
     elif len(args) == 3:
-        if args[1] == 'service' and args[2] in ['create', 'run', 'update', 'inspect', 'start', 'stop', 'rm']:
+        if args[1] == 'service' and args[2] in ['create', 'run', 'scale', 'inspect', 'start', 'stop', 'rm', 'enable-autoscaling', 'disable-autoscaling']:
             args.append('-h')
         elif args[1] == 'compose' and args[2] in ['scale']:
+            args.append('-h')
+        elif args[1] == 'backup' and args[2] in ['create', 'inspect', 'rm']:
             args.append('-h')
 
     return args[1:]
