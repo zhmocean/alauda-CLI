@@ -157,4 +157,4 @@ def backup_inspect(id, namespace):
 
 
 def backup_rm(id, namespace):
-    Backup.remove_snapshot(id, namespace)
+    Backup.remove(id, namespace)
