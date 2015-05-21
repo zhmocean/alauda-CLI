@@ -142,8 +142,8 @@ def compose_scale(descriptor, file):
 
 def backup_create(name, service_name, mounted_dir, namespace):
     service = Service.fetch(service_name, namespace)
-    backup = Backup(service)
-    backup.create(name, mounted_dir)
+    backup = Backup(service=service, name=name, mounted_dir=mounted_dir)
+    backup.create()
 
 
 def backup_list(namespace):
@@ -152,7 +152,8 @@ def backup_list(namespace):
 
 
 def backup_inspect(id, namespace):
-    result = Backup.inspect(id, namespace)
+    backup = Backup.fetch(id, namespace)
+    result = backup.inspect()
     print '[alauda] ' + json.dumps(json.loads(result), indent=2)
 
 

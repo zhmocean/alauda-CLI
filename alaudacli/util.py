@@ -227,7 +227,8 @@ def print_backup_ps_output(backup_list):
     max_time_len = len('Created time')
     max_size_len = len('Size')
 
-    for backup in backup_list:
+    for data in backup_list:
+        backup = json.loads(data.details)
         if max_name_len < len(backup['name']):
             max_name_len = len(backup['name'])
         if max_id_len < len(backup['backup_id']):
@@ -244,7 +245,8 @@ def print_backup_ps_output(backup_list):
                                                    'Size'.center(max_size_len), 'Created time'.center(max_time_len))
     print '{0}'.format('-' * (max_id_len + max_name_len + max_state_len + max_time_len + max_size_len + 4 * 4))
 
-    for backup in backup_list:
+    for data in backup_list:
+        backup = json.loads(data.details)
         print '{0}    {1}    {2}    {3}    {4}'.format(str(backup['backup_id']).ljust(max_id_len), str(backup['name']).ljust(max_name_len),
                                                        str(backup['status']).ljust(max_state_len), str(backup.get('size_byte', ' ')).ljust(max_size_len),
                                                        str(backup['created_datetime']).ljust(max_time_len))
