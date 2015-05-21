@@ -176,3 +176,73 @@ class ProcessCmdTest(unittest.TestCase):
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
         mock_commands.compose_up.assert_called()
+
+    @mock.patch('alaudacli.cmd_processor.commands')
+    def test_process_compose_ps(self, mock_commands):
+        argv = ['compose', 'ps']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_commands.compose_ps.assert_called()
+
+    @mock.patch('alaudacli.cmd_processor.commands')
+    def test_process_compose_start(self, mock_commands):
+        argv = ['compose', 'start']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_commands.compose_start.assert_called()
+
+    @mock.patch('alaudacli.cmd_processor.commands')
+    def test_process_compose_stop(self, mock_commands):
+        argv = ['compose', 'stop']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_commands.compose_stop.assert_called()
+
+    @mock.patch('alaudacli.cmd_processor.commands')
+    def test_process_compose_restart(self, mock_commands):
+        argv = ['compose', 'restart']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_commands.compose_restart.assert_called()
+
+    @mock.patch('alaudacli.cmd_processor.commands')
+    def test_process_compose_rm(self, mock_commands):
+        argv = ['compose', 'rm']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_commands.compose_rm.assert_called()
+
+    @mock.patch('alaudacli.cmd_processor.commands')
+    def test_process_compose_scale(self, mock_commands):
+        argv = ['compose', 'scale', 'redis=2 web=3']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_commands.compose_scale.assert_called(['redis=2 web=3'])
+
+    @mock.patch('alaudacli.cmd_processor.commands')
+    def test_process_backup_create(self, mock_commands):
+        argv = ['backup', 'create', 'my_snapshot', 'hello', '/data']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_commands.backup_create.assert_called('my_snapshot', 'hello', '/data')
+
+    @mock.patch('alaudacli.cmd_processor.commands')
+    def test_process_backup_list(self, mock_commands):
+        argv = ['backup', 'list']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_commands.backup_list.assert_called()
+
+    @mock.patch('alaudacli.cmd_processor.commands')
+    def test_process_backup_inspect(self, mock_commands):
+        argv = ['backup', 'inspect', 'my_backup_id']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_commands.backup_inspect.assert_called('my_backup_id')
+
+    @mock.patch('alaudacli.cmd_processor.commands')
+    def test_process_backup_rm(self, mock_commands):
+        argv = ['backup', 'inspect', 'my_backup_id']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_commands.backup_rm.assert_called('my_backup_id')
