@@ -6,6 +6,6 @@
       "decrease_delta" : 1,
       "increase_delta" : 1,
       "minimum_num_instances" : 2,
-      "maximum_num_instances" : 10,
+      "maximum_num_instances" : 5,
       "wait_period" : 120
 }

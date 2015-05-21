@@ -183,8 +183,8 @@ class Service(object):
         r = requests.put(url, headers=self.headers, data=json.dumps(payload))
         util.check_response(r)
 
-    def enable_autoscale(self, autoscaling_config):
-        print '[alauda] Update {0} scaling mode to AUTO'.format(self.name)
+    def enable_autoscaling(self, autoscaling_config):
+        print '[alauda] Enabling auto-scaling for {0}'.format(self.name)
         url = self.api_endpoint + 'services/{}/'.format(self.namespace) + self.name
         payload = {
             "scaling_mode": 'AUTO',
@@ -194,10 +194,10 @@ class Service(object):
         r = requests.put(url, headers=self.headers, data=json.dumps(payload))
         util.check_response(r)
 
-    def disable_autoscale(self, target_num_instances):
+    def disable_autoscaling(self, target_num_instances):
         if target_num_instances is not None:
             self.target_num_instances = target_num_instances
-        print '[alauda] Update {0} scaling mode to MANUAL! Instance number is: {1}'.format(self.name, self.target_num_instances)
+        print '[alauda] Disabling auto-scaling for {0}. Target number of instances: {1}'.format(self.name, self.target_num_instances)
         url = self.api_endpoint + 'services/{}/'.format(self.namespace) + self.name
         payload = {
             "app_name": self.name,

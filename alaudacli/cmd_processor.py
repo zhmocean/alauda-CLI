@@ -30,12 +30,12 @@ def process_cmds(args):
         elif args.subcmd == 'scale':
             commands.service_scale(args.descriptor, args.namespace)
         elif args.subcmd == 'enable-autoscaling':
-            commands.service_enable_autoscale(args.name, args.namespace, args.autoscaling_config)
+            commands.service_enable_autoscaling(args.name, args.namespace, args.autoscaling_config)
         elif args.subcmd == 'disable-autoscaling':
-            commands.service_disable_autoscale(args.name, args.namespace, args.target_num_instances)
+            commands.service_disable_autoscaling(args.name, args.namespace, args.target_num_instances)
     elif args.cmd == 'backup':
         if args.subcmd == 'create':
-            commands.backup_create(args.service_name, args.mounted_dir, args.snapshot_name, args.namespace)
+            commands.backup_create(args.name, args.service, args.dir, args.namespace)
         elif args.subcmd == 'list':
             commands.backup_list(args.namespace)
         elif args.subcmd == 'inspect':

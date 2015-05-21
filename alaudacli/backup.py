@@ -10,14 +10,14 @@ class Backup(object):
     def __init__(self, service):
         self.service = service
 
-    def create(self, mounted_dir, backup_name):
-        print '[alauda] Creating backup "{}"'.format(backup_name)
+    def create(self, name, mounted_dir):
+        print '[alauda] Creating backup "{}"'.format(name)
         data = json.loads(self.service.details)
         uuid = data['unique_name']
         url = self.service.api_endpoint + 'backups/{}/'.format(self.service.namespace)
         payload = {
             'app_id': uuid,
-            'name': backup_name,
+            'name': name,
             'app_volume_dir': mounted_dir
         }
         r = requests.post(url, headers=self.service.headers, data=json.dumps(payload))

@@ -49,8 +49,8 @@ def _add_service_parser(subparsers):
     create_parser.add_argument('-p', '--expose', help='Ports to expose, e.g. 5000/tcp', action='append')
     create_parser.add_argument('-ag', '--allocation-group', help='Allocation group', default='')
     create_parser.add_argument('-v', '--volume', help='Volumes, e.g. /var/lib/mysql:10', action='append')
-    create_parser.add_argument('-n', '--namespace', help='Namespace which service belongs to', default='')
-    create_parser.add_argument('-a', '--autoscale', help='Auto scale up/down your services', action='store_true')
+    create_parser.add_argument('-n', '--namespace', help='Service namespace', default='')
+    create_parser.add_argument('-a', '--autoscale', help='Enable auto-scaling', action='store_true')
     create_parser.add_argument('-f', '--autoscaling_config', help='Auto-scaling config file name', default='./auto-scaling.cfg')
 
     run_parser = service_subparsers.add_parser('run', help='Create and start a new service', description='Create and start a new service')
@@ -64,41 +64,41 @@ def _add_service_parser(subparsers):
     run_parser.add_argument('-p', '--expose', help='Ports to expose, e.g. 5000/tcp', action='append')
     run_parser.add_argument('-ag', '--allocation-group', help='Allocation group', default='')
     run_parser.add_argument('-v', '--volume', help='volumes.e.g. /var/lib/mysql:10', action='append')
-    run_parser.add_argument('-n', '--namespace', help='Namespace which service belongs to', default='')
-    run_parser.add_argument('-a', '--autoscale', help='Auto scale up/down your services', action='store_true')
+    run_parser.add_argument('-n', '--namespace', help='Service namespace', default='')
+    run_parser.add_argument('-a', '--autoscale', help='Enable auto-scaling', action='store_true')
     run_parser.add_argument('-f', '--autoscaling_config', help='Auto-scaling config file name', default='./auto-scaling.cfg')
 
     inspect_parser = service_subparsers.add_parser('inspect', help='Get details of a service', description='Get details of a service')
     inspect_parser.add_argument('name', help='Name of the service to retrieve')
-    inspect_parser.add_argument('-n', '--namespace', help='Namespace which service belongs to', default='')
+    inspect_parser.add_argument('-n', '--namespace', help='Service namespace', default='')
 
     start_parser = service_subparsers.add_parser('start', help='Start a service', description='Start a service')
     start_parser.add_argument('name', help='Name of the service to start')
-    start_parser.add_argument('-n', '--namespace', help='Namespace which service belongs to', default='')
+    start_parser.add_argument('-n', '--namespace', help='Service namespace', default='')
 
     stop_parser = service_subparsers.add_parser('stop', help='Stop a service', description='Stop a service')
     stop_parser.add_argument('name', help='Name of the service to stop')
-    stop_parser.add_argument('-n', '--namespace', help='Namespace which service belongs to', default='')
+    stop_parser.add_argument('-n', '--namespace', help='Service namespace', default='')
 
     rm_parser = service_subparsers.add_parser('rm', help='Remove a service', description='Remove a service')
     rm_parser.add_argument('name', help='Name of the service to remove')
-    rm_parser.add_argument('-n', '--namespace', help='Namespace which service belongs to', default='')
+    rm_parser.add_argument('-n', '--namespace', help='Service namespace', default='')
 
     ps_parser = service_subparsers.add_parser('ps', help='List services', description='List services')
-    ps_parser.add_argument('-n', '--namespace', help='Namespace which service belongs to', default=None)
+    ps_parser.add_argument('-n', '--namespace', help='Service namespace', default=None)
 
     scale_parser = service_subparsers.add_parser('scale', help='Scale a service', description='Scale a service')
     scale_parser.add_argument('descriptor', nargs='*', help='E.g. web=2')
-    scale_parser.add_argument('-n', '--namespace', help='Namespace which service belongs to', default='')
+    scale_parser.add_argument('-n', '--namespace', help='Service namespace', default='')
 
-    enable_autoscaling = service_subparsers.add_parser('enable-autoscaling', help='Auto-scaling a service', description='Auto-scaling a service')
-    enable_autoscaling.add_argument('name', help='Name of the service to scale')
-    enable_autoscaling.add_argument('-n', '--namespace', help='Namespace which service belongs to', default='')
+    enable_autoscaling = service_subparsers.add_parser('enable-autoscaling', help='Enable auto-scaling', description='Enable auto-scaling')
+    enable_autoscaling.add_argument('name', help='Service name')
+    enable_autoscaling.add_argument('-n', '--namespace', help='Service namespace', default='')
     enable_autoscaling.add_argument('-f', '--autoscaling_config', help='Auto-scaling config file name', default='./auto-scaling.cfg')
 
-    disable_autoscaling = service_subparsers.add_parser('disable-autoscaling', help='Manual-scaling a service', description='Manual-scaling a service')
-    disable_autoscaling.add_argument('name', help='Name of the service to scale')
-    disable_autoscaling.add_argument('-n', '--namespace', help='Namespace which service belongs to', default='')
+    disable_autoscaling = service_subparsers.add_parser('disable-autoscaling', help='Disable auto-scaling', description='Disable auto-scaling')
+    disable_autoscaling.add_argument('name', help='Service name')
+    disable_autoscaling.add_argument('-n', '--namespace', help='Service namespace', default='')
     disable_autoscaling.add_argument('-t', '--target-num-instances', help='Target number of instances for the service', type=int)
 
 
@@ -106,22 +106,22 @@ def _add_backups_parser(subparsers):
     backups_parser = subparsers.add_parser('backup', help='Backup operations', description='Backup operations')
     backup_subparsers = backups_parser.add_subparsers(title='Alauda backup commands', dest='subcmd')
 
-    create_parser = backup_subparsers.add_parser('create', help='Create a new backup', description='Create a new backup')
-    create_parser.add_argument('service_name', help='Name of the service to create backup')
-    create_parser.add_argument('mounted_dir', help='directory of the service mounted')
-    create_parser.add_argument('snapshot_name', help='backup name')
-    create_parser.add_argument('-n', '--namespace', help='Namespace which service belongs to', default=None)
+    create_parser = backup_subparsers.add_parser('create', help='Create a new volume backup', description='Create a new volume backup')
+    create_parser.add_argument('name', help='Backup name')
+    create_parser.add_argument('service', help='Name of the service to create volume backup for')
+    create_parser.add_argument('dir', help='Mounted volume directory to backup')
+    create_parser.add_argument('-n', '--namespace', help='Service namespace', default=None)
 
-    list_parser = backup_subparsers.add_parser('list', help='list backups', description='list backups')
-    list_parser.add_argument('-n', '--namespace', help='Namespace which service belongs to', default=None)
+    list_parser = backup_subparsers.add_parser('list', help='List volume backups', description='list volume backups')
+    list_parser.add_argument('-n', '--namespace', help='Service namespace', default=None)
 
-    inspect_parser = backup_subparsers.add_parser('inspect', help='Get details of a backup', description='Get details of a backup')
-    inspect_parser.add_argument('id', help='uuid of the backup')
-    inspect_parser.add_argument('-n', '--namespace', help='Namespace which service belongs to', default=None)
+    inspect_parser = backup_subparsers.add_parser('inspect', help='Get details of a volume backup', description='Get details of a volume backup')
+    inspect_parser.add_argument('id', help='UUID of the volume backup')
+    inspect_parser.add_argument('-n', '--namespace', help='Service namespace', default=None)
 
-    rm_parser = backup_subparsers.add_parser('rm', help='Remove a backup', description='Remove a backup')
-    rm_parser.add_argument('id', help='uuid of the backup')
-    rm_parser.add_argument('-n', '--namespace', help='Namespace which service belongs to', default=None)
+    rm_parser = backup_subparsers.add_parser('rm', help='Remove a volume backup', description='Remove a volume backup')
+    rm_parser.add_argument('id', help='UUID of the volume backup')
+    rm_parser.add_argument('-n', '--namespace', help='Service namespace', default=None)
 
 
 def _add_compose_parser(subparsers):

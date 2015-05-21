@@ -93,15 +93,15 @@ def service_scale(descriptor, namespace):
         service.scale(service_num)
 
 
-def service_enable_autoscale(service_name, namespace, autoscaling_config):
+def service_enable_autoscaling(name, namespace, autoscaling_config):
     _, scaling_cfg = util.parse_autoscale_info(('AUTO', autoscaling_config))
-    service = Service.fetch(service_name, namespace)
-    service.enable_autoscale(scaling_cfg)
+    service = Service.fetch(name, namespace)
+    service.enable_autoscaling(scaling_cfg)
 
 
-def service_disable_autoscale(service_name, namespace, target_num_instances):
-    service = Service.fetch(service_name, namespace)
-    service.disable_autoscale(target_num_instances)
+def service_disable_autoscaling(name, namespace, target_num_instances):
+    service = Service.fetch(name, namespace)
+    service.disable_autoscaling(target_num_instances)
 
 
 def compose_up(file):
@@ -140,10 +140,10 @@ def compose_scale(descriptor, file):
     project.scale(scale_dict)
 
 
-def backup_create(service_name, mounted_dir, backup_name, namespace):
+def backup_create(name, service_name, mounted_dir, namespace):
     service = Service.fetch(service_name, namespace)
     backup = Backup(service)
-    backup.create(mounted_dir, backup_name)
+    backup.create(name, mounted_dir)
 
 
 def backup_list(namespace):
