@@ -1,6 +1,6 @@
 import unittest
 import mock
-
+import json
 from alaudacli import cmd_parser, cmd_processor, util, auth
 
 
@@ -45,6 +45,26 @@ class UtilTest(unittest.TestCase):
     def test_parse_links(self):
         links = util.parse_links(['mysql:db', 'redis:db1'])
         self.assertEqual([('mysql', 'db'), ('redis', 'db1')], links)
+
+    def test_parse_scale(self):
+        scale_dict = util.parse_scale(['mysql=3', 'redis=2'])
+        self.assertEqual({'mysql': 3, 'redis': 2}, scale_dict)
+
+    def test_parse_autoscale_info(self):
+        mode, cfg = util.parse_autoscale_info((True, './auto-scaling.example'))
+        self.assertEqual('AUTO', mode)
+        result = {
+            "metric_name": "CPU_UTILIZATION",
+            "metric_stat": "MEAN",
+            "upper_threshold": 0.94999999999999996,
+            "lower_threshold": 0.5,
+            "decrease_delta": 1,
+            "increase_delta": 1,
+            "minimum_num_instances": 2,
+            "maximum_num_instances": 5,
+            "wait_period": 120
+        }
+        self.assertEqual(json.loads(cfg), result)
 
 
 class ProcessCmdTest(unittest.TestCase):
