@@ -32,7 +32,8 @@ def logout():
     print '[alauda] Bye'
 
 
-def service_create(image, name, start, target_num_instances, instance_size, run_command, env, ports, allocation_group, volumes, links, namespace, scaling_info):
+def service_create(image, name, start, target_num_instances, instance_size, run_command, env, ports,
+                   allocation_group, volumes, links, namespace, scaling_info, custom_domain_name):
     image_name, image_tag = util.parse_image_name_tag(image)
     instance_ports = util.parse_instance_ports(ports)
     instance_envvars = util.parse_envvars(env)
@@ -54,7 +55,8 @@ def service_create(image, name, start, target_num_instances, instance_size, run_
                       links=links,
                       namespace=namespace,
                       scaling_mode=scaling_mode,
-                      autoscaling_config=scaling_cfg)
+                      autoscaling_config=scaling_cfg,
+                      custom_domain_name=custom_domain_name)
     if start:
         service.run()
     else:

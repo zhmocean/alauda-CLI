@@ -52,6 +52,7 @@ def _add_service_parser(subparsers):
     create_parser.add_argument('-n', '--namespace', help='Service namespace', default='')
     create_parser.add_argument('-a', '--autoscale', help='Enable auto-scaling', action='store_true')
     create_parser.add_argument('-f', '--autoscaling_config', help='Auto-scaling config file name', default='./auto-scaling.cfg')
+    create_parser.add_argument('-d', '--domain', help='Domain name')
 
     run_parser = service_subparsers.add_parser('run', help='Create and start a new service', description='Create and start a new service')
     run_parser.add_argument('name', help='Service name')
@@ -67,6 +68,7 @@ def _add_service_parser(subparsers):
     run_parser.add_argument('-n', '--namespace', help='Service namespace', default='')
     run_parser.add_argument('-a', '--autoscale', help='Enable auto-scaling', action='store_true')
     run_parser.add_argument('-f', '--autoscaling_config', help='Auto-scaling config file name', default='./auto-scaling.cfg')
+    run_parser.add_argument('-d', '--domain', help='Domain name')
 
     inspect_parser = service_subparsers.add_parser('inspect', help='Get details of a service', description='Get details of a service')
     inspect_parser.add_argument('name', help='Name of the service to retrieve')
