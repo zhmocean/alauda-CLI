@@ -103,6 +103,12 @@ def _add_service_parser(subparsers):
     disable_autoscaling.add_argument('-n', '--namespace', help='Service namespace', default='')
     disable_autoscaling.add_argument('-t', '--target-num-instances', help='Target number of instances for the service', type=int)
 
+    logs_autoscaling = service_subparsers.add_parser('logs', help='Service log', description='Service log')
+    logs_autoscaling.add_argument('name', help='Service name')
+    logs_autoscaling.add_argument('-n', '--namespace', help='Service namespace', default='')
+    logs_autoscaling.add_argument('-s', '--start_time', help='Logs query start time. e.g. 2015-05-01 12:12:12')
+    logs_autoscaling.add_argument('-t', '--end_time', help='Logs query end time. e.g. 2015-05-01 12:12:12')
+
 
 def _add_backups_parser(subparsers):
     backups_parser = subparsers.add_parser('backup', help='Backup operations', description='Backup operations')

@@ -30,17 +30,17 @@ _alauda()
             return 0
             ;;
        service)
-            local service_args="create run inspect start stop rm ps scale enable-autoscaling disable-autoscaling"
+            local service_args="create run inspect start stop rm ps scale enable-autoscaling disable-autoscaling logs"
             COMPREPLY=( $(compgen -W "${service_args}" -- ${cur}) )
             return 0
             ;;
        create)
-            local create_args="{name} {image} -t -s -r -e -l -p -ag -v -n -a -f"
+            local create_args="{name} {image} -t -s -r -e -l -p -ag -v -n -a -f -d"
             COMPREPLY=( $(compgen -W "${create_args}" -- ${cur}) )
             return 0
             ;;
        run)
-            local run_args="{name} {image} -t -s -r -e -l -p -ag -v -n -a -f"
+            local run_args="{name} {image} -t -s -r -e -l -p -ag -v -n -a -f -d"
             COMPREPLY=( $(compgen -W "${run_args}" -- ${cur}) )
             return 0
             ;;
@@ -77,6 +77,11 @@ _alauda()
        disable-autoscaling)
             local disable_args="{name} -n -t"
             COMPREPLY=( $(compgen -W "${disable_args}" -- ${cur}) )
+            return 0
+            ;;
+       logs)
+            local logs_args="{name} -n -s -t"
+            COMPREPLY=( $(compgen -W "${logs_args}" -- ${cur}) )
             return 0
             ;;
        compose)

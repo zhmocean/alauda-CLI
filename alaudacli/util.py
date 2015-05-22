@@ -1,5 +1,6 @@
 from exceptions import AlaudaInputError, AlaudaServerError
 import json
+import time
 
 
 def parse_image_name_tag(image):
@@ -229,6 +230,25 @@ def parse_autoscale_info(info):
         return 'AUTO', json.dumps(cfg_json)
     else:
         return 'MANUAL', {}
+
+
+def parse_time(start_time, end_time):
+    if start_time is not None and end_time is not None:
+        try:
+            start = time.strptime(start_time, '%Y-%m-%d %H:%M:%S')
+            end = time.strptime(end_time, '%Y-%m-%d %H:%M:%S')
+            start = int(time.mktime(start))
+            end = int(time.mktime(end))
+        except:
+            raise AlaudaInputError('Please make sure time format like 2015-05-01 12:00:00')
+    elif start_time is None and end_time is None:
+        end = int(time.time())
+        start = end - 3600
+        return start, end
+    elif start_time is not None:
+        raise AlaudaInputError('Please use -e to add end time!')
+    else:
+        raise AlaudaInputError('Please use -s to add start time!')
 
 
 def failed(status_code):

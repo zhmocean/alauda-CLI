@@ -106,6 +106,12 @@ def service_disable_autoscaling(name, namespace, target_num_instances):
     service.disable_autoscaling(target_num_instances)
 
 
+def service_logs(name, namespace, start_time, end_time):
+    service = Service.fetch(name, namespace)
+    result = service.logs(start_time, end_time)
+    print "{}".format(result)
+
+
 def compose_up(file):
     project = compose.load_project(file)
     project.up()

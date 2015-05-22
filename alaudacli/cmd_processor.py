@@ -33,6 +33,8 @@ def process_cmds(args):
             commands.service_enable_autoscaling(args.name, args.namespace, args.autoscaling_config)
         elif args.subcmd == 'disable-autoscaling':
             commands.service_disable_autoscaling(args.name, args.namespace, args.target_num_instances)
+        elif args.subcmd == 'logs':
+            commands.service_logs(args.name, args.namespace, args.start_time, args.end_time)
     elif args.cmd == 'backup':
         if args.subcmd == 'create':
             commands.backup_create(args.name, args.service, args.dir, args.namespace)

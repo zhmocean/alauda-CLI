@@ -214,6 +214,13 @@ class Service(object):
         r = requests.put(url, headers=self.headers, data=json.dumps(payload))
         util.check_response(r)
 
+    def logs(self, start_time, end_time):
+        start, end = util.parse_time(start_time, end_time)
+        url = self.api_endpoint + 'services/{0}/{1}/logs?start_time={2}&end_time={3}'.format(self.namespace, self.name, start, end)
+        r = requests.get(url, headers=self.headers)
+        util.check_response(r)
+        return r.text
+
     def get_run_command(self):
         data = json.loads(self.details)
         run_command = data['run_command']
