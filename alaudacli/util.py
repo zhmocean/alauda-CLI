@@ -50,7 +50,7 @@ def parse_instance_ports(port_list):
     return parsed_ports
 
 
-def parse_envvars(envvar_list):
+def parse_envvar(_envvar):
     def _parse_envvar_dict(_envvar):
         if len(_envvar) != 1:
             raise AlaudaInputError('Invalid environment variable. (Example of valid description: FOO=foo)')
@@ -74,45 +74,96 @@ def parse_envvars(envvar_list):
             value = _envvar[pos + 1:]
             return key, value
 
-    def _parse_envvar(_envvar):
-        if isinstance(_envvar, dict):
-            return _parse_envvar_dict(_envvar)
-        elif isinstance(_envvar, str):
-            return _parse_envvar_str(_envvar)
-        else:
-            raise AlaudaInputError('Invalid environment variable. (Example of valid description: FOO=foo)')
+    if isinstance(_envvar, dict):
+        return _parse_envvar_dict(_envvar)
+    elif isinstance(_envvar, str):
+        return _parse_envvar_str(_envvar)
+    else:
+        raise AlaudaInputError('Invalid environment variable. (Example of valid description: FOO=foo)')
+
+
+def parse_envvars(envvar_list):
+    #     def _parse_envvar_dict(_envvar):
+    #         if len(_envvar) != 1:
+    #             raise AlaudaInputError('Invalid environment variable. (Example of valid description: FOO=foo)')
+    #         key = _envvar.keys()[0]
+    #         value = _envvar[key]
+    #         if value is None:
+    #             value = ''
+    #         return key, str(value)
+    #
+    #     def _parse_envvar_str(_envvar):
+    #         pos = _envvar.find('=')
+    #         if pos != -1:
+    #             key = _envvar[:pos]
+    #             value = _envvar[pos + 1:]
+    #             return key, value
+    #         else:
+    #             pos = _envvar.find(':')
+    #             if pos == -1:
+    #                 raise AlaudaInputError('Invalid environment variable. (Example of valid description: FOO=foo)')
+    #             key = _envvar[:pos]
+    #             value = _envvar[pos + 1:]
+    #             return key, value
+    #
+    #     def _parse_envvar(_envvar):
+    #         if isinstance(_envvar, dict):
+    #             return _parse_envvar_dict(_envvar)
+    #         elif isinstance(_envvar, str):
+    #             return _parse_envvar_str(_envvar)
+    #         else:
+    #             raise AlaudaInputError('Invalid environment variable. (Example of valid description: FOO=foo)')
 
     parsed_envvars = {}
     if envvar_list is not None:
         for envvar in envvar_list:
-            key, value = _parse_envvar(envvar)
+            key, value = parse_envvar(envvar)
             parsed_envvars[key] = value
     return parsed_envvars
 
 
-def parse_volumes(volume_list):
-    def _parse_volume(_volume):
-        if not isinstance(_volume, str):
-            raise AlaudaInputError('Invalid volume description. (Example of valid description: /var/lib/data1:10:[backup_id])')
-        result = _volume.split(':')
-        if len(result) != 2 and len(result) != 3:
-            raise AlaudaInputError('Invalid volume description. (Example of valid description: /var/lib/data1:10:[backup_id])')
+def parse_volume(_volume):
+    if not isinstance(_volume, str):
+        raise AlaudaInputError('Invalid volume description. (Example of valid description: /var/lib/data1:10:[backup_id])')
+    result = _volume.split(':')
+    if len(result) != 2 and len(result) != 3:
+        raise AlaudaInputError('Invalid volume description. (Example of valid description: /var/lib/data1:10:[backup_id])')
 
-        path = result[0]
-        try:
-            size = int(result[1])
-            backup_id = None
-            if len(result) == 3:
-                backup_id = result[2]
-        except:
-            print "except"
-            raise AlaudaInputError('Invalid volume description. (Example of valid description: /var/lib/data1:10:[backup_id])')
-        return path, size, backup_id
+    path = result[0]
+    try:
+        size = int(result[1])
+        backup_id = None
+        if len(result) == 3:
+            backup_id = result[2]
+    except:
+        print "except"
+        raise AlaudaInputError('Invalid volume description. (Example of valid description: /var/lib/data1:10:[backup_id])')
+    return path, size, backup_id
+
+
+def parse_volumes(volume_list):
+    #     def _parse_volume(_volume):
+    #         if not isinstance(_volume, str):
+    #             raise AlaudaInputError('Invalid volume description. (Example of valid description: /var/lib/data1:10:[backup_id])')
+    #         result = _volume.split(':')
+    #         if len(result) != 2 and len(result) != 3:
+    #             raise AlaudaInputError('Invalid volume description. (Example of valid description: /var/lib/data1:10:[backup_id])')
+    #
+    #         path = result[0]
+    #         try:
+    #             size = int(result[1])
+    #             backup_id = None
+    #             if len(result) == 3:
+    #                 backup_id = result[2]
+    #         except:
+    #             print "except"
+    #             raise AlaudaInputError('Invalid volume description. (Example of valid description: /var/lib/data1:10:[backup_id])')
+    #         return path, size, backup_id
 
     parsed_volumes = []
     if volume_list is not None:
         for volume_desc in volume_list:
-            path, size, backup_id = _parse_volume(volume_desc)
+            path, size, backup_id = parse_volume(volume_desc)
             volume = {"app_volume_dir": path, "size_gb": size, "volume_type": "EBS"}
             if backup_id is not None:
                 volume['backup_id'] = backup_id
@@ -250,3 +301,40 @@ def print_backup_ps_output(backup_list):
         print '{0}    {1}    {2}    {3}    {4}'.format(str(backup['backup_id']).ljust(max_id_len), str(backup['name']).ljust(max_name_len),
                                                        str(backup['status']).ljust(max_state_len), str(backup.get('size_byte', ' ')).ljust(max_size_len),
                                                        str(backup['created_datetime']).ljust(max_time_len))
+
+
+def indegree0(v, e):
+    if v == []:
+        return None
+    tmp = v[:]
+    for i in e:
+        if i[1] in tmp:
+            tmp.remove(i[1])
+    if tmp == []:
+        return -1
+
+    for t in tmp:
+        for i in range(len(e)):
+            if t in e[i]:
+                e[i] = 'toDel'
+    if e:
+        eset = set(e)
+        eset.remove('toDel')
+        e[:] = list(eset)
+    if v:
+        for t in tmp:
+            v.remove(t)
+    return tmp
+
+
+def topoSort(v, e):
+    result = []
+    while True:
+        nodes = indegree0(v, e)
+        if nodes is None:
+            break
+        if nodes == -1:
+            print('there\'s a circle.')
+            return None
+        result.extend(nodes)
+    return result
