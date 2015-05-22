@@ -3,7 +3,6 @@ import auth
 import json
 import requests
 from exceptions import AlaudaServerError
-from __builtin__ import classmethod
 
 
 class Backup(object):

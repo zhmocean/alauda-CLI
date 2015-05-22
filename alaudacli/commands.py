@@ -7,6 +7,7 @@ import auth
 import compose
 from service import Service
 from backup import Backup
+from instance import Instance
 
 
 def login(username, password, cloud, endpoint):
@@ -110,6 +111,31 @@ def service_logs(name, namespace, start_time, end_time):
     service = Service.fetch(name, namespace)
     result = service.logs(start_time, end_time)
     print "{}".format(result)
+
+
+def instance_ps(name, namespace):
+    service = Service.fetch(name, namespace)
+    instances = Instance.list(service)
+
+
+def instance_inspect(name, uuid, namespace):
+    service = Service.fetch(name, namespace)
+    instance = Instance.fetch(service, uuid)
+    print instance.details
+
+
+def instance_logs(name, uuid, namespace, start_time=None, end_time=None):
+    service = Service.fetch(name, namespace)
+    instance = Instance.fetch(service, uuid)
+    result = instance.logs(start_time, end_time)
+    print result
+
+
+def instance_metrics(name, uuid, namespace, start_time=None, end_time=None):
+    service = Service.fetch(name, namespace)
+    instance = Instance.fetch(service, uuid)
+    result = instance.metrics(start_time, end_time)
+    print result
 
 
 def compose_up(file):

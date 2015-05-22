@@ -35,6 +35,15 @@ def process_cmds(args):
             commands.service_disable_autoscaling(args.name, args.namespace, args.target_num_instances)
         elif args.subcmd == 'logs':
             commands.service_logs(args.name, args.namespace, args.start_time, args.end_time)
+    elif args.cmd == 'instance':
+        if args.subcmd == 'ps':
+            commands.instance_ps(args.name, namespace=args.namespace)
+        elif args.subcmd == 'inspect':
+            commands.instance_inspect(args.name, args.id, namespace=args.namespace)
+        elif args.subcmd == 'logs':
+            commands.instance_logs(args.name, args.id, args.namespace, args.start_time, args.end_time)
+        elif args.subcmd == 'metrics':
+            commands.instance_metrics(args.name, args.id, args.namespace, args.start_time, args.end_time)
     elif args.cmd == 'backup':
         if args.subcmd == 'create':
             commands.backup_create(args.name, args.service, args.dir, args.namespace)
