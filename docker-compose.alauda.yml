@@ -1,14 +1,18 @@
 web:
-  build: .
+  extends:
+    file: docker-compose.yml
+    service: web
+  image: cimomo/hello-compose-web:latest
   command: python app.py
   ports:
-   - "5000:5000"
+   - "5000"
   links:
    - redis:redis
   environment:
    - FOO: foo
    - BAR=bar
-   - BAZ:baz
+   - BAZ:b
+   - A=a
 redis:
   image: redis
   ports:

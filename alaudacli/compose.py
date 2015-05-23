@@ -12,7 +12,7 @@ def load_project(filepath):
     compose_data = _load_yaml(abspath)
     vertex_list = [abspath]
     edge_list = []
-    load_extends_file(compose_data, abspath, vertex_list, edge_list)
+    resolve_extends(compose_data, abspath, vertex_list, edge_list)
     services = load_services(compose_data)
     project = Project(services)
     return project
@@ -61,7 +61,7 @@ def load_service(service_name, service_data):
     envvars = load_envvars(service_data)
     domain = load_domain(service_data)
     instance_num, instance_size = load_instance(service_data)
-    scale_mode, auto_scale_cfg = load_scale(service_data)
+    scaling_mode, autoscaling_config = load_scaling_info(service_data)
     service = Service(name=service_name,
                       image_name=image_name,
                       image_tag=image_tag,
@@ -72,14 +72,14 @@ def load_service(service_name, service_data):
                       links=links,
                       target_num_instances=instance_num,
                       instance_size=instance_size,
-                      scaling_mode=scale_mode,
-                      autoscaling_config=auto_scale_cfg,
+                      scaling_mode=scaling_mode,
+                      autoscaling_config=autoscaling_config,
                       custom_domain_name=domain)
     return service
 
 
 def load_domain(service_data):
-    return service_data.get('domain', None)
+    return service_data.get('domain', '')
 
 
 def load_instance(service_data):
@@ -88,8 +88,8 @@ def load_instance(service_data):
     return number, size
 
 
-def load_scale(service_data):
-    autoscaling_config = service_data.get('autoscaling_config', None)
+def load_scaling_info(service_data):
+    autoscaling_config = service_data.get('autoscaling_config')
     if autoscaling_config is None:
         return util.parse_autoscale_info(None)
     return util.parse_autoscale_info((True, autoscaling_config))
@@ -115,68 +115,65 @@ def load_envvars(service_data):
     return util.parse_envvars(service_data.get('environment'))
 
 
-def load_extends_file(compose_data, file_name, vertex_list, edge_list):
-    for local_service_name, local_origin_value in compose_data.items():
-        if 'extends' in local_origin_value.keys():
-            extends = local_origin_value['extends']
-            extend_file_name = os.path.abspath(extends['file'])
+def resolve_extends(compose_data, file_name, vertex_list, edge_list):
+    for local_service_name, local_service_data in compose_data.items():
+        if 'extends' in local_service_data.keys():
+            extends = local_service_data['extends']
+            extends_file_name = os.path.abspath(extends['file'])
             original_service_name = extends['service']
-            vertex = extend_file_name
-            if vertex not in vertex_list:
-                vertex_list.append(vertex)
-            edge = (file_name, vertex)
+            if extends_file_name not in vertex_list:
+                vertex_list.append(extends_file_name)
+            edge = (file_name, extends_file_name)
             if edge not in edge_list:
                 edge_list.append(edge)
-            vertex_tmp = deepcopy(vertex_list)
-            edge_tmp = deepcopy(edge_list)
-            result = util.topoSort(vertex_tmp, edge_tmp)
+            vertex_list_tmp = deepcopy(vertex_list)
+            edge_list_tmp = deepcopy(edge_list)
+            result = util.topoSort(vertex_list_tmp, edge_list_tmp)
             if result is None:
-                raise AlaudaInputError('There is a circle in extends. Please check!')
-            original_compose_data = _load_yaml(extend_file_name)
-            load_extends_file(original_compose_data, extend_file_name, vertex_list, edge_list)
-            original_service_value = original_compose_data[original_service_name]
-            for key, value in original_service_value.items():
+                raise AlaudaInputError('There is a circular dependency in extends definitions')
+            original_compose_data = _load_yaml(extends_file_name)
+            resolve_extends(original_compose_data, extends_file_name, vertex_list, edge_list)
+            original_service_data = original_compose_data[original_service_name]
+            for key, value in original_service_data.items():
                 if key == 'links' or key == 'volumes_from':
                     continue
                 elif key == 'ports':
-                    merge_original_port(local_origin_value, value)
+                    merge_ports(local_service_data, value)
                 elif key == 'expose':
-                    merge_original_expose(local_origin_value, value)
+                    merge_expose(local_service_data, value)
                 elif key == 'environment':
-                    merge_original_environment(local_origin_value, value)
+                    merge_environment(local_service_data, value)
                 elif key == 'volumes':
-                    merge_original_volume(local_origin_value, value)
-                elif key not in local_origin_value.keys():
-                    local_origin_value[key] = value
+                    merge_volumes(local_service_data, value)
+                elif key not in local_service_data.keys():
+                    local_service_data[key] = value
                 else:
                     continue
 
 
-def merge_original_port(local_value, original_value):
+def merge_ports(local_service_data, original_ports):
     pass
 
 
-def merge_original_expose(local_value, original_value):
-    if local_value.get('expose', None) is None:
-        local_value['expose'] = original_value
+def merge_expose(local_service_data, original_expose):
+    if local_service_data.get('expose') is None:
+        local_service_data['expose'] = original_expose
     else:
-        for value in original_value:
-            if value not in local_value['expose']:
-                local_value['expose'].append(value)
+        local_service_data['expose'] += [v for v in original_expose if v not in local_service_data['expose']]
 
 
-def merge_original_environment(local_value, original_value):
-    if local_value.get('environment', None) is None:
-        local_value['environment'] = original_value
+def merge_environment(local_service_data, original_environment):
+    if local_service_data.get('environment') is None:
+        local_service_data['environment'] = original_environment
     else:
-        local_envs = util.parse_envvars(local_value['environment'])
-        for env in original_value:
+        local_envs = util.parse_envvars(local_service_data['environment'])
+        for env in original_environment:
             key, _ = util.parse_envvar(env)
             if key not in local_envs.keys():
-                local_value['environment'].append(env)
+                local_service_data['environment'].append(env)
 
 
-def merge_original_volume(local_value, original_value):
+def merge_volumes(local_service_data, original_volumes):
     pass
 
 

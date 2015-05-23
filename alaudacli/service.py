@@ -7,22 +7,22 @@ import util
 from exceptions import AlaudaServerError
 
 MAX_RETRY_NUM = 10
-INSTANCE_SIZE = ['XS', 'S', 'M', 'L', 'XL']
+INSTANCE_SIZES = ['XS', 'S', 'M', 'L', 'XL']
 
 
 class Service(object):
 
     def __init__(self, name, image_name, image_tag, target_num_instances=1, instance_size='XS', run_command='',
                  instance_ports=[], instance_envvars={}, allocation_group='', volumes=[], links=[], details='', namespace=None,
-                 scaling_mode='MANUAL', autoscaling_config={}, custom_domain_name=None):
+                 scaling_mode='MANUAL', autoscaling_config={}, custom_domain_name=''):
         self.name = name
         self.image_name = image_name
         self.image_tag = image_tag
         self.target_num_instances = target_num_instances
 
         self.instance_size = instance_size
-        if instance_size not in INSTANCE_SIZE:
-            raise AlaudaServerError('instance_size must be one of {}'.format(INSTANCE_SIZE))
+        if instance_size not in INSTANCE_SIZES:
+            raise AlaudaServerError('instance_size must be one of {}'.format(INSTANCE_SIZES))
         self.run_command = run_command
         self.instance_envvars = instance_envvars
         self.instance_ports = instance_ports
@@ -92,10 +92,9 @@ class Service(object):
             'linked_to_apps': linked_to,
             "volumes": self.volumes,
             'scaling_mode': self.scaling_mode,
-            'autoscaling_config': self.autoscaling_config
+            'autoscaling_config': self.autoscaling_config,
+            'custom_domain_name': self.custom_domain_name
         }
-        if self.custom_domain_name is not None:
-            payload['custom_domain_name'] = self.custom_domain_name
         r = requests.post(url, headers=self.headers, data=json.dumps(payload))
         util.check_response(r)
 
