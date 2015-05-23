@@ -52,8 +52,8 @@ def _add_service_parser(subparsers):
     create_parser.add_argument('-v', '--volume', help='Volumes, e.g. /var/lib/mysql:10', action='append')
     create_parser.add_argument('-n', '--namespace', help='Service namespace', default='')
     create_parser.add_argument('-a', '--autoscale', help='Enable auto-scaling', action='store_true')
-    create_parser.add_argument('-f', '--autoscaling_config', help='Auto-scaling config file name', default='./auto-scaling.cfg')
-    create_parser.add_argument('-d', '--domain', help='Domain name')
+    create_parser.add_argument('-f', '--autoscaling-config', help='Auto-scaling config file name', default='./auto-scaling.cfg')
+    create_parser.add_argument('-d', '--domain', help='Custom domain name')
 
     run_parser = service_subparsers.add_parser('run', help='Create and start a new service', description='Create and start a new service')
     run_parser.add_argument('name', help='Service name')
@@ -68,8 +68,8 @@ def _add_service_parser(subparsers):
     run_parser.add_argument('-v', '--volume', help='volumes.e.g. /var/lib/mysql:10', action='append')
     run_parser.add_argument('-n', '--namespace', help='Service namespace', default='')
     run_parser.add_argument('-a', '--autoscale', help='Enable auto-scaling', action='store_true')
-    run_parser.add_argument('-f', '--autoscaling_config', help='Auto-scaling config file name', default='./auto-scaling.cfg')
-    run_parser.add_argument('-d', '--domain', help='Domain name')
+    run_parser.add_argument('-f', '--autoscaling-config', help='Auto-scaling config file name', default='./auto-scaling.cfg')
+    run_parser.add_argument('-d', '--domain', help='Custom domain name')
 
     inspect_parser = service_subparsers.add_parser('inspect', help='Get details of a service', description='Get details of a service')
     inspect_parser.add_argument('name', help='Name of the service to retrieve')
@@ -104,11 +104,11 @@ def _add_service_parser(subparsers):
     disable_autoscaling_parser.add_argument('-n', '--namespace', help='Service namespace', default='')
     disable_autoscaling_parser.add_argument('-t', '--target-num-instances', help='Target number of instances for the service', type=int)
 
-    logs_parser = service_subparsers.add_parser('logs', help='Service log', description='Service log')
+    logs_parser = service_subparsers.add_parser('logs', help='Query service log', description='Query service log')
     logs_parser.add_argument('name', help='Service name')
     logs_parser.add_argument('-n', '--namespace', help='Service namespace', default='')
-    logs_parser.add_argument('-s', '--start_time', help='Logs query start time. e.g. 2015-05-01 12:12:12')
-    logs_parser.add_argument('-e', '--end_time', help='Logs query end time. e.g. 2015-05-01 12:12:12')
+    logs_parser.add_argument('-s', '--start-time', help='Logs query start time. e.g. 2015-05-01 12:12:12')
+    logs_parser.add_argument('-e', '--end-time', help='Logs query end time. e.g. 2015-05-01 12:12:12')
 
 
 def _add_backups_parser(subparsers):
@@ -176,16 +176,16 @@ def _add_instance_parser(subparsers):
     inspect_parser.add_argument('id', help='Instance uuid')
     inspect_parser.add_argument('-n', '--namespace', help='Service namespace', default='')
 
-    logs_parser = instance_subparsers.add_parser('logs', help='Instance log', description='Instance log')
+    logs_parser = instance_subparsers.add_parser('logs', help='Query instance log', description='Instance log')
     logs_parser.add_argument('name', help='Service name')
     logs_parser.add_argument('id', help='Instance uuid')
-    logs_parser.add_argument('-s', '--start_time', help='Logs query start time. e.g. 2015-05-01 12:12:12')
-    logs_parser.add_argument('-e', '--end_time', help='Logs query end time. e.g. 2015-05-01 12:12:12')
+    logs_parser.add_argument('-s', '--start-time', help='Logs query start time. e.g. 2015-05-01 12:12:12')
+    logs_parser.add_argument('-e', '--end-time', help='Logs query end time. e.g. 2015-05-01 12:12:12')
     logs_parser.add_argument('-n', '--namespace', help='Service namespace', default='')
 
-    metrics_parser = instance_subparsers.add_parser('metrics', help='Instance metric', description='Instance metric')
+    metrics_parser = instance_subparsers.add_parser('metrics', help='Query instance metrics', description='Instance metric')
     metrics_parser.add_argument('name', help='Service name')
     metrics_parser.add_argument('id', help='Instance uuid')
-    metrics_parser.add_argument('-s', '--start_time', help='Metrics query start time. e.g. 2015-05-01 12:12:12')
-    metrics_parser.add_argument('-e', '--end_time', help='Metrics query end time. e.g. 2015-05-01 12:12:12')
+    metrics_parser.add_argument('-s', '--start-time', help='Metrics query start time. e.g. 2015-05-01 12:12:12')
+    metrics_parser.add_argument('-e', '--end-time', help='Metrics query end time. e.g. 2015-05-01 12:12:12')
     metrics_parser.add_argument('-n', '--namespace', help='Service namespace', default='')

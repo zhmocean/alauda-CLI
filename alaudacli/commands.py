@@ -110,7 +110,7 @@ def service_disable_autoscaling(name, namespace, target_num_instances):
 def service_logs(name, namespace, start_time, end_time):
     service = Service.fetch(name, namespace)
     result = service.logs(start_time, end_time)
-    print "{}".format(result)
+    print '[alauda] ' + result
 
 
 def instance_ps(name, namespace):
@@ -128,14 +128,14 @@ def instance_logs(name, uuid, namespace, start_time=None, end_time=None):
     service = Service.fetch(name, namespace)
     instance = Instance.fetch(service, uuid)
     result = instance.logs(start_time, end_time)
-    print result
+    print '[alauda] ' + result
 
 
 def instance_metrics(name, uuid, namespace, start_time=None, end_time=None):
     service = Service.fetch(name, namespace)
     instance = Instance.fetch(service, uuid)
     result = instance.metrics(start_time, end_time)
-    print result
+    print '[alauda] ' + result
 
 
 def compose_up(file):
