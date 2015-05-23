@@ -115,7 +115,7 @@ def service_logs(name, namespace, start_time, end_time):
 
 def instance_ps(name, namespace):
     service = Service.fetch(name, namespace)
-    instances = Instance.list(service)
+    Instance.list(service)
 
 
 def instance_inspect(name, uuid, namespace):

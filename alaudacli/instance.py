@@ -2,7 +2,6 @@ import util
 import auth
 import json
 import requests
-from exceptions import AlaudaServerError
 
 
 class Instance(object):
