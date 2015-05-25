@@ -40,11 +40,12 @@ class Organization(object):
         url = api_endpoint + 'orgs/'
         r = requests.get(url, headers=headers)
         util.check_response(r)
-        organizations = json.loads(r.text)
         organization_list = []
-        for data in organizations:
-            organization = Organization.fetch(data['name'])
-            organization_list.append(organization)
+        if r.text:
+            organizations = json.loads(r.text)
+            for data in organizations:
+                organization = Organization.fetch(data['name'])
+                organization_list.append(organization)
         return organization_list
 
     def update(self, company):
