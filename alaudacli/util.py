@@ -206,7 +206,7 @@ def parse_time(start_time, end_time):
             raise AlaudaInputError('Please make sure time format like 2015-05-01 12:00:00')
     elif start_time is None and end_time is None:
         end = int(time.time())
-        start = end - 800
+        start = end - 3600
         return start, end
     elif start_time is not None:
         raise AlaudaInputError('Please use -e to add end time!')
@@ -307,6 +307,13 @@ def print_instance_ps_output(instance_list):
         instance = json.loads(data.details)
         print '{0}    {1}    {2}'.format(str(instance['instance_name']).ljust(max_name_len), str(instance['uuid']).ljust(max_id_len),
                                          str(instance['started_at']).ljust(max_time_len))
+
+
+def print_logs(logs):
+    entry_list = logs.split('\\r\\n')
+    print '[alauda] Logs:'
+    for entry in entry_list:
+        print entry
 
 
 def indegree0(v, e):
