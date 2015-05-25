@@ -12,6 +12,11 @@ def patch_argv(argv):
     if not args:
         raise AlaudaInputError('Arguments cannot be empty')
 
+    if len(args) >= 2:
+        if args[1] in ['create', 'run', 'scale', 'inspect', 'start', 'stop', 'rm',
+                       'enable-autoscaling', 'disable-autoscaling', 'logs', 'ps']:
+            args.insert(1, 'service')
+
     if len(args) == 1:
         args.append('-h')
     elif len(args) == 2 and args[1] in ['service', 'compose', 'backup', 'instance']:
