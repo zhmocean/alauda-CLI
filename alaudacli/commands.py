@@ -203,7 +203,8 @@ def organization_create(name, company):
 
 def organization_list():
     orgs_list = Organization.list()
-    print orgs_list
+    for org in orgs_list:
+        print org.details
 
 
 def organization_inspect(name):
