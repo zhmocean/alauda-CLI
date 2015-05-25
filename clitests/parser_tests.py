@@ -168,81 +168,130 @@ class ProcessCmdTest(unittest.TestCase):
         argv = ['service', 'ps']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.service_ps.assert_called()
+        mock_commands.service_ps.assert_called_with(namespace=None)
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_compose_up(self, mock_commands):
         argv = ['compose', 'up']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.compose_up.assert_called()
+        mock_commands.compose_up.assert_called_with('./docker-compose.yml')
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_compose_ps(self, mock_commands):
         argv = ['compose', 'ps']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.compose_ps.assert_called()
+        mock_commands.compose_ps.assert_called_with('./docker-compose.yml')
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_compose_start(self, mock_commands):
         argv = ['compose', 'start']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.compose_start.assert_called()
+        mock_commands.compose_start.assert_called_with('./docker-compose.yml')
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_compose_stop(self, mock_commands):
         argv = ['compose', 'stop']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.compose_stop.assert_called()
+        mock_commands.compose_stop.assert_called_with('./docker-compose.yml')
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_compose_restart(self, mock_commands):
         argv = ['compose', 'restart']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.compose_restart.assert_called()
+        mock_commands.compose_restart.assert_called_with('./docker-compose.yml')
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_compose_rm(self, mock_commands):
         argv = ['compose', 'rm']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.compose_rm.assert_called()
+        mock_commands.compose_rm.assert_called_with('./docker-compose.yml')
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_compose_scale(self, mock_commands):
         argv = ['compose', 'scale', 'redis=2 web=3']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.compose_scale.assert_called(['redis=2 web=3'])
+        mock_commands.compose_scale.assert_called_with(['redis=2 web=3'], './docker-compose.yml')
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_backup_create(self, mock_commands):
         argv = ['backup', 'create', 'my_snapshot', 'hello', '/data']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.backup_create.assert_called('my_snapshot', 'hello', '/data')
+        mock_commands.backup_create.assert_called_with('my_snapshot', 'hello', '/data', None)
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_backup_list(self, mock_commands):
         argv = ['backup', 'list']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.backup_list.assert_called()
+        mock_commands.backup_list.assert_called_with(None)
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_backup_inspect(self, mock_commands):
         argv = ['backup', 'inspect', 'my_backup_id']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.backup_inspect.assert_called('my_backup_id')
+        mock_commands.backup_inspect.assert_called_with('my_backup_id', None)
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_backup_rm(self, mock_commands):
-        argv = ['backup', 'inspect', 'my_backup_id']
+        argv = ['backup', 'rm', 'my_backup_id']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.backup_rm.assert_called('my_backup_id')
+        mock_commands.backup_rm.assert_called_with('my_backup_id', None)
+
+    @mock.patch('alaudacli.cmd_processor.commands')
+    def test_process_instance_ps(self, mock_commands):
+        argv = ['service', 'instances', 'hello']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_commands.instance_ps.assert_called_with('hello', namespace='')
+
+    @mock.patch('alaudacli.cmd_processor.commands')
+    def test_process_instance_inspect(self, mock_commands):
+        argv = ['service', 'instance', 'hello', 'd938a2d7-0071-11e5-ab5d-02416b28d26a']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_commands.instance_inspect.assert_called_with('hello', 'd938a2d7-0071-11e5-ab5d-02416b28d26a', namespace='')
+
+    @mock.patch('alaudacli.cmd_processor.commands')
+    def test_process_instance_logs(self, mock_commands):
+        argv = ['service', 'instance-logs', 'hello', 'd938a2d7-0071-11e5-ab5d-02416b28d26a']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_commands.instance_logs.assert_called_with('hello', 'd938a2d7-0071-11e5-ab5d-02416b28d26a', '', None, None)
+
+    @mock.patch('alaudacli.cmd_processor.commands')
+    def test_process_instance_metrics(self, mock_commands):
+        argv = ['service', 'instance-metrics', 'hello', 'd938a2d7-0071-11e5-ab5d-02416b28d26a']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_commands.instance_metrics.assert_called_with('hello', 'd938a2d7-0071-11e5-ab5d-02416b28d26a', '', None, None)
+
+    @mock.patch('alaudacli.cmd_processor.commands')
+    def test_process_organization_create(self, mock_commands):
+        argv = ['organization', 'create', 'myorgs', 'mathilde']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_commands.organization_create.assert_called_with('myorgs', 'mathilde')
+
+    @mock.patch('alaudacli.cmd_processor.commands')
+    def test_process_organization_inspect(self, mock_commands):
+        argv = ['organization', 'inspect', 'myorgs']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_commands.organization_inspect.assert_called_with('myorgs')
+
+    @mock.patch('alaudacli.cmd_processor.commands')
+    def test_process_organization_update(self, mock_commands):
+        argv = ['organization', 'update', 'myorgs', 'alauda']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_commands.organization_update.assert_called_with('myorgs', 'alauda')
