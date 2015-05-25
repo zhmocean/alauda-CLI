@@ -30,11 +30,11 @@ class Instance(object):
         r = requests.get(url, headers=headers)
         util.check_response(r)
         data = json.loads(r.text)
-        instances = []
+        instance_list = []
         for instance in data:
             instance = cls(service=service, uuid=instance['uuid'], details=json.dumps(instance))
-            instances.append(instance)
-        util.print_instance_ps_output(instances)
+            instance_list.append(instance)
+        return instance_list
 
     def logs(self, start_time, end_time):
         start, end = util.parse_time(start_time, end_time)
