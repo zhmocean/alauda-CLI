@@ -107,7 +107,7 @@ def parse_volume(_volume):
         size = int(result[1])
         if size < VOLUME_MIN_SIZE or size > VOLUME_MAX_SIZE:
             raise AlaudaInputError(
-                'Invalid volume description. Volume size: {0} is invalid. Must > {1} and < {2}'.format(
+                'Invalid volume size {0}. Volume size must be between {1} and {2}'.format(
                     size,
                     VOLUME_MIN_SIZE,
                     VOLUME_MAX_SIZE))
