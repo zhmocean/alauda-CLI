@@ -2,6 +2,9 @@ from exceptions import AlaudaInputError, AlaudaServerError
 import json
 import time
 
+VOLUME_MIN_SIZE = 10
+VOLUME_MAX_SIZE = 100
+
 
 def parse_image_name_tag(image):
     result = image.split(':')
@@ -102,9 +105,17 @@ def parse_volume(_volume):
     path = result[0]
     try:
         size = int(result[1])
+        if size < VOLUME_MIN_SIZE or size > VOLUME_MAX_SIZE:
+            raise AlaudaInputError(
+                'Invalid volume description. Volume size: {0} is invalid. Must > {1} and < {2}'.format(
+                    size,
+                    VOLUME_MIN_SIZE,
+                    VOLUME_MAX_SIZE))
         backup_id = None
         if len(result) == 3:
             backup_id = result[2]
+    except AlaudaInputError as ex:
+        raise ex
     except:
         print "except"
         raise AlaudaInputError('Invalid volume description. (Example of valid description: /var/lib/data1:10:[backup_id])')
@@ -195,7 +206,7 @@ def parse_time(start_time, end_time):
             raise AlaudaInputError('Please make sure time format like 2015-05-01 12:00:00')
     elif start_time is None and end_time is None:
         end = int(time.time())
-        start = end - 3600
+        start = end - 800
         return start, end
     elif start_time is not None:
         raise AlaudaInputError('Please use -e to add end time!')
@@ -273,6 +284,29 @@ def print_backup_ps_output(backup_list):
         print '{0}    {1}    {2}    {3}    {4}'.format(str(backup['backup_id']).ljust(max_id_len), str(backup['name']).ljust(max_name_len),
                                                        str(backup['status']).ljust(max_state_len), str(backup.get('size_byte', ' ')).ljust(max_size_len),
                                                        str(backup['created_datetime']).ljust(max_time_len))
+
+
+def print_instance_ps_output(instance_list):
+    max_name_len = len('Name')
+    max_id_len = len('ID')
+    max_time_len = len('Created time')
+
+    for data in instance_list:
+        instance = json.loads(data.details)
+        if max_name_len < len(instance['instance_name']):
+            max_name_len = len(instance['instance_name'])
+        if max_id_len < len(instance['uuid']):
+            max_id_len = len(instance['uuid'])
+        if max_time_len < len(instance['started_at']):
+            max_time_len = len(instance['started_at'])
+
+    print '{0}    {1}    {2}'.format('Name'.center(max_name_len), 'ID'.center(max_id_len), 'Created time'.center(max_time_len))
+    print '{0}'.format('-' * (max_name_len + max_id_len + max_time_len + 4 * 2))
+
+    for data in instance_list:
+        instance = json.loads(data.details)
+        print '{0}    {1}    {2}'.format(str(instance['instance_name']).ljust(max_name_len), str(instance['uuid']).ljust(max_id_len),
+                                         str(instance['started_at']).ljust(max_time_len))
 
 
 def indegree0(v, e):

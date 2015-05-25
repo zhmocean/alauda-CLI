@@ -9,7 +9,7 @@ _alauda()
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
-    opts="login -v -h logout service compose backup"
+    opts="login -v -h logout service compose backup instance"
 
     case "${prev}" in
         login)
@@ -102,6 +102,16 @@ _alauda()
        list)
             local list_args="{name} -n"
             COMPREPLY=( $(compgen -W "${list_args}" -- ${cur}) )
+            return 0
+            ;;
+       instance)
+            local instance_args="ps inspect logs metrics"
+            COMPREPLY=( $(compgen -W "${instance_args}" -- ${cur}) )
+            return 0
+            ;;
+       metrics)
+            local metrics_args="{name} -n -s -t"
+            COMPREPLY=( $(compgen -W "${metrics_args}" -- ${cur}) )
             return 0
             ;;
         *)
