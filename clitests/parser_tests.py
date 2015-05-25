@@ -295,3 +295,10 @@ class ProcessCmdTest(unittest.TestCase):
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
         mock_commands.organization_update.assert_called_with('myorgs', 'alauda')
+
+    @mock.patch('alaudacli.cmd_processor.commands')
+    def test_process_organization_list(self, mock_commands):
+        argv = ['organization', 'list']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_commands.organization_list.assert_called()
