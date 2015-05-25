@@ -11,31 +11,6 @@ class Instance(object):
         self.uuid = uuid
         self.details = details
 
-    @classmethod
-    def fetch(cls, service, id):
-        api_endpoint, token, _ = auth.load_token()
-        url = api_endpoint + 'services/{0}/{1}/instances/{2}'.format(service.namespace, service.name, id)
-        headers = auth.build_headers(token)
-        r = requests.get(url, headers=headers)
-        util.check_response(r)
-        data = json.loads(r.text)
-        instance = cls(service=service, uuid=data['uuid'], details=r.text)
-        return instance
-
-    @classmethod
-    def list(cls, service):
-        api_endpoint, token, _ = auth.load_token()
-        url = api_endpoint + 'services/{0}/{1}/instances/'.format(service.namespace, service.name)
-        headers = auth.build_headers(token)
-        r = requests.get(url, headers=headers)
-        util.check_response(r)
-        data = json.loads(r.text)
-        instance_list = []
-        for instance in data:
-            instance = cls(service=service, uuid=instance['uuid'], details=json.dumps(instance))
-            instance_list.append(instance)
-        return instance_list
-
     def logs(self, start_time, end_time):
         start, end = util.parse_time(start_time, end_time)
         api_endpoint, token, _ = auth.load_token()

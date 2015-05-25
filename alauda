@@ -9,7 +9,7 @@ _alauda()
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
-    opts="login -v -h logout service compose backup instance organization"
+    opts="login -v -h logout service compose backup organization"
 
     case "${prev}" in
         login)
@@ -30,7 +30,7 @@ _alauda()
             return 0
             ;;
        service)
-            local service_args="create run inspect start stop rm ps scale enable-autoscaling disable-autoscaling logs"
+            local service_args="create run inspect start stop rm ps scale enable-autoscaling disable-autoscaling logs instances instance instance-logs instance-metircs"
             COMPREPLY=( $(compgen -W "${service_args}" -- ${cur}) )
             return 0
             ;;
@@ -84,6 +84,16 @@ _alauda()
             COMPREPLY=( $(compgen -W "${logs_args}" -- ${cur}) )
             return 0
             ;;
+       instance-logs)
+            local instance_logs_args="{name} {uuid} -n -s -t"
+            COMPREPLY=( $(compgen -W "${instance_logs_args}" -- ${cur}) )
+            return 0
+            ;;
+       instance-metrics)
+            local instance_metrics_args="{name} {uuid} -n -s -t"
+            COMPREPLY=( $(compgen -W "${instance_metrics_args}" -- ${cur}) )
+            return 0
+            ;;
        compose)
             local compose_args="up ps start stop restart rm scale"
             COMPREPLY=( $(compgen -W "${compose_args}" -- ${cur}) )
@@ -105,8 +115,13 @@ _alauda()
             return 0
             ;;
        instance)
-            local instance_args="ps inspect logs metrics"
+            local instance_args="{name} {uuid} -n"
             COMPREPLY=( $(compgen -W "${instance_args}" -- ${cur}) )
+            return 0
+            ;;
+       instances)
+            local instances_args="{name} -n"
+            COMPREPLY=( $(compgen -W "${instances_args}" -- ${cur}) )
             return 0
             ;;
        metrics)
