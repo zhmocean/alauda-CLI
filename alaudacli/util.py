@@ -207,11 +207,15 @@ def parse_time(start_time, end_time):
     elif start_time is None and end_time is None:
         end = int(time.time())
         start = end - 3600
-        return start, end
     elif start_time is not None:
-        raise AlaudaInputError('Please use -e to add end time!')
+        start = time.strptime(start_time, '%Y-%m-%d %H:%M:%S')
+        start = int(time.mktime(start))
+        end = int(time.time())
     else:
-        raise AlaudaInputError('Please use -s to add start time!')
+        end = time.strptime(end_time, '%Y-%m-%d %H:%M:%S')
+        end = int(time.mktime(end))
+        start = end - 3600
+    return start, end
 
 
 def failed(status_code):

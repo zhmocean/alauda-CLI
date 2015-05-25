@@ -7,7 +7,6 @@ import auth
 import compose
 from service import Service
 from backup import Backup
-from instance import Instance
 from organization import Organization
 
 

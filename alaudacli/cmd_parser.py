@@ -19,7 +19,6 @@ def create_parser():
     _add_service_parser(subparsers)
     _add_compose_parser(subparsers)
     _add_backups_parser(subparsers)
-#     _add_instance_parser(subparsers)
     _add_organization_parser(subparsers)
     return parser
 
@@ -191,11 +190,12 @@ def _add_organization_parser(subparsers):
     org_parser = subparsers.add_parser('organization', help='Organization operations', description='Organization operations')
     org_subparsers = org_parser.add_subparsers(title='Alauda organization commands', dest='subcmd')
 
+    list_parser = org_subparsers.add_parser('list', help='List organizations', description='List organizations')
+    list_parser.set_defaults(which='list')
+
     create_parser = org_subparsers.add_parser('create', help='Create a new organization', description='Create a new organization')
     create_parser.add_argument('name', help='Organization name')
     create_parser.add_argument('company', help='Company name')
-
-    org_subparsers.add_parser('list', help='List organizations', description='list organizations')
 
     inspect_parser = org_subparsers.add_parser('inspect', help='Get details of an organization', description='Get details of an organization')
     inspect_parser.add_argument('name', help='Organization name')

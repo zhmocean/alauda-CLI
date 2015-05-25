@@ -1,6 +1,5 @@
 import util
 import auth
-import json
 import requests
 
 
