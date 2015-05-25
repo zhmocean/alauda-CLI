@@ -229,9 +229,9 @@ class Service(object):
 
     def get_state(self):
         data = json.loads(self.details)
-        if data['is_deploying']:
+        if data.get('is_deploying'):
             return 'Deploying'
-        elif data['current_num_instances'] == data['target_num_instances']:
+        elif data.get('current_num_instances', 0) == data['target_num_instances']:
             return 'Running'
         elif data['target_state'] == 'STOPPED':
             return 'Stopped'
