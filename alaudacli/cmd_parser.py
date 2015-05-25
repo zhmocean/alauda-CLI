@@ -20,6 +20,7 @@ def create_parser():
     _add_compose_parser(subparsers)
     _add_backups_parser(subparsers)
     _add_instance_parser(subparsers)
+    _add_organization_parser(subparsers)
     return parser
 
 
@@ -189,3 +190,21 @@ def _add_instance_parser(subparsers):
     metrics_parser.add_argument('-s', '--start-time', help='Metrics query start time. e.g. 2015-05-01 12:12:12')
     metrics_parser.add_argument('-e', '--end-time', help='Metrics query end time. e.g. 2015-05-01 12:12:12')
     metrics_parser.add_argument('-n', '--namespace', help='Service namespace', default='')
+
+
+def _add_organization_parser(subparsers):
+    org_parser = subparsers.add_parser('organization', help='Organization operations', description='Organization operations')
+    org_subparsers = org_parser.add_subparsers(title='Alauda organization commands', dest='subcmd')
+
+    create_parser = org_subparsers.add_parser('create', help='Create a new organization', description='Create a new organization')
+    create_parser.add_argument('name', help='Organization name')
+    create_parser.add_argument('company', help='Company name')
+
+    org_subparsers.add_parser('list', help='List organizations', description='list organizations')
+
+    inspect_parser = org_subparsers.add_parser('inspect', help='Get details of an organization', description='Get details of an organization')
+    inspect_parser.add_argument('name', help='Organization name')
+
+    update_parser = org_subparsers.add_parser('update', help='Update an exist orgnization', description='Update an exist orgnization')
+    update_parser.add_argument('name', help='Organization name')
+    update_parser.add_argument('company', help='Company name')

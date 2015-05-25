@@ -8,6 +8,7 @@ import compose
 from service import Service
 from backup import Backup
 from instance import Instance
+from organization import Organization
 
 
 def login(username, password, cloud, endpoint):
@@ -194,3 +195,23 @@ def backup_inspect(id, namespace):
 
 def backup_rm(id, namespace):
     Backup.remove(id, namespace)
+
+
+def organization_create(name, company):
+    orgs = Organization(name=name, company=company)
+    orgs.create()
+
+
+def organization_list():
+    orgs_list = Organization.list()
+
+
+def organization_inspect(name):
+    orgs = Organization.fetch(name)
+    result = orgs.inspect()
+    print result
+
+
+def organization_update(name, company):
+    orgs = Organization.fetch(name)
+    orgs.update(company)

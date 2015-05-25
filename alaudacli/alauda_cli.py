@@ -19,7 +19,7 @@ def patch_argv(argv):
 
     if len(args) == 1:
         args.append('-h')
-    elif len(args) == 2 and args[1] in ['service', 'compose', 'backup', 'instance']:
+    elif len(args) == 2 and args[1] in ['service', 'compose', 'backup', 'instance', 'organization']:
         args.append('-h')
     elif len(args) == 3:
         if args[1] == 'service' and args[2] in ['create', 'run', 'scale', 'inspect', 'start', 'stop', 'rm',
@@ -27,9 +27,11 @@ def patch_argv(argv):
             args.append('-h')
         elif args[1] == 'compose' and args[2] in ['scale']:
             args.append('-h')
-        elif args[1] == 'backup' and args[2] in ['create', 'inspect', 'rm']:
+        elif args[1] == 'backup' and args[2] in ['create', 'inspect', 'rm', 'list']:
             args.append('-h')
         elif args[1] == 'instance' and args[2] in ['ps', 'inspect', 'logs', 'metrics']:
+            args.append('-h')
+        elif args[1] == 'organization' and args[2] in ['create', 'inspect', 'list', 'update']:
             args.append('-h')
 
     return args[1:]

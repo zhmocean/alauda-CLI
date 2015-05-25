@@ -68,3 +68,12 @@ def process_cmds(args):
             commands.compose_rm(args.file)
         elif args.subcmd == 'scale':
             commands.compose_scale(args.descriptor, args.file)
+    elif args.cmd == 'organization':
+        if args.subcmd == 'create':
+            commands.organization_create(args.name, args.company)
+        elif args.subcmd == 'list':
+            commands.organization_list()
+        elif args.subcmd == 'inspect':
+            commands.organization_inspect(args.name)
+        elif args.subcmd == 'update':
+            commands.organization_update(args.name, args.company)
