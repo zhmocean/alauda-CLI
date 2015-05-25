@@ -116,13 +116,13 @@ def service_logs(name, namespace, start_time, end_time):
 
 def instance_ps(name, namespace):
     service = Service.fetch(name, namespace)
-    instance_list = Instance.list(service)
+    instance_list = service.list_instances()
     util.print_instance_ps_output(instance_list)
 
 
 def instance_inspect(name, uuid, namespace):
     service = Service.fetch(name, namespace)
-    instance = Instance.fetch(service, uuid)
+    instance = service.get_instance(uuid)
     print instance.details
 
 
@@ -204,6 +204,7 @@ def organization_create(name, company):
 
 def organization_list():
     orgs_list = Organization.list()
+    print orgs_list
 
 
 def organization_inspect(name):

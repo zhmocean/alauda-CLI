@@ -19,7 +19,7 @@ def create_parser():
     _add_service_parser(subparsers)
     _add_compose_parser(subparsers)
     _add_backups_parser(subparsers)
-    _add_instance_parser(subparsers)
+#     _add_instance_parser(subparsers)
     _add_organization_parser(subparsers)
     return parser
 
@@ -111,6 +111,29 @@ def _add_service_parser(subparsers):
     logs_parser.add_argument('-s', '--start-time', help='Logs query start time. e.g. 2015-05-01 12:12:12')
     logs_parser.add_argument('-e', '--end-time', help='Logs query end time. e.g. 2015-05-01 12:12:12')
 
+    list_instance_parser = service_subparsers.add_parser('instances', help='List instances', description='List instances')
+    list_instance_parser.add_argument('name', help='Service name')
+    list_instance_parser.add_argument('-n', '--namespace', help='Service namespace', default='')
+
+    inspect_instance_parser = service_subparsers.add_parser('instance', help='Get details of a instance', description='Get details of a instance')
+    inspect_instance_parser.add_argument('name', help='Service name')
+    inspect_instance_parser.add_argument('id', help='Instance uuid')
+    inspect_instance_parser.add_argument('-n', '--namespace', help='Service namespace', default='')
+
+    logs_instance_parser = service_subparsers.add_parser('instance-logs', help='Query instance log', description='Query instance log')
+    logs_instance_parser.add_argument('name', help='Service name')
+    logs_instance_parser.add_argument('id', help='Instance uuid')
+    logs_instance_parser.add_argument('-s', '--start-time', help='Logs query start time. e.g. 2015-05-01 12:12:12')
+    logs_instance_parser.add_argument('-e', '--end-time', help='Logs query end time. e.g. 2015-05-01 12:12:12')
+    logs_instance_parser.add_argument('-n', '--namespace', help='Service namespace', default='')
+
+    metrics_instance_parser = service_subparsers.add_parser('instance-metrics', help='Query instance metrics', description='Query instance metrics')
+    metrics_instance_parser.add_argument('name', help='Service name')
+    metrics_instance_parser.add_argument('id', help='Instance uuid')
+    metrics_instance_parser.add_argument('-s', '--start-time', help='Metrics query start time. e.g. 2015-05-01 12:12:12')
+    metrics_instance_parser.add_argument('-e', '--end-time', help='Metrics query end time. e.g. 2015-05-01 12:12:12')
+    metrics_instance_parser.add_argument('-n', '--namespace', help='Service namespace', default='')
+
 
 def _add_backups_parser(subparsers):
     backups_parser = subparsers.add_parser('backup', help='Backup operations', description='Backup operations')
@@ -162,34 +185,6 @@ def _add_compose_parser(subparsers):
         description='Set number of containers to run for a service')
     scale_parser.add_argument('descriptor', nargs='*', help='E.g. web=2 db=1')
     scale_parser.add_argument('-f', '--file', help='Compose file name', default='./docker-compose.yml')
-
-
-def _add_instance_parser(subparsers):
-    instance_parser = subparsers.add_parser('instance', help='Instance operations', description='Instance operations')
-    instance_subparsers = instance_parser.add_subparsers(title="Alauda instance commands", dest='subcmd')
-
-    ps_parser = instance_subparsers.add_parser('ps', help='List instances', description='List instances')
-    ps_parser.add_argument('name', help='Service name')
-    ps_parser.add_argument('-n', '--namespace', help='Service namespace', default='')
-
-    inspect_parser = instance_subparsers.add_parser('inspect', help='Get details of a instance', description='Get details of a instance')
-    inspect_parser.add_argument('name', help='Service name')
-    inspect_parser.add_argument('id', help='Instance uuid')
-    inspect_parser.add_argument('-n', '--namespace', help='Service namespace', default='')
-
-    logs_parser = instance_subparsers.add_parser('logs', help='Query instance log', description='Instance log')
-    logs_parser.add_argument('name', help='Service name')
-    logs_parser.add_argument('id', help='Instance uuid')
-    logs_parser.add_argument('-s', '--start-time', help='Logs query start time. e.g. 2015-05-01 12:12:12')
-    logs_parser.add_argument('-e', '--end-time', help='Logs query end time. e.g. 2015-05-01 12:12:12')
-    logs_parser.add_argument('-n', '--namespace', help='Service namespace', default='')
-
-    metrics_parser = instance_subparsers.add_parser('metrics', help='Query instance metrics', description='Instance metric')
-    metrics_parser.add_argument('name', help='Service name')
-    metrics_parser.add_argument('id', help='Instance uuid')
-    metrics_parser.add_argument('-s', '--start-time', help='Metrics query start time. e.g. 2015-05-01 12:12:12')
-    metrics_parser.add_argument('-e', '--end-time', help='Metrics query end time. e.g. 2015-05-01 12:12:12')
-    metrics_parser.add_argument('-n', '--namespace', help='Service namespace', default='')
 
 
 def _add_organization_parser(subparsers):

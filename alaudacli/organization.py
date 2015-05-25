@@ -2,7 +2,6 @@ import util
 import auth
 import json
 import requests
-from exceptions import AlaudaServerError
 
 
 class Organization(object):
@@ -38,7 +37,7 @@ class Organization(object):
     def list(cls):
         api_endpoint, token, _ = auth.load_token()
         headers = auth.build_headers(token)
-        url = api_endpoint + 'orgs/'.format(name)
+        url = api_endpoint + 'orgs/'
         r = requests.get(url, headers=headers)
         util.check_response(r)
         organizations = json.loads(r.text)

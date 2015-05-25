@@ -4,6 +4,7 @@ import time
 
 import auth
 import util
+from instance import Instance
 from exceptions import AlaudaServerError
 
 MAX_RETRY_NUM = 10
@@ -250,3 +251,22 @@ class Service(object):
                                                         port['container_port'],
                                                         port['protocol'])
         return ports[:len(ports) - 2]
+
+    def get_instance(self, id):
+        url = self.api_endpoint + 'services/{0}/{1}/instances/{2}'.format(self.namespace, self.name, id)
+        r = requests.get(url, headers=self.headers)
+        util.check_response(r)
+        data = json.loads(r.text)
+        instance = Instance(service=self, uuid=data['uuid'], details=r.text)
+        return instance
+
+    def list_instances(self):
+        url = self.api_endpoint + 'services/{0}/{1}/instances/'.format(self.namespace, self.name)
+        r = requests.get(url, headers=self.headers)
+        util.check_response(r)
+        data = json.loads(r.text)
+        instance_list = []
+        for instance in data:
+            instance = Instance(service=self, uuid=instance['uuid'], details=json.dumps(instance))
+            instance_list.append(instance)
+        return instance_list
