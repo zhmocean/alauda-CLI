@@ -1,7 +1,7 @@
 import unittest
 import mock
 import json
-from alaudacli import cmd_parser, cmd_processor, util, auth
+from alaudacli import cmd_parser, cmd_processor, util, auth, commands
 from alaudacli.backup import Backup
 
 
@@ -310,10 +310,11 @@ class BackupTest(unittest.TestCase):
     def setUp(self):
         pass
 
+    @mock.patch('alaudacli.service.Service.fetch')
     @mock.patch.object(Backup, 'create')
-    def test_backup_create(self, mock_create):
-        obj = Backup()
-        obj.create()
+    def test_backup_create(self, mock_create, mock_fetch):
+        commands.backup_create('name', 'service_name', 'mounted_dir', 'namespace')
+        mock_fetch.assert_called_once_with('service_name', 'namespace')
         mock_create.assert_called_once_with()
 
     @mock.patch.object(Backup, 'fetch')
