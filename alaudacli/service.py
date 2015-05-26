@@ -77,6 +77,7 @@ class Service(object):
 
     def _create_remote(self, target_state):
         linked_to = self._update_envvars_with_links(self.instance_envvars, self.links, self.namespace)
+        self._env_replace(self.instance_envvars)
         url = self.api_endpoint + 'services/{}/'.format(self.namespace)
         payload = {
             "app_name": self.name,
@@ -98,6 +99,27 @@ class Service(object):
         }
         r = requests.post(url, headers=self.headers, data=json.dumps(payload))
         util.check_response(r)
+
+    def _env_replace(self, instance_envvars):
+        envvars = instance_envvars.copy()
+        key_next_start_pos = {}
+        while len(envvars) > 0:
+            for key, value in envvars.items():
+                if not isinstance(value, str) and not isinstance(value, unicode):
+                    del envvars[key]
+                    continue
+                start_pos, end_pos = util.get_flag_pos(value, '$', ':', key_next_start_pos.get(key, 0))
+                if start_pos == -1:
+                    del envvars[key]
+                    continue
+                replace_key = value[start_pos:end_pos]
+                replace_key = replace_key[1:]
+                if replace_key in instance_envvars.keys():
+                    new_value = value[:start_pos] + instance_envvars[replace_key] + value[end_pos:]
+                    envvars[key] = new_value
+                    instance_envvars[key] = new_value
+                else:
+                    key_next_start_pos[key] = end_pos + 1
 
     @classmethod
     def fetch(cls, name, namespace=None):

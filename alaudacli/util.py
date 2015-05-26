@@ -320,6 +320,16 @@ def print_logs(logs):
         print entry
 
 
+def get_flag_pos(src, start_with, end_with, start_pos):
+    start_with_pos = src.find(start_with, start_pos)
+    if start_with_pos == -1:
+        return -1, -1
+    end_with_pos = src.find(end_with, start_with_pos + len(end_with))
+    if end_with_pos == -1:
+        end_with_pos = len(src)
+    return start_with_pos, end_with_pos
+
+
 def indegree0(v, e):
     if v == []:
         return None
