@@ -2,6 +2,7 @@ import unittest
 import mock
 import json
 from alaudacli import cmd_parser, cmd_processor, util, auth
+from alaudacli.backup import Backup
 
 
 class UtilTest(unittest.TestCase):
@@ -302,3 +303,36 @@ class ProcessCmdTest(unittest.TestCase):
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
         mock_commands.organization_list.assert_called()
+
+
+class BackupTest(unittest.TestCase):
+
+    def setUp(self):
+        pass
+
+    @mock.patch.object(Backup, 'create')
+    def test_backup_create(self, mock_create):
+        obj = Backup()
+        obj.create()
+        mock_create.assert_called_once_with()
+
+    @mock.patch.object(Backup, 'fetch')
+    def test_backup_fetch(self, mock_fetch):
+        Backup.fetch('backup_id', 'namespace')
+        mock_fetch.assert_called_with('backup_id', 'namespace')
+
+    @mock.patch.object(Backup, 'list')
+    def test_backup_list(self, mock_list):
+        Backup.list('namespace')
+        mock_list.assert_called_with('namespace')
+
+    @mock.patch.object(Backup, 'remove')
+    def test_backup_remove(self, mock_remove):
+        Backup.remove('backup_id', 'namespace')
+        mock_remove.assert_called_with('backup_id', 'namespace')
+
+    @mock.patch.object(Backup, 'inspect')
+    def test_backup_inspect(self, mock_inspect):
+        obj = Backup()
+        obj.inspect()
+        mock_inspect.assert_called_once_with()
