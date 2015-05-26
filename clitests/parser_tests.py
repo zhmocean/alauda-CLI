@@ -2,7 +2,6 @@ import unittest
 import mock
 import json
 from alaudacli import cmd_parser, cmd_processor, util, auth
-from alaudacli.backup import Backup
 
 
 class UtilTest(unittest.TestCase):
@@ -311,7 +310,7 @@ class BackupTest(unittest.TestCase):
         pass
 
     @mock.patch('alaudacli.service.Service.fetch')
-    @mock.patch.object(Backup, 'create')
+    @mock.patch('alaudacli.backup.Backup.create')
     def test_backup_create(self, mock_create, mock_fetch):
         argv = ['backup', 'create', 'name', 'service_name', 'mounted_dir', '-n', 'namespace']
         args = cmd_parser.parse_cmds(argv)
@@ -319,23 +318,128 @@ class BackupTest(unittest.TestCase):
         mock_fetch.assert_called_once_with('service_name', 'namespace')
         mock_create.assert_called_once_with()
 
-    @mock.patch.object(Backup, 'fetch')
-    def test_backup_fetch(self, mock_fetch):
-        Backup.fetch('backup_id', 'namespace')
-        mock_fetch.assert_called_with('backup_id', 'namespace')
+    @mock.patch('alaudacli.cmd_processor.commands')
+    @mock.patch('alaudacli.backup.Backup.fetch')
+    @mock.patch('alaudacli.backup.Backup.inspect')
+    def test_backup_fetch_and_inspect(self, mock_inspect, mock_fetch, mock_commands):
+        argv = ['backup', 'inspect', 'my_backup_id', '-n', 'namespace']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_fetch.assert_called('my_backup_id', 'namespace')
+        mock_inspect.assert_called()
+        mock_commands.backup_inspect.assert_called_with('my_backup_id', 'namespace')
 
-    @mock.patch.object(Backup, 'list')
+    @mock.patch('alaudacli.backup.Backup.list')
     def test_backup_list(self, mock_list):
-        Backup.list('namespace')
-        mock_list.assert_called_with('namespace')
+        argv = ['backup', 'list', '-n', 'namespace']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_list.assert_called_once_with('namespace')
 
-    @mock.patch.object(Backup, 'remove')
+    @mock.patch('alaudacli.backup.Backup.remove')
     def test_backup_remove(self, mock_remove):
-        Backup.remove('backup_id', 'namespace')
-        mock_remove.assert_called_with('backup_id', 'namespace')
+        argv = ['backup', 'rm', 'my_backup_id']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_remove.assert_called_once_with('my_backup_id', None)
 
-    @mock.patch.object(Backup, 'inspect')
-    def test_backup_inspect(self, mock_inspect):
-        obj = Backup()
-        obj.inspect()
-        mock_inspect.assert_called_once_with()
+
+class ServiceTest(unittest.TestCase):
+
+    def setup(self):
+        pass
+
+    @mock.patch('alaudacli.service.Service.start')
+    @mock.patch('alaudacli.service.Service.fetch')
+    def test_service_fetch_start(self, mock_fetch, mock_start):
+        argv = ['service', 'start', 'hello']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_fetch.assert_called_once_with('hello', '')
+        mock_start.assert_called()
+
+    @mock.patch('alaudacli.service.Service.stop')
+    @mock.patch('alaudacli.service.Service.fetch')
+    def test_service_fetch_stop(self, mock_fetch, mock_stop):
+        argv = ['service', 'stop', 'hello']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_fetch.assert_called_once_with('hello', '')
+        mock_stop.assert_called()
+
+    @mock.patch('alaudacli.service.Service.list')
+    def test_service_list(self, mock_list):
+        argv = ['service', 'ps']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_list.assert_called_once_with(None)
+
+    @mock.patch('alaudacli.service.Service.remove')
+    def test_service_remove(self, mock_remove):
+        argv = ['service', 'rm', 'hello']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_remove.assert_called_once_with('hello', '')
+
+    @mock.patch('alaudacli.cmd_processor.commands')
+    @mock.patch('alaudacli.service.Service.create')
+    def test_process_service_create(self, mock_create, mock_commands):
+        argv = ['service', 'create', 'hello', 'index.alauda.io/alauda/hello-world:latest',
+                '-t', '2', '-s', 'XS', '-r', '/run.sh',
+                '-e', 'FOO=bar', '-p', '5000/tcp', '-ag', 'ag1', '-v', '/var/lib/data1:10', '-l', 'myql:db',
+                '-a', '-f', './auto-scaling.cfg', '-n', 'myns', '-d', 'my.com']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_commands.service_create.assert_called_with(image='index.alauda.io/alauda/hello-world:latest',
+                                                        name='hello', start=False, target_num_instances=2, instance_size='XS',
+                                                        run_command='/run.sh', env=['FOO=bar'], ports=['5000/tcp'], allocation_group='ag1',
+                                                        volumes=['/var/lib/data1:10'], links=['myql:db'], scaling_info=(True, './auto-scaling.cfg'),
+                                                        namespace='myns', custom_domain_name='my.com')
+        mock_create.assert_called()
+
+    @mock.patch('alaudacli.cmd_processor.commands')
+    @mock.patch('alaudacli.service.Service.run')
+    def test_process_service_run(self, mock_run, mock_commands):
+        argv = ['service', 'run', 'hello', 'index.alauda.io/alauda/hello-world:latest',
+                '-t', '2', '-s', 'XS', '-r', '/run.sh',
+                '-e', 'FOO=bar', '-p', '5000/tcp', '-ag', 'ag1', '-v', '/var/lib/data1:10', '-l', 'db',
+                '-f', './auto-scaling.cfg', '-n', 'myns', '-d', 'my.com']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_commands.service_create.assert_called_with(image='index.alauda.io/alauda/hello-world:latest',
+                                                        name='hello', start=True, target_num_instances=2, instance_size='XS',
+                                                        run_command='/run.sh', env=['FOO=bar'], ports=['5000/tcp'], allocation_group='ag1',
+                                                        volumes=['/var/lib/data1:10'], links=['db'], scaling_info=(False, './auto-scaling.cfg'),
+                                                        namespace='myns', custom_domain_name='my.com')
+        mock_run.assert_called()
+
+    @mock.patch('alaudacli.cmd_processor.commands')
+    @mock.patch('alaudacli.service.Service.fetch')
+    @mock.patch('alaudacli.service.Service.inspect')
+    def test_service_inspect(self, mock_inspect, mock_fetch, mock_commands):
+        argv = ['service', 'inspect', 'hello']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_commands.service_inspect.assert_called_with('hello', namespace='')
+        mock_fetch.assert_called('hello', '')
+        mock_inspect.assert_called()
+
+    @mock.patch('alaudacli.service.Service.fetch')
+    @mock.patch('alaudacli.service.Service.scale')
+    def test_service_scale(self, mock_scale, mock_fetch):
+        argv = ['service', 'scale', 'mysql=2']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_fetch.assert_called_once_with('mysql', '')
+        mock_scale.assert_called()
+
+    @mock.patch('alaudacli.cmd_processor.commands')
+    @mock.patch('alaudacli.service.Service.fetch')
+    @mock.patch('alaudacli.service.Service.enable_autoscaling')
+    def test_service_enable_autoscaling(self, mock_enable_autoscaling, mock_fetch, mock_commands):
+        argv = ['service', 'enable-autoscaling', 'hello', '-f', 'auto-scaling.cfg']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_commands.service_enable_autoscaling.assert_called_with('hello', '', 'auto-scaling.cfg')
+        mock_fetch.assert_called()
+        mock_enable_autoscaling.assert_called('hello', '', 'auto-scaling.cfg')
