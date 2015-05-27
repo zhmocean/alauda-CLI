@@ -34,7 +34,7 @@ def logout():
 
 
 def service_create(image, name, start, target_num_instances, instance_size, run_command, env, ports,
-                   allocation_group, volumes, links, namespace, scaling_info, custom_domain_name):
+                   volumes, links, namespace, scaling_info, custom_domain_name):
     image_name, image_tag = util.parse_image_name_tag(image)
     instance_ports = util.parse_instance_ports(ports)
     instance_envvars = util.parse_envvars(env)
@@ -51,7 +51,6 @@ def service_create(image, name, start, target_num_instances, instance_size, run_
                       run_command=run_command,
                       instance_ports=instance_ports,
                       instance_envvars=instance_envvars,
-                      allocation_group=allocation_group,
                       volumes=volumes,
                       links=links,
                       namespace=namespace,

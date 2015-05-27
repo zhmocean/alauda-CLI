@@ -14,7 +14,7 @@ INSTANCE_SIZES = ['XS', 'S', 'M', 'L', 'XL']
 class Service(object):
 
     def __init__(self, name, image_name, image_tag, target_num_instances=1, instance_size='XS', run_command='',
-                 instance_ports=[], instance_envvars={}, allocation_group='', volumes=[], links=[], details='', namespace=None,
+                 instance_ports=[], instance_envvars={}, volumes=[], links=[], details='', namespace=None,
                  scaling_mode='MANUAL', autoscaling_config={}, custom_domain_name=''):
         self.name = name
         self.image_name = image_name
@@ -27,7 +27,6 @@ class Service(object):
         self.run_command = run_command
         self.instance_envvars = instance_envvars
         self.instance_ports = instance_ports
-        self.allocation_group = allocation_group
         self.volumes = volumes
         self.links = links
         self.details = details
@@ -90,7 +89,6 @@ class Service(object):
             "run_command": self.run_command,
             "instance_envvars": self.instance_envvars,
             "instance_ports": self.instance_ports,
-            "allocation_group": self.allocation_group,
             'linked_to_apps': linked_to,
             "volumes": self.volumes,
             'scaling_mode': self.scaling_mode,

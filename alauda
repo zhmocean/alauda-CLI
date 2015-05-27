@@ -35,12 +35,12 @@ _alauda()
             return 0
             ;;
        create)
-            local create_args="{name} {image} -t -s -r -e -l -p -ag -v -n -a -f -d"
+            local create_args="{name} {image} -t -s -r -e -l -p -v -n -a -f -d"
             COMPREPLY=( $(compgen -W "${create_args}" -- ${cur}) )
             return 0
             ;;
        run)
-            local run_args="{name} {image} -t -s -r -e -l -p -ag -v -n -a -f -d"
+            local run_args="{name} {image} -t -s -r -e -l -p -v -n -a -f -d"
             COMPREPLY=( $(compgen -W "${run_args}" -- ${cur}) )
             return 0
             ;;
