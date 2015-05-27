@@ -77,7 +77,7 @@ class Service(object):
 
     def _create_remote(self, target_state):
         linked_to = self._update_envvars_with_links(self.instance_envvars, self.links, self.namespace)
-        self._env_replace(self.instance_envvars)
+        util.expand_environment(self.instance_envvars)
         url = self.api_endpoint + 'services/{}/'.format(self.namespace)
         payload = {
             "app_name": self.name,

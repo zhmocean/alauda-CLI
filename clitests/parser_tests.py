@@ -66,6 +66,19 @@ class UtilTest(unittest.TestCase):
         }
         self.assertEqual(json.loads(cfg), result)
 
+    def test_expand_environment(self):
+        envvars = {
+            'FOO': 'foo',
+            'BAR': 'bar',
+            'BAZ': '$FOO:$BAR',
+            'FOOBAR': '$FOO-$FOO-$BAR-$BAR'
+        }
+        util.expand_environment(envvars)
+        self.assertEqual('foo', envvars['FOO'])
+        self.assertEqual('bar', envvars['BAR'])
+        self.assertEqual('foo:bar', envvars['BAZ'])
+        self.assertEqual('foo-foo-bar-bar', envvars['FOOBAR'])
+
 
 class ProcessCmdTest(unittest.TestCase):
 

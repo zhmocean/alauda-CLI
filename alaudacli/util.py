@@ -1,6 +1,7 @@
 from exceptions import AlaudaInputError, AlaudaServerError
 import json
 import time
+from string import Template
 
 VOLUME_MIN_SIZE = 10
 VOLUME_MAX_SIZE = 100
@@ -225,6 +226,12 @@ def failed(status_code):
 def check_response(response):
     if failed(response.status_code):
         raise AlaudaServerError(response.status_code, response.text)
+
+
+def expand_environment(envvars):
+    for key, value in envvars.items():
+        expanded = Template(value).substitute(envvars)
+        envvars[key] = expanded
 
 
 def print_ps_output(service_list):
