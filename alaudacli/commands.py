@@ -203,14 +203,13 @@ def organization_create(name, company):
 
 def organization_list():
     orgs_list = Organization.list()
-    for org in orgs_list:
-        print org.details
+    util.print_organization_ps_output(orgs_list)
 
 
 def organization_inspect(name):
     orgs = Organization.fetch(name)
     result = orgs.inspect()
-    print result
+    util.print_organization_ps_output([result])
 
 
 def organization_update(name, company):

@@ -1,7 +1,11 @@
+# -*- coding: utf-8 -*-
 from exceptions import AlaudaInputError, AlaudaServerError
 import json
 import time
 from string import Template
+import sys
+reload(sys)
+sys.setdefaultencoding("utf-8")
 
 VOLUME_MIN_SIZE = 10
 VOLUME_MAX_SIZE = 100
@@ -318,6 +322,30 @@ def print_instance_ps_output(instance_list):
         instance = json.loads(data.details)
         print '{0}    {1}    {2}'.format(str(instance['instance_name']).ljust(max_name_len), str(instance['uuid']).ljust(max_id_len),
                                          str(instance['started_at']).ljust(max_time_len))
+
+
+def print_organization_ps_output(orgs):
+    max_name_len = len('Name')
+    max_company_len = len('Company')
+    max_time_len = len('Created time')
+
+    for data in orgs:
+        org = json.loads(data.details)
+        org['company'] = str(org['company']).encode('GBK')
+        if max_name_len < len(org['name']):
+            max_name_len = len(org['name'])
+        if max_time_len < len(org['created_at']):
+            max_time_len = len(org['created_at'])
+        if max_company_len < len(org['company']):
+            max_company_len = len(org['company'])
+
+    print '{0}    {1}    {2}'.format('Name'.center(max_name_len), 'Company'.center(max_company_len), 'Created time'.center(max_time_len))
+    print '{0}'.format('-' * (max_name_len + max_company_len + max_time_len + 4 * 2))
+
+    for data in orgs:
+        org = json.loads(data.details)
+        print '{0}    {1}    {2}'.format(str(org['name']).ljust(max_name_len), str(org['company']).ljust(max_company_len),
+                                         str(org['created_at']).ljust(max_time_len))
 
 
 def print_logs(logs):

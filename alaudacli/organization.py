@@ -59,4 +59,4 @@ class Organization(object):
         util.check_response(r)
 
     def inspect(self):
-        return self.details
+        return self
