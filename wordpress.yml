@@ -1,0 +1,16 @@
+wordpress:
+  image: wordpress:4.2.2
+  ports:
+  - "80"
+  links:
+  - mysql:mysql
+  environment:
+  - WORDPRESS_DB_PASSWORD: 111111
+  - WORDPRESS_DB_HOST: $MYSQL_PORT_3306_TCP_ADDR:$MYSQL_PORT_3306_TCP_PORT
+mysql:
+  image: mysql:5.6
+  ports:
+  - "3306"
+  environment:
+  - MYSQL_ROOT_PASSWORD: 111111
+  size: S
