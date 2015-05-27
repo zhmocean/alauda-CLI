@@ -71,13 +71,13 @@ class UtilTest(unittest.TestCase):
             'FOO': 'foo',
             'BAR': 'bar',
             'BAZ': '$FOO:$BAR',
-            'FOOBAR': '$FOO-$FOO-$BAR-$BAR'
+            'FOOBAR': '$FOO-$FOO-$BAR-$BAR-$BOO'
         }
         util.expand_environment(envvars)
         self.assertEqual('foo', envvars['FOO'])
         self.assertEqual('bar', envvars['BAR'])
         self.assertEqual('foo:bar', envvars['BAZ'])
-        self.assertEqual('foo-foo-bar-bar', envvars['FOOBAR'])
+        self.assertEqual('foo-foo-bar-bar-$BOO', envvars['FOOBAR'])
 
 
 class ProcessCmdTest(unittest.TestCase):

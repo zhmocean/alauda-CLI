@@ -230,7 +230,7 @@ def check_response(response):
 
 def expand_environment(envvars):
     for key, value in envvars.items():
-        expanded = Template(value).substitute(envvars)
+        expanded = Template(value).safe_substitute(envvars)
         envvars[key] = expanded
 
 
