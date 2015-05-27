@@ -1,7 +1,7 @@
 wordpress:
   image: wordpress:4.2.2
   ports:
-  - 8080:80
+  - "8080:80"
   links:
   - mysql:mysql
   environment:
@@ -9,6 +9,6 @@ wordpress:
 mysql:
   image: mysql:5.6
   ports:
-  - 3306
+  - "3306"
   environment:
   - MYSQL_ROOT_PASSWORD=111111
