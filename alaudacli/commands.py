@@ -66,7 +66,7 @@ def service_create(image, name, start, target_num_instances, instance_size, run_
 def service_inspect(name, namespace):
     service = Service.fetch(name, namespace)
     result = service.inspect()
-    print '[alauda] ' + json.dumps(json.loads(result), indent=2)
+    util.print_json_result(result)
 
 
 def service_start(name, namespace):
@@ -121,7 +121,8 @@ def instance_ps(name, namespace):
 def instance_inspect(name, uuid, namespace):
     service = Service.fetch(name, namespace)
     instance = service.get_instance(uuid)
-    print instance.details
+    result = instance.inspect()
+    util.print_json_result(result)
 
 
 def instance_logs(name, uuid, namespace, start_time=None, end_time=None):
@@ -188,7 +189,7 @@ def backup_list(namespace):
 def backup_inspect(id, namespace):
     backup = Backup.fetch(id, namespace)
     result = backup.inspect()
-    print '[alauda] ' + json.dumps(json.loads(result), indent=2)
+    util.print_json_result(result)
 
 
 def backup_rm(id, namespace):
@@ -208,7 +209,7 @@ def organization_list():
 def organization_inspect(name):
     orgs = Organization.fetch(name)
     result = orgs.inspect()
-    util.print_organization_ps_output([result])
+    util.print_json_result(result)
 
 
 def organization_update(name, company):

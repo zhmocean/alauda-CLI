@@ -10,6 +10,9 @@ class Instance(object):
         self.uuid = uuid
         self.details = details
 
+    def inspect(self):
+        return self.details
+
     def logs(self, start_time, end_time):
         start, end = util.parse_time(start_time, end_time)
         api_endpoint, token, _ = auth.load_token()

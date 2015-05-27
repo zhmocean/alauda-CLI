@@ -355,6 +355,13 @@ def print_logs(logs):
         print entry
 
 
+def print_json_result(result):
+    try:
+        print '[alauda] ' + json.dumps(json.loads(result), indent=2)
+    except:
+        print '[alauda] EMPTY'
+
+
 def get_flag_pos(src, start_with, end_with, start_pos):
     start_with_pos = src.find(start_with, start_pos)
     if start_with_pos == -1:

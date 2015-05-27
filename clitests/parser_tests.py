@@ -331,16 +331,14 @@ class BackupTest(unittest.TestCase):
         mock_fetch.assert_called_once_with('service_name', 'namespace')
         mock_create.assert_called_once_with()
 
-    @mock.patch('alaudacli.cmd_processor.commands')
     @mock.patch('alaudacli.backup.Backup.fetch')
     @mock.patch('alaudacli.backup.Backup.inspect')
-    def test_backup_fetch_and_inspect(self, mock_inspect, mock_fetch, mock_commands):
+    def test_backup_fetch_and_inspect(self, mock_inspect, mock_fetch):
         argv = ['backup', 'inspect', 'my_backup_id', '-n', 'namespace']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_fetch.assert_called('my_backup_id', 'namespace')
-        mock_inspect.assert_called()
-        mock_commands.backup_inspect.assert_called_with('my_backup_id', 'namespace')
+        mock_fetch.assert_called_once_with('my_backup_id', 'namespace')
+        mock_inspect.assert_called_once()
 
     @mock.patch('alaudacli.backup.Backup.list')
     def test_backup_list(self, mock_list):
