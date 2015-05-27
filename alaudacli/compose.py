@@ -53,7 +53,10 @@ def load_services(compose_data):
 
 
 def load_service(service_name, service_data):
-    image_name, image_tag = util.parse_image_name_tag(service_data['image'])
+    image = service_data.get('image')
+    if not image:
+        raise AlaudaInputError('Compose file must specify image')
+    image_name, image_tag = util.parse_image_name_tag(image)
     ports = load_ports(service_data)
     run_command = load_command(service_data)
     links = load_links(service_data)
