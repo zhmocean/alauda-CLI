@@ -11,12 +11,13 @@ MKDIR = mkdir
 FLAKE8 = flake8
 PIP_INSTALL = pip install
 RUN_UNITTESTS = python -m unittest clitests.parser_tests
+RUN_E2ETESTS = python -m unittest clitests.e2e_tests
 INSTALL_CLI = ./local-install.sh
 UNINSTALL_CLI = ./local-uninstall.sh
 
-.PHONY: setup build test install uninstall help
+.PHONY: setup build ut test install uninstall help
 
-all: build test
+all: build ut
 
 setup:
 	$(PIP_INSTALL) $(FLAKE8)
@@ -24,8 +25,11 @@ setup:
 build:
 	$(FLAKE8) $(SOURCEDIR) --show-source --show-pep8 --statistics --count
 
-test:
+ut:
 	$(RUN_UNITTESTS)
+
+test:
+	$(RUN_E2ETESTS)
 
 install:
 	$(INSTALL_CLI)
@@ -38,6 +42,7 @@ help:
 	@$(ECHO) "all       - build, test and install"
 	@$(ECHO) "setup     - set up prerequisites for build"
 	@$(ECHO) "build     - perform static analysis"
-	@$(ECHO) "test      - run unittests"
+	@$(ECHO) "ut        - run unittests"
+	@$(ECHO) "test      - run e2e tests"
 	@$(ECHO) "install   - install alaudacli locally"
 	@$(ECHO) "uninstall - uninstall local alaudacli"

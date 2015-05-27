@@ -95,7 +95,7 @@ def _add_service_parser(subparsers):
     enable_autoscaling_parser = service_subparsers.add_parser('enable-autoscaling', help='Enable auto-scaling', description='Enable auto-scaling')
     enable_autoscaling_parser.add_argument('name', help='Service name')
     enable_autoscaling_parser.add_argument('-n', '--namespace', help='Service namespace', default='')
-    enable_autoscaling_parser.add_argument('-f', '--autoscaling_config', help='Auto-scaling config file name', default='./auto-scaling.cfg')
+    enable_autoscaling_parser.add_argument('-f', '--autoscaling-config', help='Auto-scaling config file name', default='./auto-scaling.cfg')
 
     disable_autoscaling_parser = service_subparsers.add_parser('disable-autoscaling', help='Disable auto-scaling', description='Disable auto-scaling')
     disable_autoscaling_parser.add_argument('name', help='Service name')
