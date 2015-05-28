@@ -111,7 +111,7 @@ class ServiceTest(unittest.TestCase):
         self._inspect_service(name)
 
         # logs
-        # self._get_service_logs(name)
+        self._get_service_logs(name)
 
         # scale
         self._scale_service(name, 2)

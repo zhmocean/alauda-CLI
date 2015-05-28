@@ -1,17 +1,11 @@
 web:
-  build: .
+  image: cimomo/hello-compose-web:latest
   command: python app.py
   ports:
-   - "5000:5000"
+   - "5000"
   links:
    - redis:redis
-  environment:
-   - FOO: foo
-   - BAR=bar
-   - BAZ:baz
 redis:
   image: redis
   ports:
    - "6379"
-  volumes:
-   - /var/lib/data1:10

@@ -211,7 +211,7 @@ def parse_time(start_time, end_time):
             raise AlaudaInputError('Please make sure time format like 2015-05-01 12:00:00')
     elif start_time is None and end_time is None:
         end = int(time.time())
-        start = end - 3600
+        start = end - 900
     elif start_time is not None:
         start = time.strptime(start_time, '%Y-%m-%d %H:%M:%S')
         start = int(time.mktime(start))
@@ -219,7 +219,7 @@ def parse_time(start_time, end_time):
     else:
         end = time.strptime(end_time, '%Y-%m-%d %H:%M:%S')
         end = int(time.mktime(end))
-        start = end - 3600
+        start = end - 900
     return start, end
 
 

@@ -2,7 +2,6 @@ web:
   extends:
     file: docker-compose.yml
     service: web
-  image: cimomo/hello-compose-web:latest
   command: python app.py
   ports:
    - "5000"
@@ -14,8 +13,8 @@ web:
    - BAZ:b
    - A=a
 redis:
-  image: redis
+  extends:
+    file: docker-compose.yml
+    service: redis
   ports:
    - "6379"
-  volumes:
-   - /var/lib/data1:10
