@@ -282,13 +282,6 @@ class ProcessCmdTest(unittest.TestCase):
         mock_commands.instance_logs.assert_called_with('hello', 'd938a2d7-0071-11e5-ab5d-02416b28d26a', '', None, None)
 
     @mock.patch('alaudacli.cmd_processor.commands')
-    def test_process_instance_metrics(self, mock_commands):
-        argv = ['service', 'instance-metrics', 'hello', 'd938a2d7-0071-11e5-ab5d-02416b28d26a']
-        args = cmd_parser.parse_cmds(argv)
-        cmd_processor.process_cmds(args)
-        mock_commands.instance_metrics.assert_called_with('hello', 'd938a2d7-0071-11e5-ab5d-02416b28d26a', '', None, None)
-
-    @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_organization_create(self, mock_commands):
         argv = ['organization', 'create', 'myorgs', 'mathilde']
         args = cmd_parser.parse_cmds(argv)

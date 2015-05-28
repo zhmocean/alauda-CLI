@@ -124,13 +124,6 @@ def _add_service_parser(subparsers):
     logs_instance_parser.add_argument('-e', '--end-time', help='Logs query end time. e.g. 2015-05-01 12:12:12')
     logs_instance_parser.add_argument('-n', '--namespace', help='Service namespace', default='')
 
-    metrics_instance_parser = service_subparsers.add_parser('instance-metrics', help='Query instance metrics', description='Query instance metrics')
-    metrics_instance_parser.add_argument('name', help='Service name')
-    metrics_instance_parser.add_argument('id', help='Instance uuid')
-    metrics_instance_parser.add_argument('-s', '--start-time', help='Metrics query start time. e.g. 2015-05-01 12:12:12')
-    metrics_instance_parser.add_argument('-e', '--end-time', help='Metrics query end time. e.g. 2015-05-01 12:12:12')
-    metrics_instance_parser.add_argument('-n', '--namespace', help='Service namespace', default='')
-
 
 def _add_backups_parser(subparsers):
     backups_parser = subparsers.add_parser('backup', help='Backup operations', description='Backup operations')

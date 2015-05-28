@@ -15,7 +15,7 @@ def patch_argv(argv):
     if len(args) >= 2:
         if args[1] in ['create', 'run', 'scale', 'inspect', 'start', 'stop', 'rm',
                        'enable-autoscaling', 'disable-autoscaling', 'logs', 'ps',
-                       'instances', 'instance', 'instance-logs', 'instance-metrics']:
+                       'instances', 'instance', 'instance-logs']:
             args.insert(1, 'service')
 
     if len(args) == 1:

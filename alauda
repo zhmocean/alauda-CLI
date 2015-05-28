@@ -30,7 +30,7 @@ _alauda()
             return 0
             ;;
        service)
-            local service_args="create run inspect start stop rm ps scale enable-autoscaling disable-autoscaling logs instances instance instance-logs instance-metircs"
+            local service_args="create run inspect start stop rm ps scale enable-autoscaling disable-autoscaling logs instances instance instance-logs"
             COMPREPLY=( $(compgen -W "${service_args}" -- ${cur}) )
             return 0
             ;;

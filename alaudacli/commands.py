@@ -132,13 +132,6 @@ def instance_logs(name, uuid, namespace, start_time=None, end_time=None):
     util.print_logs(result)
 
 
-def instance_metrics(name, uuid, namespace, start_time=None, end_time=None):
-    service = Service.fetch(name, namespace)
-    instance = service.get_instance(uuid)
-    result = instance.metrics(start_time, end_time)
-    print '[alauda] ' + result
-
-
 def compose_up(file):
     project = compose.load_project(file)
     project.up()

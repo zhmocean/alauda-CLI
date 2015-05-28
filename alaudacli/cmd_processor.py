@@ -41,8 +41,6 @@ def process_cmds(args):
             commands.instance_inspect(args.name, args.id, namespace=args.namespace)
         elif args.subcmd == 'instance-logs':
             commands.instance_logs(args.name, args.id, args.namespace, args.start_time, args.end_time)
-        elif args.subcmd == 'instance-metrics':
-            commands.instance_metrics(args.name, args.id, args.namespace, args.start_time, args.end_time)
     elif args.cmd == 'backup':
         if args.subcmd == 'create':
             commands.backup_create(args.name, args.service, args.dir, args.namespace)
