@@ -43,13 +43,37 @@ def sort_services(compose_data):
     return sorted_list
 
 
+def toposort_services(compose_data):
+    service_vertex = []
+    service_edge = []
+    src_keys = compose_data.keys()
+    for key, value in compose_data.items():
+        links = _get_linked_services(value.get('links'))
+        if key not in service_vertex:
+            service_vertex.append(key)
+        if not set(links).issubset(set(src_keys)):
+            raise AlaudaInputError("{} has invalid link name".format(links))
+        else:
+            for link in links:
+                if link not in service_vertex:
+                    service_vertex.append(link)
+                service_edge.append((link, key))
+    sorted_result = util.topoSort(service_vertex, service_edge)
+    if sorted_result == -1:
+        raise AlaudaInputError("there is a circle in your service depended list")
+    return sorted_result
+
+
 def load_services(compose_data):
-    services = []
-    sorted_list = sort_services(compose_data)
-    for service_name in sorted_list:
-        service = load_service(service_name, compose_data[service_name])
-        services.append(service)
-    return services
+    sorted_services = []
+    sorted_list = toposort_services(compose_data)
+    for services in sorted_list:
+        service_list = []
+        for service_name in services:
+            service = load_service(service_name, compose_data[service_name])
+            service_list.append(service)
+        sorted_services.append(service_list)
+    return sorted_services
 
 
 def load_service(service_name, service_data):

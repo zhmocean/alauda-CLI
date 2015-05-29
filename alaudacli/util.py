@@ -405,5 +405,5 @@ def topoSort(v, e):
         if nodes == -1:
             print('there\'s a circle.')
             return None
-        result.extend(nodes)
+        result.append(nodes)
     return result

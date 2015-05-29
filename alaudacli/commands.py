@@ -132,9 +132,12 @@ def instance_logs(name, uuid, namespace, start_time=None, end_time=None):
     util.print_logs(result)
 
 
-def compose_up(file):
+def compose_up(file, strict):
     project = compose.load_project(file)
-    project.up()
+    if strict:
+        project.strict_up()
+    else:
+        project.up()
 
 
 def compose_ps(file):
@@ -142,9 +145,12 @@ def compose_ps(file):
     project.ps()
 
 
-def compose_start(file):
+def compose_start(file, strict):
     project = compose.load_project(file)
-    project.start()
+    if strict:
+        project.strict_start()
+    else:
+        project.start()
 
 
 def compose_stop(file):
@@ -152,9 +158,12 @@ def compose_stop(file):
     project.stop()
 
 
-def compose_restart(file):
+def compose_restart(file, strict):
     project = compose.load_project(file)
-    project.restart()
+    if strict:
+        project.strict_restart()
+    else:
+        project.restart()
 
 
 def compose_rm(file):

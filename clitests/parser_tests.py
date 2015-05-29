@@ -185,10 +185,10 @@ class ProcessCmdTest(unittest.TestCase):
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_compose_up(self, mock_commands):
-        argv = ['compose', 'up']
+        argv = ['compose', 'up', '-s']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.compose_up.assert_called_with('./docker-compose.yml')
+        mock_commands.compose_up.assert_called_with('./docker-compose.yml', True)
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_compose_ps(self, mock_commands):
@@ -202,7 +202,7 @@ class ProcessCmdTest(unittest.TestCase):
         argv = ['compose', 'start']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.compose_start.assert_called_with('./docker-compose.yml')
+        mock_commands.compose_start.assert_called_with('./docker-compose.yml', False)
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_compose_stop(self, mock_commands):
@@ -216,7 +216,7 @@ class ProcessCmdTest(unittest.TestCase):
         argv = ['compose', 'restart']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.compose_restart.assert_called_with('./docker-compose.yml')
+        mock_commands.compose_restart.assert_called_with('./docker-compose.yml', False)
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_compose_rm(self, mock_commands):

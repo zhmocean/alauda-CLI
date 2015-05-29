@@ -52,15 +52,15 @@ def process_cmds(args):
             commands.backup_rm(args.id, args.namespace)
     elif args.cmd == 'compose':
         if args.subcmd == 'up':
-            commands.compose_up(args.file)
+            commands.compose_up(args.file, args.strict)
         elif args.subcmd == 'ps':
             commands.compose_ps(args.file)
         elif args.subcmd == 'start':
-            commands.compose_start(args.file)
+            commands.compose_start(args.file, args.strict)
         elif args.subcmd == 'stop':
             commands.compose_stop(args.file)
         elif args.subcmd == 'restart':
-            commands.compose_restart(args.file)
+            commands.compose_restart(args.file, args.strict)
         elif args.subcmd == 'rm':
             commands.compose_rm(args.file)
         elif args.subcmd == 'scale':
