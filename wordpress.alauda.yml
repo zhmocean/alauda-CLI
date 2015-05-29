@@ -8,6 +8,8 @@ wordpress:
    - "80"
   environment:
    - WORDPRESS_DB_HOST: $MYSQL_PORT_3306_TCP_ADDR:$MYSQL_PORT_3306_TCP_PORT
+  volumes:
+  - /var/www/html:10
 mysql:
   extends:
     file: wordpress.yml
