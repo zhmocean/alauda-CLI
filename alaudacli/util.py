@@ -199,6 +199,20 @@ def parse_autoscale_info(info):
         return 'MANUAL', {}
 
 
+def load_tag_config_file(tag_config_file):
+    try:
+        fp = file(tag_config_file)
+    except:
+        raise AlaudaInputError('can not open create repo config file-> {}.'.format(tag_config_file))
+    try:
+        cfg_json = json.load(fp)
+        fp.close()
+        return cfg_json
+    except:
+        fp.close()
+        raise AlaudaInputError('Parse {} fail! The format refer to ./create_repo_config.example or ./update_repo_config.example'.format(tag_config_file))
+
+
 def parse_time(start_time, end_time):
     if start_time is not None and end_time is not None:
         try:
@@ -370,6 +384,18 @@ def get_flag_pos(src, start_with, end_with, start_pos):
     if end_with_pos == -1:
         end_with_pos = len(src)
     return start_with_pos, end_with_pos
+
+
+def valid_repo_info(client, namespace, name, clone_url):
+    if client == 'Simple':
+        if clone_url is None:
+            raise AlaudaInputError('Please specify -ru when -c is Simple')
+        return None, None, clone_url
+
+    else:
+        if namespace is None or name is None:
+            raise AlaudaInputError('Please specify -rns and -rn when -c is GitHub/Bitbucket/OSChina')
+        return namespace, name, None
 
 
 def indegree0(v, e):

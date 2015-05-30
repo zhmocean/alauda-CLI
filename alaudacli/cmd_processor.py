@@ -74,3 +74,28 @@ def process_cmds(args):
             commands.organization_inspect(args.name)
         elif args.subcmd == 'update':
             commands.organization_update(args.name, args.company)
+    elif args.cmd == 'repository':
+        if args.subcmd == 'create':
+            commands.repository_create(name=args.name, description=args.description,
+                                       full_description=args.full_description, is_public=args.public,
+                                       repo_client=args.client, repo_namespace=args.repo_namespace,
+                                       repo_name=args.repo_name, repo_clone_url=args.repo_clone_url,
+                                       tag_config_file=args.tag_config_file, namespace=args.namespace)
+        elif args.subcmd == 'list':
+            commands.repository_list(args.namespace)
+        elif args.subcmd == 'inspect':
+            commands.repository_inspect(args.name, args.namespace)
+        elif args.subcmd == 'update':
+            commands.repository_update(args.name, args.namespace, args.description, args.full_description)
+        elif args.subcmd == 'public':
+            commands.repository_public(args.name, args.namespace)
+        elif args.subcmd == 'private':
+            commands.repository_private(args.name, args.namespace)
+        elif args.subcmd == 'rm':
+            commands.repository_rm(args.name, args.namespace)
+        elif args.subcmd == 'tags':
+            commands.repository_tags(args.name, args.namespace)
+        elif args.subcmd == 'tag':
+            commands.repository_tag(args.name, args.namespace, args.tag_name)
+        elif args.subcmd == 'tag-update':
+            commands.repository_tag_update(args.name, args.namespace, args.tag_config_file)

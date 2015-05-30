@@ -9,7 +9,7 @@ _alauda()
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
-    opts="login -v -h logout service compose backup organization"
+    opts="login -v -h logout service compose backup organization repository"
 
     case "${prev}" in
         login)
@@ -132,6 +132,36 @@ _alauda()
        organization)
        		local organization_args="create list inspect update"
        		COMPREPLY=( $(compgen -W "${organization_args}" -- ${cur}) )
+            return 0
+            ;;
+       repository)
+       		local repository_args="create list inspect update public private rm tags tag tag-update"
+       		COMPREPLY=( $(compgen -W "${repository_args}" -- ${cur}) )
+            return 0
+            ;;
+       public)
+       		local public_args="{name} -n"
+       		COMPREPLY=( $(compgen -W "${public_args}" -- ${cur}) )
+            return 0
+            ;;
+       private)
+       		local private_args="{name} -n"
+       		COMPREPLY=( $(compgen -W "${private_args}" -- ${cur}) )
+            return 0
+            ;;
+       tags)
+       		local tags_args="{name} -n"
+       		COMPREPLY=( $(compgen -W "${tags_args}" -- ${cur}) )
+            return 0
+            ;;
+       tag)
+       		local repository_args="{name} -n"
+       		COMPREPLY=( $(compgen -W "${tag_args}" -- ${cur}) )
+            return 0
+            ;;
+       tag-update)
+       		local tag_update_args="{name} -n -f"
+       		COMPREPLY=( $(compgen -W "${tag_update_args}" -- ${cur}) )
             return 0
             ;;
         *)

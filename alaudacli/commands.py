@@ -8,6 +8,7 @@ import compose
 from service import Service
 from backup import Backup
 from organization import Organization
+from repository import Repository
 
 
 def login(username, password, cloud, endpoint):
@@ -217,3 +218,64 @@ def organization_inspect(name):
 def organization_update(name, company):
     orgs = Organization.fetch(name)
     orgs.update(company)
+
+
+def repository_create(name, description, full_description, is_public, repo_client, repo_namespace,
+                      repo_name, repo_clone_url, tag_config_file, namespace):
+    tag_configs = util.load_tag_config_file(tag_config_file)
+    repo_namespace, repo_name, repo_clone_url = util.valid_repo_info(repo_client, repo_namespace, repo_name, repo_clone_url)
+    repo = Repository(name=name, description=description, full_description=full_description,
+                      is_public=is_public, repo_client=repo_client, repo_clone_url=repo_clone_url,
+                      repo_namespace=repo_namespace, repo_name=repo_name, tag_configs=tag_configs,
+                      namespace=namespace)
+    result = repo.create()
+    print result
+
+
+def repository_list(namespace):
+    repo_list = Repository.list(namespace)
+    for repo in repo_list:
+        print repo.details
+
+
+def repository_inspect(name, namespace):
+    repo = Repository.fetch(name, namespace)
+    result = repo.inspect()
+    print result
+
+
+def repository_update(name, namespace, description, full_description):
+    repo = Repository.fetch(name, namespace)
+    repo.update(description, full_description)
+
+
+def repository_public(name, namespace):
+    repo = Repository.fetch(name, namespace)
+    repo.public()
+
+
+def repository_private(name, namespace):
+    repo = Repository.fetch(name, namespace)
+    repo.private()
+
+
+def repository_rm(name, namespace):
+    Repository.remove(name, namespace)
+
+
+def repository_tags(name, namespace):
+    repo = Repository.fetch(name, namespace)
+    result = repo.list_tags()
+    print result
+
+
+def repository_tag(name, namespace, tag):
+    repo = Repository.fetch(name, namespace)
+    result = repo.inspect_tag(tag)
+    print result
+
+
+def repository_tag_update(name, namespace, tag_config_file):
+    tag_configs = util.load_tag_config_file(tag_config_file)
+    repo = Repository.fetch(name, namespace)
+    repo.merge_tags(tag_configs)

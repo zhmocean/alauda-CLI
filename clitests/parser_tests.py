@@ -308,3 +308,78 @@ class ProcessCmdTest(unittest.TestCase):
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
         mock_commands.organization_list.assert_called()
+
+    @mock.patch('alaudacli.cmd_processor.commands')
+    def test_process_repository_create(self, mock_commands):
+        argv = ['repository', 'create', 'hello', '-d', 'description', '-fd', 'full description',
+                '-c', 'Simple', '-ru', 'https://github.com/xxx/test_repo.git', '-f', 'create_repo_config.example']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_commands.repository_create.assert_called_with(name='hello', description='description',
+                                                           full_description='full description', is_public=False,
+                                                           repo_client='Simple', repo_namespace=None, repo_name=None,
+                                                           repo_clone_url='https://github.com/xxx/test_repo.git',
+                                                           tag_config_file='create_repo_config.example', namespace=None)
+
+    @mock.patch('alaudacli.cmd_processor.commands')
+    def test_process_repository_list(self, mock_commands):
+        argv = ['repository', 'list']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_commands.repository_list.assert_called()
+
+    @mock.patch('alaudacli.cmd_processor.commands')
+    def test_process_repository_inspect(self, mock_commands):
+        argv = ['repository', 'inspect', 'hello']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_commands.repository_inspect.assert_called_with('hello', None)
+
+    @mock.patch('alaudacli.cmd_processor.commands')
+    def test_process_repository_update(self, mock_commands):
+        argv = ['repository', 'update', 'hello', '-d', 'test update']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_commands.repository_update.assert_called_with('hello', None, 'test update', None)
+
+    @mock.patch('alaudacli.cmd_processor.commands')
+    def test_process_repository_public(self, mock_commands):
+        argv = ['repository', 'public', 'hello']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_commands.repository_public.assert_called_with('hello', None)
+
+    @mock.patch('alaudacli.cmd_processor.commands')
+    def test_process_repository_private(self, mock_commands):
+        argv = ['repository', 'private', 'hello']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_commands.repository_private.assert_called_with('hello', None)
+
+    @mock.patch('alaudacli.cmd_processor.commands')
+    def test_process_repository_rm(self, mock_commands):
+        argv = ['repository', 'rm', 'hello']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_commands.repository_rm.assert_called_with('hello', None)
+
+    @mock.patch('alaudacli.cmd_processor.commands')
+    def test_process_repository_tags(self, mock_commands):
+        argv = ['repository', 'tags', 'hello']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_commands.repository_tags.assert_called_with('hello', None)
+
+    @mock.patch('alaudacli.cmd_processor.commands')
+    def test_process_repository_tag(self, mock_commands):
+        argv = ['repository', 'tag', 'hello', 'latest']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_commands.repository_tag.assert_called_with('hello', None, 'latest')
+
+    @mock.patch('alaudacli.cmd_processor.commands')
+    def test_process_repository_tag_update(self, mock_commands):
+        argv = ['repository', 'tag-update', 'hello', '-f', 'update-tag-config.example']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_commands.repository_tag_update.assert_called('hello', None, 'update-tag-config.example')

@@ -1,0 +1,10 @@
+[
+	{
+		"code_repo_type": "branch",
+		"code_repo_type_value": "master",
+		"docker_build_tag": "latest",
+		"dockerfile_location": "/",
+		"is_active": false,
+		"is_version_tagging": true
+	} 
+]
