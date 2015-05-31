@@ -362,6 +362,81 @@ def print_organization_ps_output(orgs):
                                          str(org['created_at']).ljust(max_time_len))
 
 
+def print_build_ps_output(builds):
+    max_id_len = len('Build id')
+    max_client_len = len('Repository type')
+    max_repo_len = len('Origin repository path')
+    max_tag_len = len('Tag')
+    max_state_len = len('State')
+    max_time_len = len('Created time')
+
+    for data in builds:
+        build = json.loads(data.details)
+        print data.details
+        if max_id_len < len(build['build_id']):
+            max_id_len = len(build['build_id'])
+        if max_client_len < len(build['code_repo_client']):
+            max_client_len = len(build['code_repo_client'])
+        if max_repo_len < len(build['code_repo_path']):
+            max_repo_len = len(build['code_repo_path'])
+        if max_tag_len < len(build['docker_repo_tag']):
+            max_tag_len = len(build['docker_repo_tag'])
+        if max_state_len < len(build['status']):
+            max_state_len = len(build['status'])
+        if max_time_len < len(build['created_at']):
+            max_time_len = len(build['created_at'])
+    print '{0}    {1}    {2}    {3}    {4}    {5}'.format('Build id'.center(max_id_len), 'Repository type'.center(max_client_len),
+                                                          'Origin repository path'.center(max_repo_len), 'Tag'.center(max_tag_len),
+                                                          'State'.center(max_state_len), 'Created time'.center(max_time_len))
+    print '{}'.format('-' * (max_id_len + max_client_len + max_repo_len + max_tag_len + max_state_len + max_time_len + 4 * 5))
+
+    for data in builds:
+        build = json.loads(data.details)
+        print '{0}    {1}    {2}    {3}    {4}    {5}'.format(str(build['build_id']).ljust(max_id_len),
+                                                              str(build['code_repo_client']).ljust(max_client_len),
+                                                              str(build['code_repo_path']).ljust(max_repo_len),
+                                                              str(build['docker_repo_tag']).ljust(max_tag_len),
+                                                              str(build['status']).ljust(max_state_len),
+                                                              str(build['created_at']).ljust(max_time_len))
+
+
+def print_repo_ps_output(repos):
+    max_name_len = len('Name')
+    max_type_len = len('Repository type')
+    max_auth_len = len('Public/Private')
+    max_origin_len = len('Origin repository path')
+    max_local_len = len('Local repository path')
+    max_time_len = len('Created time')
+
+    for data in repos:
+        repo = json.loads(data.details)
+        print data.details
+        if max_name_len < len(repo['repo_name']):
+            max_name_len = len(repo['repo_name'])
+        if max_time_len < len(repo['created_at']):
+            max_time_len = len(repo['created_at'])
+        if max_type_len < len(repo['build_config']['code_repo_client']):
+            max_type_len = len(repo['build_config']['code_repo_client'])
+        if max_origin_len < len(repo['build_config']['code_repo_path']):
+            max_origin_len = len(repo['build_config']['code_repo_path'])
+        if max_local_len < len(repo['build_config']['docker_repo_path']):
+            max_local_len = len(repo['build_config']['docker_repo_path'])
+
+    print '{0}    {1}    {2}    {3}    {4}    {5}'.format('Name'.center(max_name_len), 'Repository type'.center(max_type_len),
+                                                          'Public/Private'.center(max_auth_len), 'Origin repository path'.center(max_origin_len),
+                                                          'Local repository path'.center(max_local_len), 'Created time'.center(max_time_len))
+    print '{}'.format('-' * (max_name_len + max_type_len + max_auth_len + max_origin_len + max_local_len + max_time_len + 4 * 5))
+
+    for data in repos:
+        repo = json.loads(data.details)
+        print '{0}    {1}    {2}    {3}    {4}    {5}'.format(str(repo['repo_name']).ljust(max_name_len),
+                                                              str(repo['build_config']['code_repo_client']).ljust(max_type_len),
+                                                              str('Public' if repo['is_public'] else 'Private').ljust(max_auth_len),
+                                                              str(repo['build_config']['code_repo_path']).ljust(max_origin_len),
+                                                              str(repo['build_config']['docker_repo_path']).ljust(max_local_len),
+                                                              str(repo['created_at']).ljust(max_time_len))
+
+
 def print_logs(logs):
     entry_list = logs.split('\\r\\n')
     print '[alauda] Logs:'

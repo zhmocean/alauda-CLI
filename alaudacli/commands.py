@@ -9,6 +9,7 @@ from service import Service
 from backup import Backup
 from organization import Organization
 from repository import Repository
+from build import Build
 
 
 def login(username, password, cloud, endpoint):
@@ -84,8 +85,8 @@ def service_rm(name, namespace):
     Service.remove(name, namespace)
 
 
-def service_ps(namespace):
-    service_list = Service.list(namespace)
+def service_ps(namespace, page):
+    service_list = Service.list(namespace, page)
     util.print_ps_output(service_list)
 
 
@@ -232,16 +233,15 @@ def repository_create(name, description, full_description, is_public, repo_clien
     print result
 
 
-def repository_list(namespace):
-    repo_list = Repository.list(namespace)
-    for repo in repo_list:
-        print repo.details
+def repository_list(namespace, page):
+    repo_list = Repository.list(namespace, page)
+    util.print_repo_ps_output(repo_list)
 
 
 def repository_inspect(name, namespace):
     repo = Repository.fetch(name, namespace)
     result = repo.inspect()
-    print result
+    util.print_json_result(result)
 
 
 def repository_update(name, namespace, description, full_description):
@@ -272,10 +272,35 @@ def repository_tags(name, namespace):
 def repository_tag(name, namespace, tag):
     repo = Repository.fetch(name, namespace)
     result = repo.inspect_tag(tag)
-    print result
+    util.print_json_result(result)
 
 
 def repository_tag_update(name, namespace, tag_config_file):
     tag_configs = util.load_tag_config_file(tag_config_file)
     repo = Repository.fetch(name, namespace)
     repo.merge_tags(tag_configs)
+
+
+def build_trigger(name, namespace, tag):
+    Build.trigger(name, namespace, tag)
+
+
+def build_list(page):
+    build_list = Build.list(page)
+    util.print_build_ps_output(build_list)
+
+
+def build_rm(build_id):
+    Build.remove(build_id)
+
+
+def build_logs(build_id, start_time, end_time):
+    build = Build.fetch(build_id)
+    result = build.logs(start_time, end_time)
+    util.print_json_result(result)
+
+
+def build_inspect(build_id):
+    build = Build.fetch(build_id)
+    result = build.inspect()
+    util.print_json_result(result)

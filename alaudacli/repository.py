@@ -61,9 +61,9 @@ class Repository(object):
         return repo
 
     @classmethod
-    def list(cls, namespace=None):
+    def list(cls, namespace, page):
         api_endpoint, token, username = auth.load_token()
-        url = api_endpoint + 'repositories/{}/'.format(namespace or username)
+        url = api_endpoint + 'repositories/{0}/?page={1}'.format(namespace or username, page)
         headers = auth.build_headers(token)
         r = requests.get(url, headers=headers)
         util.check_response(r)

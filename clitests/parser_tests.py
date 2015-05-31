@@ -132,56 +132,56 @@ class ProcessCmdTest(unittest.TestCase):
         argv = ['service', 'scale', 'mysql=2 redis=3']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.service_scale.assert_called_with(['mysql=2 redis=3'], '')
+        mock_commands.service_scale.assert_called_with(['mysql=2 redis=3'], None)
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_service_enable_autoscaling(self, mock_commands):
         argv = ['service', 'enable-autoscaling', 'hello', '-f', 'auto-scaling.cfg']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.service_enable_autoscaling.assert_called_with('hello', '', 'auto-scaling.cfg')
+        mock_commands.service_enable_autoscaling.assert_called_with('hello', None, 'auto-scaling.cfg')
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_service_disable_autoscaling(self, mock_commands):
         argv = ['service', 'disable-autoscaling', 'hello', '-t', '2']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.service_disable_autoscaling.assert_called_with('hello', '', 2)
+        mock_commands.service_disable_autoscaling.assert_called_with('hello', None, 2)
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_service_inspect(self, mock_commands):
         argv = ['service', 'inspect', 'hello']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.service_inspect.assert_called_with('hello', namespace='')
+        mock_commands.service_inspect.assert_called_with('hello', namespace=None)
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_service_start(self, mock_commands):
         argv = ['service', 'start', 'hello']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.service_start.assert_called_with('hello', namespace='')
+        mock_commands.service_start.assert_called_with('hello', namespace=None)
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_service_stop(self, mock_commands):
         argv = ['service', 'stop', 'hello']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.service_stop.assert_called_with('hello', namespace='')
+        mock_commands.service_stop.assert_called_with('hello', namespace=None)
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_service_rm(self, mock_commands):
         argv = ['service', 'rm', 'hello']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.service_rm.assert_called_with('hello', namespace='')
+        mock_commands.service_rm.assert_called_with('hello', namespace=None)
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_service_ps(self, mock_commands):
         argv = ['service', 'ps']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.service_ps.assert_called_with(namespace=None)
+        mock_commands.service_ps.assert_called_with(namespace=None, page=1)
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_compose_up(self, mock_commands):
@@ -265,21 +265,21 @@ class ProcessCmdTest(unittest.TestCase):
         argv = ['service', 'instances', 'hello']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.instance_ps.assert_called_with('hello', namespace='')
+        mock_commands.instance_ps.assert_called_with('hello', namespace=None)
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_instance_inspect(self, mock_commands):
         argv = ['service', 'instance', 'hello', 'd938a2d7-0071-11e5-ab5d-02416b28d26a']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.instance_inspect.assert_called_with('hello', 'd938a2d7-0071-11e5-ab5d-02416b28d26a', namespace='')
+        mock_commands.instance_inspect.assert_called_with('hello', 'd938a2d7-0071-11e5-ab5d-02416b28d26a', namespace=None)
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_instance_logs(self, mock_commands):
         argv = ['service', 'instance-logs', 'hello', 'd938a2d7-0071-11e5-ab5d-02416b28d26a']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.instance_logs.assert_called_with('hello', 'd938a2d7-0071-11e5-ab5d-02416b28d26a', '', None, None)
+        mock_commands.instance_logs.assert_called_with('hello', 'd938a2d7-0071-11e5-ab5d-02416b28d26a', None, None, None)
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_organization_create(self, mock_commands):
@@ -307,7 +307,7 @@ class ProcessCmdTest(unittest.TestCase):
         argv = ['organization', 'list']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.organization_list.assert_called()
+        mock_commands.organization_list.assert_called_with()
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_repository_create(self, mock_commands):
@@ -326,7 +326,7 @@ class ProcessCmdTest(unittest.TestCase):
         argv = ['repository', 'list']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.repository_list.assert_called()
+        mock_commands.repository_list.assert_called_with(None, 1)
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_repository_inspect(self, mock_commands):
@@ -382,4 +382,32 @@ class ProcessCmdTest(unittest.TestCase):
         argv = ['repository', 'tag-update', 'hello', '-f', 'update-tag-config.example']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.repository_tag_update.assert_called('hello', None, 'update-tag-config.example')
+        mock_commands.repository_tag_update.assert_called_with('hello', None, 'update-tag-config.example')
+
+    @mock.patch('alaudacli.cmd_processor.commands')
+    def test_process_build_trigger(self, mock_commands):
+        argv = ['build', 'trigger', 'hello']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_commands.build_trigger.assert_called_with('hello', None, 'latest')
+
+    @mock.patch('alaudacli.cmd_processor.commands')
+    def test_process_build_list(self, mock_commands):
+        argv = ['build', 'list']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_commands.build_list.assert_called_with(1)
+
+    @mock.patch('alaudacli.cmd_processor.commands')
+    def test_process_build_rm(self, mock_commands):
+        argv = ['build', 'rm', 'fdd6edca-3618-4daa-8ace-79147c08d6a2']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_commands.build_rm.assert_called_with('fdd6edca-3618-4daa-8ace-79147c08d6a2')
+
+    @mock.patch('alaudacli.cmd_processor.commands')
+    def test_process_build_logs(self, mock_commands):
+        argv = ['build', 'logs', 'fdd6edca-3618-4daa-8ace-79147c08d6a2']
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)
+        mock_commands.build_logs.assert_called_with('fdd6edca-3618-4daa-8ace-79147c08d6a2', None, None)

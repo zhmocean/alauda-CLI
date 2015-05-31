@@ -26,7 +26,7 @@ def process_cmds(args):
         elif args.subcmd == 'rm':
             commands.service_rm(args.name, namespace=args.namespace)
         elif args.subcmd == 'ps':
-            commands.service_ps(namespace=args.namespace)
+            commands.service_ps(namespace=args.namespace, page=args.page)
         elif args.subcmd == 'scale':
             commands.service_scale(args.descriptor, args.namespace)
         elif args.subcmd == 'enable-autoscaling':
@@ -82,7 +82,7 @@ def process_cmds(args):
                                        repo_name=args.repo_name, repo_clone_url=args.repo_clone_url,
                                        tag_config_file=args.tag_config_file, namespace=args.namespace)
         elif args.subcmd == 'list':
-            commands.repository_list(args.namespace)
+            commands.repository_list(args.namespace, args.page)
         elif args.subcmd == 'inspect':
             commands.repository_inspect(args.name, args.namespace)
         elif args.subcmd == 'update':
@@ -99,3 +99,14 @@ def process_cmds(args):
             commands.repository_tag(args.name, args.namespace, args.tag_name)
         elif args.subcmd == 'tag-update':
             commands.repository_tag_update(args.name, args.namespace, args.tag_config_file)
+    elif args.cmd == 'build':
+        if args.subcmd == 'trigger':
+            commands.build_trigger(args.name, args.namespace, args.tag)
+        elif args.subcmd == 'list':
+            commands.build_list(args.page)
+        elif args.subcmd == 'rm':
+            commands.build_rm(args.id)
+        elif args.subcmd == 'inspect':
+            commands.build_inspect(args.id)
+        elif args.subcmd == 'logs':
+            commands.build_logs(args.id, args.start_time, args.end_time)

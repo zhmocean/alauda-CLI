@@ -21,6 +21,7 @@ def create_parser():
     _add_backups_parser(subparsers)
     _add_organization_parser(subparsers)
     _add_repository_parser(subparsers)
+    _add_build_parser(subparsers)
     return parser
 
 
@@ -50,7 +51,7 @@ def _add_service_parser(subparsers):
     create_parser.add_argument('-l', '--link', help='which service to link.', action='append')
     create_parser.add_argument('-p', '--publish', help='Ports to publish, e.g. 5000/tcp', action='append')
     create_parser.add_argument('-v', '--volume', help='Volumes, e.g. /var/lib/mysql:10', action='append')
-    create_parser.add_argument('-n', '--namespace', help='Service namespace', default='')
+    create_parser.add_argument('-n', '--namespace', help='Service namespace')
     create_parser.add_argument('-a', '--autoscale', help='Enable auto-scaling', action='store_true')
     create_parser.add_argument('-f', '--autoscaling-config', help='Auto-scaling config file name', default='./auto-scaling.cfg')
     create_parser.add_argument('-d', '--domain', help='Custom domain name')
@@ -65,65 +66,66 @@ def _add_service_parser(subparsers):
     run_parser.add_argument('-l', '--link', help='which service to link.', action='append')
     run_parser.add_argument('-p', '--publish', help='Ports to publish, e.g. 5000/tcp', action='append')
     run_parser.add_argument('-v', '--volume', help='volumes.e.g. /var/lib/mysql:10', action='append')
-    run_parser.add_argument('-n', '--namespace', help='Service namespace', default='')
+    run_parser.add_argument('-n', '--namespace', help='Service namespace')
     run_parser.add_argument('-a', '--autoscale', help='Enable auto-scaling', action='store_true')
     run_parser.add_argument('-f', '--autoscaling-config', help='Auto-scaling config file name', default='./auto-scaling.cfg')
     run_parser.add_argument('-d', '--domain', help='Custom domain name')
 
     inspect_parser = service_subparsers.add_parser('inspect', help='Get details of a service', description='Get details of a service')
     inspect_parser.add_argument('name', help='Name of the service to retrieve')
-    inspect_parser.add_argument('-n', '--namespace', help='Service namespace', default='')
+    inspect_parser.add_argument('-n', '--namespace', help='Service namespace')
 
     start_parser = service_subparsers.add_parser('start', help='Start a service', description='Start a service')
     start_parser.add_argument('name', help='Name of the service to start')
-    start_parser.add_argument('-n', '--namespace', help='Service namespace', default='')
+    start_parser.add_argument('-n', '--namespace', help='Service namespace')
 
     stop_parser = service_subparsers.add_parser('stop', help='Stop a service', description='Stop a service')
     stop_parser.add_argument('name', help='Name of the service to stop')
-    stop_parser.add_argument('-n', '--namespace', help='Service namespace', default='')
+    stop_parser.add_argument('-n', '--namespace', help='Service namespace')
 
     rm_parser = service_subparsers.add_parser('rm', help='Remove a service', description='Remove a service')
     rm_parser.add_argument('name', help='Name of the service to remove')
-    rm_parser.add_argument('-n', '--namespace', help='Service namespace', default='')
+    rm_parser.add_argument('-n', '--namespace', help='Service namespace')
 
     ps_parser = service_subparsers.add_parser('ps', help='List services', description='List services')
-    ps_parser.add_argument('-n', '--namespace', help='Service namespace', default=None)
+    ps_parser.add_argument('-n', '--namespace', help='Service namespace')
+    ps_parser.add_argument('-p', '--page', help='Page number', default=1)
 
     scale_parser = service_subparsers.add_parser('scale', help='Scale a service', description='Scale a service')
     scale_parser.add_argument('descriptor', nargs='*', help='E.g. web=2')
-    scale_parser.add_argument('-n', '--namespace', help='Service namespace', default='')
+    scale_parser.add_argument('-n', '--namespace', help='Service namespace')
 
     enable_autoscaling_parser = service_subparsers.add_parser('enable-autoscaling', help='Enable auto-scaling', description='Enable auto-scaling')
     enable_autoscaling_parser.add_argument('name', help='Service name')
-    enable_autoscaling_parser.add_argument('-n', '--namespace', help='Service namespace', default='')
+    enable_autoscaling_parser.add_argument('-n', '--namespace', help='Service namespace')
     enable_autoscaling_parser.add_argument('-f', '--autoscaling-config', help='Auto-scaling config file name', default='./auto-scaling.cfg')
 
     disable_autoscaling_parser = service_subparsers.add_parser('disable-autoscaling', help='Disable auto-scaling', description='Disable auto-scaling')
     disable_autoscaling_parser.add_argument('name', help='Service name')
-    disable_autoscaling_parser.add_argument('-n', '--namespace', help='Service namespace', default='')
+    disable_autoscaling_parser.add_argument('-n', '--namespace', help='Service namespace')
     disable_autoscaling_parser.add_argument('-t', '--target-num-instances', help='Target number of instances for the service', type=int)
 
     logs_parser = service_subparsers.add_parser('logs', help='Query service log', description='Query service log')
     logs_parser.add_argument('name', help='Service name')
-    logs_parser.add_argument('-n', '--namespace', help='Service namespace', default='')
+    logs_parser.add_argument('-n', '--namespace', help='Service namespace')
     logs_parser.add_argument('-s', '--start-time', help='Logs query start time. e.g. 2015-05-01 12:12:12')
     logs_parser.add_argument('-e', '--end-time', help='Logs query end time. e.g. 2015-05-01 12:12:12')
 
     list_instance_parser = service_subparsers.add_parser('instances', help='List instances', description='List instances')
     list_instance_parser.add_argument('name', help='Service name')
-    list_instance_parser.add_argument('-n', '--namespace', help='Service namespace', default='')
+    list_instance_parser.add_argument('-n', '--namespace', help='Service namespace')
 
     inspect_instance_parser = service_subparsers.add_parser('instance', help='Get details of a instance', description='Get details of a instance')
     inspect_instance_parser.add_argument('name', help='Service name')
     inspect_instance_parser.add_argument('id', help='Instance uuid')
-    inspect_instance_parser.add_argument('-n', '--namespace', help='Service namespace', default='')
+    inspect_instance_parser.add_argument('-n', '--namespace', help='Service namespace')
 
     logs_instance_parser = service_subparsers.add_parser('instance-logs', help='Query instance log', description='Query instance log')
     logs_instance_parser.add_argument('name', help='Service name')
     logs_instance_parser.add_argument('id', help='Instance uuid')
     logs_instance_parser.add_argument('-s', '--start-time', help='Logs query start time. e.g. 2015-05-01 12:12:12')
     logs_instance_parser.add_argument('-e', '--end-time', help='Logs query end time. e.g. 2015-05-01 12:12:12')
-    logs_instance_parser.add_argument('-n', '--namespace', help='Service namespace', default='')
+    logs_instance_parser.add_argument('-n', '--namespace', help='Service namespace')
 
 
 def _add_backups_parser(subparsers):
@@ -134,18 +136,18 @@ def _add_backups_parser(subparsers):
     create_parser.add_argument('name', help='Backup name')
     create_parser.add_argument('service', help='Name of the service to create volume backup for')
     create_parser.add_argument('dir', help='Mounted volume directory to backup')
-    create_parser.add_argument('-n', '--namespace', help='Service namespace', default=None)
+    create_parser.add_argument('-n', '--namespace', help='Service namespace')
 
     list_parser = backup_subparsers.add_parser('list', help='List volume backups', description='list volume backups')
-    list_parser.add_argument('-n', '--namespace', help='Service namespace', default=None)
+    list_parser.add_argument('-n', '--namespace', help='Service namespace')
 
     inspect_parser = backup_subparsers.add_parser('inspect', help='Get details of a volume backup', description='Get details of a volume backup')
     inspect_parser.add_argument('id', help='UUID of the volume backup')
-    inspect_parser.add_argument('-n', '--namespace', help='Service namespace', default=None)
+    inspect_parser.add_argument('-n', '--namespace', help='Service namespace')
 
     rm_parser = backup_subparsers.add_parser('rm', help='Remove a volume backup', description='Remove a volume backup')
     rm_parser.add_argument('id', help='UUID of the volume backup')
-    rm_parser.add_argument('-n', '--namespace', help='Service namespace', default=None)
+    rm_parser.add_argument('-n', '--namespace', help='Service namespace')
 
 
 def _add_compose_parser(subparsers):
@@ -217,6 +219,7 @@ def _add_repository_parser(subparsers):
 
     list_parser = repo_subparsers.add_parser('list', help='List all repositories', description='List all repositories')
     list_parser.add_argument('-n', '--namespace', help='Repository namespace')
+    list_parser.add_argument('-p', '--page', help='Page number', default=1)
 
     inspect_parser = repo_subparsers.add_parser('inspect', help='Get detail of a repository', description='Get detail of a repository')
     inspect_parser.add_argument('name', help='Repository name')
@@ -253,3 +256,27 @@ def _add_repository_parser(subparsers):
     update_tag_parser.add_argument('name', help='Repository name')
     update_tag_parser.add_argument('-f', '--tag-config-file', help='Tag config file', default='./update_repo_config.example')
     update_tag_parser.add_argument('-n', '--namespace', help='Repository namespace')
+
+
+def _add_build_parser(subparsers):
+    build_parser = subparsers.add_parser('build', help='Build operations', description='Build operations')
+    build_subparsers = build_parser.add_subparsers(title='Alauda build commands', dest='subcmd')
+
+    trigger_parser = build_subparsers.add_parser('trigger', help='Trigger a build', description='Trigger a build')
+    trigger_parser.add_argument('name', help='Repository name')
+    trigger_parser.add_argument('-n', '--namespace', help='Repository namespace')
+    trigger_parser.add_argument('-t', '--tag', help='Tag name', default='latest')
+
+    list_parser = build_subparsers.add_parser('list', help='List all builds', description='List all builds')
+    list_parser.add_argument('-p', '--page', help='Page number', default=1)
+
+    inspect_parser = build_subparsers.add_parser('inspect', help='Get detail of a build', description='Get detail of a build')
+    inspect_parser.add_argument('id', help='Build id')
+
+    rm_parser = build_subparsers.add_parser('rm', help='Delete a build', description='Delete a build')
+    rm_parser.add_argument('id', help='Build id')
+
+    logs_parser = build_subparsers.add_parser('logs', help='Query a build log', description='Query a build log')
+    logs_parser.add_argument('id', help='Build id')
+    logs_parser.add_argument('-s', '--start-time', help='Logs query start time. e.g. 2015-05-01 12:12:12')
+    logs_parser.add_argument('-e', '--end-time', help='Logs query end time. e.g. 2015-05-01 12:12:12')

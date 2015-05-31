@@ -9,7 +9,7 @@ _alauda()
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
-    opts="login -v -h logout service compose backup organization repository"
+    opts="login -v -h logout service compose backup organization repository build"
 
     case "${prev}" in
         login)
@@ -162,6 +162,16 @@ _alauda()
        tag-update)
        		local tag_update_args="{name} -n -f"
        		COMPREPLY=( $(compgen -W "${tag_update_args}" -- ${cur}) )
+            return 0
+            ;;
+       build)
+       		local build_args="trigger list inspect rm logs"
+       		COMPREPLY=( $(compgen -W "${build_args}" -- ${cur}) )
+            return 0
+            ;;
+       trigger)
+       		local trigger_args="{name} -n -t"
+       		COMPREPLY=( $(compgen -W "${trigger_args}" -- ${cur}) )
             return 0
             ;;
         *)
