@@ -10,12 +10,12 @@ def process_cmds(args):
         if args.subcmd == 'create':
             commands.service_create(image=args.image, name=args.name, start=False, target_num_instances=args.target_num_instances,
                                     instance_size=args.instance_size, run_command=args.run_command, env=args.env, ports=args.publish,
-                                    volumes=args.volume, links=args.link, namespace=args.namespace,
+                                    exposes=args.expose, volumes=args.volume, links=args.link, namespace=args.namespace,
                                     scaling_info=(args.autoscale, args.autoscaling_config), custom_domain_name=args.domain)
         elif args.subcmd == 'run':
             commands.service_create(image=args.image, name=args.name, start=True, target_num_instances=args.target_num_instances,
                                     instance_size=args.instance_size, run_command=args.run_command, env=args.env, ports=args.publish,
-                                    volumes=args.volume, links=args.link, namespace=args.namespace,
+                                    exposes=args.expose, volumes=args.volume, links=args.link, namespace=args.namespace,
                                     scaling_info=(args.autoscale, args.autoscaling_config), custom_domain_name=args.domain)
         elif args.subcmd == 'inspect':
             commands.service_inspect(args.name, namespace=args.namespace)

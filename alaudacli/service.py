@@ -52,8 +52,8 @@ class Service(object):
                     linked_service_ports = linked_service_data['instance_ports']
                     if len(linked_service_ports) == 0:
                         break
-                    linked_service_envvars = json.loads(linked_service_data['instance_envvars'])
-                    linked_service_addr = linked_service_envvars['__DEFAULT_DOMAIN_NAME__']
+#                     linked_service_envvars = json.loads(linked_service_data['instance_envvars'])
+#                     linked_service_addr = linked_service_envvars['__DEFAULT_DOMAIN_NAME__']
                     key = '{0}_PORT'.format(alias).upper()
                     for port in linked_service_ports:
                         service_port = port.get('service_port')
@@ -62,12 +62,12 @@ class Service(object):
                             time.sleep(1)
                             break
                         retry_num = MAX_RETRY_NUM + 1
-                        url = '{0}://{1}:{2}'.format(port['protocol'], linked_service_addr, service_port)
+                        url = '{0}://{1}:{2}'.format(port['protocol'], port['default_domain'], service_port)
                         if key not in instance_envvars.keys():
                             instance_envvars[key] = url
                         pattern = '{0}_PORT_{1}_{2}'.format(alias, port['container_port'], port['protocol']).upper()
                         instance_envvars[pattern] = url
-                        instance_envvars[pattern + '_ADDR'] = linked_service_addr
+                        instance_envvars[pattern + '_ADDR'] = port['default_domain']
                         instance_envvars[pattern + '_PORT'] = str(service_port)
                         instance_envvars[pattern + '_PROTO'] = port['protocol']
                 if retry_num == MAX_RETRY_NUM:

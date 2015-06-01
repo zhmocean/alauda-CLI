@@ -42,21 +42,42 @@ def parse_instance_ports(port_list):
         if len(result) == 2:
             protocol = result[1]
         else:
-            protocol = 'tcp'
+            if port == 80:
+                protocol = 'http'
+            else:
+                protocol = 'tcp'
 
-        if protocol not in ['tcp']:
+        if protocol not in ['tcp', 'http']:
             raise AlaudaInputError('Invalid port protocal. Supported protocols: {tcp}')
         if port < 0 or port > 65535:
             raise AlaudaInputError('Invalid port number')
 
-        return port, protocol
+        return port, 'tcp', protocol
 
     parsed_ports = []
+    ports = []
     if port_list is not None:
         for port_desc in port_list:
-            port, protocol = _parse_instance_port(port_desc)
-            parsed_ports.append({"container_port": port, "protocol": protocol})
-    return parsed_ports
+            port, protocol, port_type = _parse_instance_port(port_desc)
+            result = {"container_port": port, "protocol": 'tcp', 'endpoint_type': 'http-endpoint' if port_type == 'http' else 'tcp-endpoint'}
+            if result not in parsed_ports:
+                parsed_ports.append(result)
+                ports.append(port)
+    return parsed_ports, ports
+
+
+def merge_internal_external_ports(ports, exposes):
+    expose_list = []
+    for expose in exposes:
+        if not str(expose).isdigit() or int(expose) < 0 or int(expose) > 65535:
+            raise AlaudaInputError('Invalid port number')
+        expose = int(expose)
+        if expose in ports:
+            continue
+        result = {"container_port": expose, "protocol": 'tcp', 'endpoint_type': 'internal-endpoint'}
+        if result not in expose_list:
+            expose_list.append(result)
+    return expose_list
 
 
 def parse_envvar(_envvar):
