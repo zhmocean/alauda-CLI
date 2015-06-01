@@ -39,7 +39,6 @@ def service_create(image, name, start, target_num_instances, instance_size, run_
     instance_ports, port_list = util.parse_instance_ports(ports)
     expose_list = util.merge_internal_external_ports(port_list, exposes)
     instance_ports.extend(expose_list)
-    print instance_ports
     instance_envvars = util.parse_envvars(env)
     links = util.parse_links(links)
     volumes = util.parse_volumes(volumes)

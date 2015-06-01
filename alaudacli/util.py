@@ -68,6 +68,8 @@ def parse_instance_ports(port_list):
 
 def merge_internal_external_ports(ports, exposes):
     expose_list = []
+    if exposes is None:
+        return expose_list
     for expose in exposes:
         if not str(expose).isdigit() or int(expose) < 0 or int(expose) > 65535:
             raise AlaudaInputError('Invalid port number')
