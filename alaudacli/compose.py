@@ -127,7 +127,10 @@ def load_links(service_data):
 
 
 def load_ports(service_data):
-    return util.parse_instance_ports(service_data.get('ports'))
+    instance_ports, port_list = util.parse_instance_ports(service_data.get('ports'))
+    expose_list = util.merge_internal_external_ports(port_list, service_data.get('expose', []))
+    instance_ports.extend(expose_list)
+    return instance_ports
 
 
 def load_command(service_data):

@@ -26,8 +26,9 @@ class UtilTest(unittest.TestCase):
         self.assertEqual('STOPPED', state)
 
     def test_parse_instance_ports(self):
-        ports = util.parse_instance_ports(['80/tcp', '22'])
-        self.assertEqual([{'container_port': 80, 'protocol': 'tcp'}, {'container_port': 22, 'protocol': 'tcp'}], ports)
+        ports, _ = util.parse_instance_ports(['80/tcp', '22'])
+        self.assertEqual([{'endpoint_type': 'tcp-endpoint', 'container_port': 80, 'protocol': 'tcp'},
+                          {'endpoint_type': 'tcp-endpoint', 'container_port': 22, 'protocol': 'tcp'}], ports)
 
     def test_parse_envvars(self):
         envvars = util.parse_envvars(['FOO=foo', 'BAR:bar', {'BAZ': 'baz'}, 'A=', 'A= '])
@@ -109,7 +110,7 @@ class ProcessCmdTest(unittest.TestCase):
         cmd_processor.process_cmds(args)
         mock_commands.service_create.assert_called_with(image='index.alauda.io/alauda/hello-world:latest',
                                                         name='hello', start=False, target_num_instances=2, instance_size='XS',
-                                                        run_command='/run.sh', env=['FOO=bar'], ports=['5000/tcp'],
+                                                        run_command='/run.sh', env=['FOO=bar'], ports=['5000/tcp'], exposes=None,
                                                         volumes=['/var/lib/data1:10'], links=['myql:db'], scaling_info=(True, './auto-scaling.cfg'),
                                                         namespace='myns', custom_domain_name='my.com')
 
@@ -123,7 +124,7 @@ class ProcessCmdTest(unittest.TestCase):
         cmd_processor.process_cmds(args)
         mock_commands.service_create.assert_called_with(image='index.alauda.io/alauda/hello-world:latest',
                                                         name='hello', start=True, target_num_instances=2, instance_size='XS',
-                                                        run_command='/run.sh', env=['FOO=bar'], ports=['5000/tcp'],
+                                                        run_command='/run.sh', env=['FOO=bar'], ports=['5000/tcp'], exposes=None,
                                                         volumes=['/var/lib/data1:10'], links=['db'], scaling_info=(False, './auto-scaling.cfg'),
                                                         namespace='myns', custom_domain_name='my.com')
 
