@@ -153,21 +153,21 @@ def _add_compose_parser(subparsers):
 
     up_parser = compose_subparsers.add_parser('up', help='Create and start all service containers', description='Create and start all service containers')
     up_parser.add_argument('-f', '--file', help='Compose file name', default='./docker-compose.yml')
-    up_parser.add_argument('-s', '--strict', help='Strict mode', action='store_true')
+    up_parser.add_argument('-s', '--strict', help='Wait for linked services to start', action='store_true')
 
     ps_parser = compose_subparsers.add_parser('ps', help='List containers', description='Lists container')
     ps_parser.add_argument('-f', '--file', help='Compose file name', default='./docker-compose.yml')
 
     start_parser = compose_subparsers.add_parser('start', help='Start all service containers', description='Start all service containers')
     start_parser.add_argument('-f', '--file', help='Compose file name', default='./docker-compose.yml')
-    start_parser.add_argument('-s', '--strict', help='Strict mode', action='store_true')
+    start_parser.add_argument('-s', '--strict', help='Wait for linked services to start', action='store_true')
 
     stop_parser = compose_subparsers.add_parser('stop', help='Stop all service containers', description='Stop all service containers')
     stop_parser.add_argument('-f', '--file', help='Compose file name', default='./docker-compose.yml')
 
     restart_parser = compose_subparsers.add_parser('restart', help='Restart all service containers', description='Restart all service containers')
     restart_parser.add_argument('-f', '--file', help='Compose file name', default='./docker-compose.yml')
-    restart_parser.add_argument('-s', '--strict', help='Strict mode', action='store_true')
+    restart_parser.add_argument('-s', '--strict', help='Wait for linked services to start', action='store_true')
 
     rm_parser = compose_subparsers.add_parser('rm', help='Remove all service containers', description='Remove all service containers')
     rm_parser.add_argument('-f', '--file', help='Compose file name', default='./docker-compose.yml')
