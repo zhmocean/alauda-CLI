@@ -293,7 +293,7 @@ optional arguments:
 
 ###stop
 
-启动一个处于运行状态的服务
+暂停一个处于运行状态的服务
 
 ```
 usage: alauda service stop [-h] [-n NAMESPACE] name
@@ -331,7 +331,7 @@ optional arguments:
 
 ###scale
 
-调节当前服务中实例适量
+调节当前服务中实例数量
 
 ```
 usage: alauda service scale [-h] [-n NAMESPACE] [descriptor [descriptor ...]]
@@ -498,6 +498,173 @@ bash-3.2# alauda compose up -f gitlab.alauda.yml
 
 ```
 
+注意：
+
+* volumes的格式修改为path/size `path`即挂载路径，`size`为挂载卷大小单位为G。例如:
+	
+	```
+	volumes:
+    - /data:10
+    - /mnt:10
+	```
+* ports格式不再支持`port1:port2`。例如:
+
+	```
+	ports:
+	- "80"
+	- "22"
+	```
+* environment。 支持环境变量的替换。即，某一环境变量可以是其他环境变量赋值或者拼接得到。例如:
+
+	```
+	DB_HOST: $POSTGRESQL_PORT_5432_TCP_ADDR
+	DB_HOST的值就是环境变量POSTGRESQL_PORT_5432_TCP_ADDR所指的值。
+	
+	``` 
+
+* 新增size。用于指定服务所需的硬件资源大小。可选范围为{'XS', 'S', 'M', 'L', 'XL'} 例如:
+
+	```
+	size: L
+	```
+* 新增domain。 用于用户指定自己的域名。例如:
+
+	```
+	domain: "www.myself.com"
+	```
+* 新增autoscaling_config。用于指定服务的自动调节模式，以及自动调节模式的配置文件。例如:
+
+	```
+	autoscaling_config: ./autoscaling.cfg
+	```
+* 新增number。用户指定某个服务所开启的实例数量。例如:
+
+	```
+	size: 5
+	```
+
+###up
+
+启动包含多个服务的应用
+
+```
+usage: alauda compose up [-h] [-f FILE] [-s]
+
+Create and start all service containers
+
+optional arguments:
+  -h, --help           show this help message and exit
+  -f, --file=""  		Compose file name
+  -s, --strict=false   Wait for linked services to start
+
+```
+当显示的输入-s 参数时，表示服务需要等到其所link的服务启动之后，才开始启动。
+
+###ps
+
+列出应用的各个服务信息。
+
+```
+usage: alauda service ps [-h] [-n NAMESPACE]
+
+List services
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -n NAMESPACE, --namespace NAMESPACE
+                        Service namespace
+bash-3.2# alauda compose ps -h
+usage: alauda compose ps [-h] [-f FILE]
+
+Lists container
+
+optional arguments:
+  -h, --help           show this help message and exit
+  -f, --file=""  		Compose file name
+```
+
+###start
+
+启动已经停止的应用
+
+```
+usage: alauda compose start [-h] [-f FILE] [-s]
+
+Start all service containers
+
+optional arguments:
+  -h, --help           	show this help message and exit
+  -f, --file=""  		Compose file name
+  -s, --strict         	Wait for linked services to start
+```
+`-s`同`up`命令
+
+###stop
+
+暂停运行中的应用
+
+```
+usage: alauda compose stop [-h] [-f FILE]
+
+Stop all service containers
+
+optional arguments:
+  -h, --help           	show this help message and exit
+  -f, --file=""  		Compose file name
+```
+
+###restart
+
+重新启动应用
+
+```
+usage: alauda compose restart [-h] [-f FILE] [-s]
+
+Restart all service containers
+
+optional arguments:
+  -h, --help           	show this help message and exit
+  -f, --file=""  		Compose file name
+  -s, --strict         	Wait for linked services to start
+```
+
+###rm
+
+删除应用
+
+```
+usage: alauda compose rm [-h] [-f FILE]
+
+Remove all service containers
+
+optional arguments:
+  -h, --help           	show this help message and exit
+  -f, --file=""  		Compose file name
+```
+
+###scale
+
+调节应用中每个服务的实例数量
+
+```
+usage: alauda compose scale [-h] [-f FILE] [descriptor [descriptor ...]]
+
+Set number of containers to run for a service
+
+positional arguments:
+  descriptor            E.g. web=2 db=1
+
+optional arguments:
+  -h, --help           	show this help message and exit
+  -f, --file=""  		Compose file name
+```
+样例:
+
+```
+alauda compose scale web=2 redis=3
+```
+
+
 ##backup
 
 ```
@@ -525,6 +692,77 @@ bash-3.2# alauda backup create backup1 redis /data
 [alauda] Creating backup "backup1"
 [alauda] OK
 
+```
+
+###create
+
+创建一个备份
+
+```
+usage: alauda backup create [-h] [-n NAMESPACE] name service dir
+
+Create a new volume backup
+
+positional arguments:
+  name                  Backup name
+  service               Name of the service to create volume backup for
+  dir                   Mounted volume directory to backup
+
+optional arguments:
+  -h, --help           	show this help message and exit
+  -n, --namespace=""	Service namespace
+```
+
+参数`dir` 是服务在创建的时候所制定的volume挂载路径。
+
+###list
+
+列出当前所有备份
+
+```
+usage: alauda backup list [-h] [-n NAMESPACE]
+
+list volume backups
+
+optional arguments:
+  -h, --help           	show this help message and exit
+  -n, --namespace=""	Service namespace
+```
+
+###inspect
+
+获取某个备份的详细信息
+
+```
+usage: alauda backup inspect [-h] [-n NAMESPACE] id
+
+Get details of a volume backup
+
+positional arguments:
+  id                    UUID of the volume backup
+
+optional arguments:
+  -h, --help           	show this help message and exit
+  -n, --namespace=""	Service namespace
+```
+
+`id` 为用户创建每个备份之后所获取的唯一id。
+
+###rm
+
+删除备份
+
+```
+usage: alauda backup rm [-h] [-n NAMESPACE] id
+
+Remove a volume backup
+
+positional arguments:
+  id                    UUID of the volume backup
+
+optional arguments:
+  -h, --help           	show this help message and exit
+  -n, --namespace=""	Service namespace
 ```
 
 ##organization
@@ -558,4 +796,56 @@ mathildedev      云雀科技研发组    2015-04-25T05:42:00.828Z
 xdzhangcnorg     mathilde          2015-05-19T03:35:29.047Z
 xdzhangcnorg1    mathilde2         2015-05-25T07:38:07.670Z
 
+```
+###create
+
+创建一个组织
+
+```
+usage: alauda organization create [-h] name company
+
+Create a new organization
+
+positional arguments:
+  name        Organization name
+  company     Company name
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+
+###list
+
+列出当前用户所属的组织
+
+###inspect
+
+获取某个组织的详细信息
+
+```
+usage: alauda organization inspect [-h] name
+
+Get details of an organization
+
+positional arguments:
+  name        Organization name
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+###update
+
+更新某个组织的信息
+
+```
+usage: alauda organization update [-h] name company
+
+Update an exist orgnization
+
+positional arguments:
+  name        Organization name
+  company     Company name
+
+optional arguments:
+  -h, --help  show this help message and exit
 ```
