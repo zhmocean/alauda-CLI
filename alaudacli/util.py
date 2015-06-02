@@ -222,20 +222,6 @@ def parse_autoscale_info(info):
         return 'MANUAL', {}
 
 
-def load_tag_config_file(tag_config_file):
-    try:
-        fp = file(tag_config_file)
-    except:
-        raise AlaudaInputError('can not open create repo config file-> {}.'.format(tag_config_file))
-    try:
-        cfg_json = json.load(fp)
-        fp.close()
-        return cfg_json
-    except:
-        fp.close()
-        raise AlaudaInputError('Parse {} fail! The format refer to ./create_repo_config.example or ./update_repo_config.example'.format(tag_config_file))
-
-
 def parse_time(start_time, end_time):
     if start_time is not None and end_time is not None:
         try:
@@ -385,81 +371,6 @@ def print_organization_ps_output(orgs):
                                          str(org['created_at']).ljust(max_time_len))
 
 
-def print_build_ps_output(builds):
-    max_id_len = len('Build id')
-    max_client_len = len('Repository type')
-    max_repo_len = len('Origin repository path')
-    max_tag_len = len('Tag')
-    max_state_len = len('State')
-    max_time_len = len('Created time')
-
-    for data in builds:
-        build = json.loads(data.details)
-        print data.details
-        if max_id_len < len(build['build_id']):
-            max_id_len = len(build['build_id'])
-        if max_client_len < len(build['code_repo_client']):
-            max_client_len = len(build['code_repo_client'])
-        if max_repo_len < len(build['code_repo_path']):
-            max_repo_len = len(build['code_repo_path'])
-        if max_tag_len < len(build['docker_repo_tag']):
-            max_tag_len = len(build['docker_repo_tag'])
-        if max_state_len < len(build['status']):
-            max_state_len = len(build['status'])
-        if max_time_len < len(build['created_at']):
-            max_time_len = len(build['created_at'])
-    print '{0}    {1}    {2}    {3}    {4}    {5}'.format('Build id'.center(max_id_len), 'Repository type'.center(max_client_len),
-                                                          'Origin repository path'.center(max_repo_len), 'Tag'.center(max_tag_len),
-                                                          'State'.center(max_state_len), 'Created time'.center(max_time_len))
-    print '{}'.format('-' * (max_id_len + max_client_len + max_repo_len + max_tag_len + max_state_len + max_time_len + 4 * 5))
-
-    for data in builds:
-        build = json.loads(data.details)
-        print '{0}    {1}    {2}    {3}    {4}    {5}'.format(str(build['build_id']).ljust(max_id_len),
-                                                              str(build['code_repo_client']).ljust(max_client_len),
-                                                              str(build['code_repo_path']).ljust(max_repo_len),
-                                                              str(build['docker_repo_tag']).ljust(max_tag_len),
-                                                              str(build['status']).ljust(max_state_len),
-                                                              str(build['created_at']).ljust(max_time_len))
-
-
-def print_repo_ps_output(repos):
-    max_name_len = len('Name')
-    max_type_len = len('Repository type')
-    max_auth_len = len('Public/Private')
-    max_origin_len = len('Origin repository path')
-    max_local_len = len('Local repository path')
-    max_time_len = len('Created time')
-
-    for data in repos:
-        repo = json.loads(data.details)
-        print data.details
-        if max_name_len < len(repo['repo_name']):
-            max_name_len = len(repo['repo_name'])
-        if max_time_len < len(repo['created_at']):
-            max_time_len = len(repo['created_at'])
-        if max_type_len < len(repo['build_config']['code_repo_client']):
-            max_type_len = len(repo['build_config']['code_repo_client'])
-        if max_origin_len < len(repo['build_config']['code_repo_path']):
-            max_origin_len = len(repo['build_config']['code_repo_path'])
-        if max_local_len < len(repo['build_config']['docker_repo_path']):
-            max_local_len = len(repo['build_config']['docker_repo_path'])
-
-    print '{0}    {1}    {2}    {3}    {4}    {5}'.format('Name'.center(max_name_len), 'Repository type'.center(max_type_len),
-                                                          'Public/Private'.center(max_auth_len), 'Origin repository path'.center(max_origin_len),
-                                                          'Local repository path'.center(max_local_len), 'Created time'.center(max_time_len))
-    print '{}'.format('-' * (max_name_len + max_type_len + max_auth_len + max_origin_len + max_local_len + max_time_len + 4 * 5))
-
-    for data in repos:
-        repo = json.loads(data.details)
-        print '{0}    {1}    {2}    {3}    {4}    {5}'.format(str(repo['repo_name']).ljust(max_name_len),
-                                                              str(repo['build_config']['code_repo_client']).ljust(max_type_len),
-                                                              str('Public' if repo['is_public'] else 'Private').ljust(max_auth_len),
-                                                              str(repo['build_config']['code_repo_path']).ljust(max_origin_len),
-                                                              str(repo['build_config']['docker_repo_path']).ljust(max_local_len),
-                                                              str(repo['created_at']).ljust(max_time_len))
-
-
 def print_logs(logs):
     entry_list = logs.split('\\r\\n')
     print '[alauda] Logs:'
@@ -482,18 +393,6 @@ def get_flag_pos(src, start_with, end_with, start_pos):
     if end_with_pos == -1:
         end_with_pos = len(src)
     return start_with_pos, end_with_pos
-
-
-def valid_repo_info(client, namespace, name, clone_url):
-    if client == 'Simple':
-        if clone_url is None:
-            raise AlaudaInputError('Please specify -ru when -c is Simple')
-        return None, None, clone_url
-
-    else:
-        if namespace is None or name is None:
-            raise AlaudaInputError('Please specify -rns and -rn when -c is GitHub/Bitbucket/OSChina')
-        return namespace, name, None
 
 
 def indegree0(v, e):

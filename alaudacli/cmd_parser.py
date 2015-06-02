@@ -20,8 +20,6 @@ def create_parser():
     _add_compose_parser(subparsers)
     _add_backups_parser(subparsers)
     _add_organization_parser(subparsers)
-    _add_repository_parser(subparsers)
-    _add_build_parser(subparsers)
     return parser
 
 
@@ -201,84 +199,3 @@ def _add_organization_parser(subparsers):
     update_parser = org_subparsers.add_parser('update', help='Update an exist orgnization', description='Update an exist orgnization')
     update_parser.add_argument('name', help='Organization name')
     update_parser.add_argument('company', help='Company name')
-
-
-def _add_repository_parser(subparsers):
-    repo_parser = subparsers.add_parser('repository', help='Repository operations', description='Repository operations')
-    repo_subparsers = repo_parser.add_subparsers(title='Alauda repository commands', dest='subcmd')
-
-    create_parser = repo_subparsers.add_parser('create', help='Create a new repository', description='Create a new repository')
-    create_parser.add_argument('name', help='Repository name')
-    create_parser.add_argument('-d', '--description', help='Repository brief', default='docker images')
-    create_parser.add_argument('-fd', '--full-description', help='Repository full description', default='')
-    create_parser.add_argument('-p', '--public', help='Public repository or not', action='store_true')
-    create_parser.add_argument('-c', '--client', help='Repository client', choices=['Simple', 'GitHub', 'Bitbucket', 'OSChina'], default='Simple')
-    create_parser.add_argument('-rns', '--repo-namespace', help='Origin repository namespace')
-    create_parser.add_argument('-rn', '--repo-name', help='Origin repository name')
-    create_parser.add_argument('-ru', '--repo-clone-url', help='Origin repository url')
-    create_parser.add_argument('-f', '--tag-config-file', help='Tag config file', default='./create_repo_config.example')
-    create_parser.add_argument('-n', '--namespace', help='Repository namespace')
-
-    list_parser = repo_subparsers.add_parser('list', help='List all repositories', description='List all repositories')
-    list_parser.add_argument('-n', '--namespace', help='Repository namespace')
-    list_parser.add_argument('-p', '--page', help='Page number', default=1)
-
-    inspect_parser = repo_subparsers.add_parser('inspect', help='Get detail of a repository', description='Get detail of a repository')
-    inspect_parser.add_argument('name', help='Repository name')
-    inspect_parser.add_argument('-n', '--namespace', help='Repository namespace')
-
-    update_parser = repo_subparsers.add_parser('update', help='Update a repository', description='Update a repository')
-    update_parser.add_argument('name', help='Repository name')
-    update_parser.add_argument('-d', '--description', help='Repository brief')
-    update_parser.add_argument('-fd', '--full-description', help='Repository full description')
-    update_parser.add_argument('-n', '--namespace', help='Repository namespace')
-
-    public_parser = repo_subparsers.add_parser('public', help='Make a repository to public', description='Make a repository to public')
-    public_parser.add_argument('name', help='Repository name')
-    public_parser.add_argument('-n', '--namespace', help='Repository namespace')
-
-    private_parser = repo_subparsers.add_parser('private', help='Make a repository to private', description='Make a repository to private')
-    private_parser.add_argument('name', help='Repository name')
-    private_parser.add_argument('-n', '--namespace', help='Repository namespace')
-
-    rm_parser = repo_subparsers.add_parser('rm', help='Delete a repository', description='Delete a repository')
-    rm_parser.add_argument('name', help='Repository name')
-    rm_parser.add_argument('-n', '--namespace', help='Repository namespace')
-
-    tags_parser = repo_subparsers.add_parser('tags', help='List tags', description='List tags')
-    tags_parser.add_argument('name', help='Repository name')
-    tags_parser.add_argument('-n', '--namespace', help='Repository namespace')
-
-    tag_parser = repo_subparsers.add_parser('tag', help='Get detail of a tag', description='Get detail of a tag')
-    tag_parser.add_argument('name', help='Repository name')
-    tag_parser.add_argument('tag_name', help='Tag name')
-    tag_parser.add_argument('-n', '--namespace', help='Repository namespace')
-
-    update_tag_parser = repo_subparsers.add_parser('tag-update', help='Update repository tag config', description='Update repository tag config')
-    update_tag_parser.add_argument('name', help='Repository name')
-    update_tag_parser.add_argument('-f', '--tag-config-file', help='Tag config file', default='./update_repo_config.example')
-    update_tag_parser.add_argument('-n', '--namespace', help='Repository namespace')
-
-
-def _add_build_parser(subparsers):
-    build_parser = subparsers.add_parser('build', help='Build operations', description='Build operations')
-    build_subparsers = build_parser.add_subparsers(title='Alauda build commands', dest='subcmd')
-
-    trigger_parser = build_subparsers.add_parser('trigger', help='Trigger a build', description='Trigger a build')
-    trigger_parser.add_argument('name', help='Repository name')
-    trigger_parser.add_argument('-n', '--namespace', help='Repository namespace')
-    trigger_parser.add_argument('-t', '--tag', help='Tag name', default='latest')
-
-    list_parser = build_subparsers.add_parser('list', help='List all builds', description='List all builds')
-    list_parser.add_argument('-p', '--page', help='Page number', default=1)
-
-    inspect_parser = build_subparsers.add_parser('inspect', help='Get detail of a build', description='Get detail of a build')
-    inspect_parser.add_argument('id', help='Build id')
-
-    rm_parser = build_subparsers.add_parser('rm', help='Delete a build', description='Delete a build')
-    rm_parser.add_argument('id', help='Build id')
-
-    logs_parser = build_subparsers.add_parser('logs', help='Query a build log', description='Query a build log')
-    logs_parser.add_argument('id', help='Build id')
-    logs_parser.add_argument('-s', '--start-time', help='Logs query start time. e.g. 2015-05-01 12:12:12')
-    logs_parser.add_argument('-e', '--end-time', help='Logs query end time. e.g. 2015-05-01 12:12:12')

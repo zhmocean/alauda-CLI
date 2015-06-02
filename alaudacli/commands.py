@@ -8,8 +8,6 @@ import compose
 from service import Service
 from backup import Backup
 from organization import Organization
-from repository import Repository
-from build import Build
 
 
 def login(username, password, cloud, endpoint):
@@ -221,88 +219,3 @@ def organization_inspect(name):
 def organization_update(name, company):
     orgs = Organization.fetch(name)
     orgs.update(company)
-
-
-def repository_create(name, description, full_description, is_public, repo_client, repo_namespace,
-                      repo_name, repo_clone_url, tag_config_file, namespace):
-    tag_configs = util.load_tag_config_file(tag_config_file)
-    repo_namespace, repo_name, repo_clone_url = util.valid_repo_info(repo_client, repo_namespace, repo_name, repo_clone_url)
-    repo = Repository(name=name, description=description, full_description=full_description,
-                      is_public=is_public, repo_client=repo_client, repo_clone_url=repo_clone_url,
-                      repo_namespace=repo_namespace, repo_name=repo_name, tag_configs=tag_configs,
-                      namespace=namespace)
-    result = repo.create()
-    print result
-
-
-def repository_list(namespace, page):
-    repo_list = Repository.list(namespace, page)
-    util.print_repo_ps_output(repo_list)
-
-
-def repository_inspect(name, namespace):
-    repo = Repository.fetch(name, namespace)
-    result = repo.inspect()
-    util.print_json_result(result)
-
-
-def repository_update(name, namespace, description, full_description):
-    repo = Repository.fetch(name, namespace)
-    repo.update(description, full_description)
-
-
-def repository_public(name, namespace):
-    repo = Repository.fetch(name, namespace)
-    repo.public()
-
-
-def repository_private(name, namespace):
-    repo = Repository.fetch(name, namespace)
-    repo.private()
-
-
-def repository_rm(name, namespace):
-    Repository.remove(name, namespace)
-
-
-def repository_tags(name, namespace):
-    repo = Repository.fetch(name, namespace)
-    result = repo.list_tags()
-    print result
-
-
-def repository_tag(name, namespace, tag):
-    repo = Repository.fetch(name, namespace)
-    result = repo.inspect_tag(tag)
-    util.print_json_result(result)
-
-
-def repository_tag_update(name, namespace, tag_config_file):
-    tag_configs = util.load_tag_config_file(tag_config_file)
-    repo = Repository.fetch(name, namespace)
-    repo.merge_tags(tag_configs)
-
-
-def build_trigger(name, namespace, tag):
-    Build.trigger(name, namespace, tag)
-
-
-def build_list(page):
-    build_list = Build.list(page)
-    util.print_build_ps_output(build_list)
-
-
-def build_rm(build_id):
-    Build.remove(build_id)
-
-
-def build_logs(build_id, start_time, end_time):
-    build = Build.fetch(build_id)
-    result = build.logs(start_time, end_time)
-    util.print_json_result(result)
-
-
-def build_inspect(build_id):
-    build = Build.fetch(build_id)
-    result = build.inspect()
-    util.print_json_result(result)
