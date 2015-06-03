@@ -92,7 +92,7 @@ class Project(object):
     def scale(self, scale_dict):
         for name, number in scale_dict.items():
             service = Service.fetch(name)
-            service.update(number)
+            service.scale(number)
 
     def _get_service_list(self):
         service_list = []
