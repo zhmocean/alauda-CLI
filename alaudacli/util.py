@@ -127,6 +127,8 @@ def parse_volume(_volume):
     if not isinstance(_volume, str):
         raise AlaudaInputError('Invalid volume description. (Example of valid description: /var/lib/data1:10:[backup_id])')
     result = _volume.split(':')
+    if len(result) == 1:
+        result.append('10')
     if len(result) != 2 and len(result) != 3:
         raise AlaudaInputError('Invalid volume description. (Example of valid description: /var/lib/data1:10:[backup_id])')
 
