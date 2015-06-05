@@ -52,7 +52,7 @@ class UtilTest(unittest.TestCase):
         self.assertEqual({'mysql': 3, 'redis': 2}, scale_dict)
 
     def test_parse_autoscale_info(self):
-        mode, cfg = util.parse_autoscale_info((True, './auto-scaling.example'))
+        mode, cfg = util.parse_autoscale_info((True, './example/auto-scaling.cfg'))
         self.assertEqual('AUTO', mode)
         result = {
             "metric_name": "CPU_UTILIZATION",
@@ -189,49 +189,49 @@ class ProcessCmdTest(unittest.TestCase):
         argv = ['compose', 'up', '-s']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.compose_up.assert_called_with('./docker-compose.yml', True)
+        mock_commands.compose_up.assert_called_with('./example/docker-compose.yml', True)
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_compose_ps(self, mock_commands):
         argv = ['compose', 'ps']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.compose_ps.assert_called_with('./docker-compose.yml')
+        mock_commands.compose_ps.assert_called_with('./example/docker-compose.yml')
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_compose_start(self, mock_commands):
         argv = ['compose', 'start']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.compose_start.assert_called_with('./docker-compose.yml', False)
+        mock_commands.compose_start.assert_called_with('./example/docker-compose.yml', False)
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_compose_stop(self, mock_commands):
         argv = ['compose', 'stop']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.compose_stop.assert_called_with('./docker-compose.yml')
+        mock_commands.compose_stop.assert_called_with('./example/docker-compose.yml')
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_compose_restart(self, mock_commands):
         argv = ['compose', 'restart']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.compose_restart.assert_called_with('./docker-compose.yml', False)
+        mock_commands.compose_restart.assert_called_with('./example/docker-compose.yml', False)
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_compose_rm(self, mock_commands):
         argv = ['compose', 'rm']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.compose_rm.assert_called_with('./docker-compose.yml')
+        mock_commands.compose_rm.assert_called_with('./example/docker-compose.yml')
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_compose_scale(self, mock_commands):
         argv = ['compose', 'scale', 'redis=2 web=3']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.compose_scale.assert_called_with(['redis=2 web=3'], './docker-compose.yml')
+        mock_commands.compose_scale.assert_called_with(['redis=2 web=3'], './example/docker-compose.yml')
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_backup_create(self, mock_commands):

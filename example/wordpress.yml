@@ -1,5 +1,5 @@
 wordpress:
-  image: wordpress:4.2.2
+  image: index.alauda.cn/library/wordpress:4.2.2
   ports:
   - "8080:80"
   links:
@@ -7,7 +7,7 @@ wordpress:
   environment:
   - WORDPRESS_DB_PASSWORD=111111
 mysql:
-  image: mysql:5.6
+  image: index.alauda.cn/library/mysql:5.6
   ports:
   - "3306"
   environment:

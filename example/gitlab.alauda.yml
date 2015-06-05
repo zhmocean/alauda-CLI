@@ -1,6 +1,6 @@
 postgresql:
   extends:
-    file: gitlab.yml
+    file: ./example/gitlab.yml
     service: postgresql
   expose:
     - "5432"
@@ -8,7 +8,7 @@ postgresql:
     - /var/lib/postgresql/data:10
 gitlab:
   extends:
-    file: gitlab.yml
+    file: ./example/gitlab.yml
     service: gitlab
   links:
     - redis:redis
@@ -26,7 +26,7 @@ gitlab:
   size: L
 redis:
   extends:
-    file: gitlab.yml
+    file: ./example/gitlab.yml
     service: redis
   expose:
     - "6379"

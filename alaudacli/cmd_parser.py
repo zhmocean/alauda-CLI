@@ -52,7 +52,7 @@ def _add_service_parser(subparsers):
     create_parser.add_argument('-v', '--volume', help='Volumes, e.g. /var/lib/mysql:10', action='append')
     create_parser.add_argument('-n', '--namespace', help='Service namespace')
     create_parser.add_argument('-a', '--autoscale', help='Enable auto-scaling', action='store_true')
-    create_parser.add_argument('-f', '--autoscaling-config', help='Auto-scaling config file name', default='./auto-scaling.cfg')
+    create_parser.add_argument('-f', '--autoscaling-config', help='Auto-scaling config file name', default='./example/auto-scaling.cfg')
     create_parser.add_argument('-d', '--domain', help='Custom domain name', default='')
 
     run_parser = service_subparsers.add_parser('run', help='Create and start a new service', description='Create and start a new service')
@@ -68,7 +68,7 @@ def _add_service_parser(subparsers):
     run_parser.add_argument('-v', '--volume', help='volumes.e.g. /var/lib/mysql:10', action='append')
     run_parser.add_argument('-n', '--namespace', help='Service namespace')
     run_parser.add_argument('-a', '--autoscale', help='Enable auto-scaling', action='store_true')
-    run_parser.add_argument('-f', '--autoscaling-config', help='Auto-scaling config file name', default='./auto-scaling.cfg')
+    run_parser.add_argument('-f', '--autoscaling-config', help='Auto-scaling config file name', default='./example/auto-scaling.cfg')
     run_parser.add_argument('-d', '--domain', help='Custom domain name', default='')
 
     inspect_parser = service_subparsers.add_parser('inspect', help='Get details of a service', description='Get details of a service')
@@ -98,7 +98,7 @@ def _add_service_parser(subparsers):
     enable_autoscaling_parser = service_subparsers.add_parser('enable-autoscaling', help='Enable auto-scaling', description='Enable auto-scaling')
     enable_autoscaling_parser.add_argument('name', help='Service name')
     enable_autoscaling_parser.add_argument('-n', '--namespace', help='Service namespace')
-    enable_autoscaling_parser.add_argument('-f', '--autoscaling-config', help='Auto-scaling config file name', default='./auto-scaling.cfg')
+    enable_autoscaling_parser.add_argument('-f', '--autoscaling-config', help='Auto-scaling config file name', default='./example/auto-scaling.cfg')
 
     disable_autoscaling_parser = service_subparsers.add_parser('disable-autoscaling', help='Disable auto-scaling', description='Disable auto-scaling')
     disable_autoscaling_parser.add_argument('name', help='Service name')
@@ -155,32 +155,32 @@ def _add_compose_parser(subparsers):
     compose_subparsers = compose_parser.add_subparsers(title='Alauda compose commands', dest='subcmd')
 
     up_parser = compose_subparsers.add_parser('up', help='Create and start all service containers', description='Create and start all service containers')
-    up_parser.add_argument('-f', '--file', help='Compose file name', default='./docker-compose.yml')
+    up_parser.add_argument('-f', '--file', help='Compose file name', default='./example/docker-compose.yml')
     up_parser.add_argument('-s', '--strict', help='Wait for linked services to start', action='store_true')
 
     ps_parser = compose_subparsers.add_parser('ps', help='List containers', description='Lists container')
-    ps_parser.add_argument('-f', '--file', help='Compose file name', default='./docker-compose.yml')
+    ps_parser.add_argument('-f', '--file', help='Compose file name', default='./example/docker-compose.yml')
 
     start_parser = compose_subparsers.add_parser('start', help='Start all service containers', description='Start all service containers')
-    start_parser.add_argument('-f', '--file', help='Compose file name', default='./docker-compose.yml')
+    start_parser.add_argument('-f', '--file', help='Compose file name', default='./example/docker-compose.yml')
     start_parser.add_argument('-s', '--strict', help='Wait for linked services to start', action='store_true')
 
     stop_parser = compose_subparsers.add_parser('stop', help='Stop all service containers', description='Stop all service containers')
-    stop_parser.add_argument('-f', '--file', help='Compose file name', default='./docker-compose.yml')
+    stop_parser.add_argument('-f', '--file', help='Compose file name', default='./example/docker-compose.yml')
 
     restart_parser = compose_subparsers.add_parser('restart', help='Restart all service containers', description='Restart all service containers')
-    restart_parser.add_argument('-f', '--file', help='Compose file name', default='./docker-compose.yml')
+    restart_parser.add_argument('-f', '--file', help='Compose file name', default='./example/docker-compose.yml')
     restart_parser.add_argument('-s', '--strict', help='Wait for linked services to start', action='store_true')
 
     rm_parser = compose_subparsers.add_parser('rm', help='Remove all service containers', description='Remove all service containers')
-    rm_parser.add_argument('-f', '--file', help='Compose file name', default='./docker-compose.yml')
+    rm_parser.add_argument('-f', '--file', help='Compose file name', default='./example/docker-compose.yml')
 
     scale_parser = compose_subparsers.add_parser(
         'scale',
         help='Set number of containers to run for a service',
         description='Set number of containers to run for a service')
     scale_parser.add_argument('descriptor', nargs='*', help='E.g. web=2 db=1')
-    scale_parser.add_argument('-f', '--file', help='Compose file name', default='./docker-compose.yml')
+    scale_parser.add_argument('-f', '--file', help='Compose file name', default='./example/docker-compose.yml')
 
 
 def _add_organization_parser(subparsers):

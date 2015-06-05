@@ -1,6 +1,6 @@
 web:
   extends:
-    file: docker-compose.yml
+    file: ./example/docker-compose.yml
     service: web
   command: python app.py
   ports:
@@ -14,7 +14,7 @@ web:
    - A=a
 redis:
   extends:
-    file: docker-compose.yml
+    file: ./example/docker-compose.yml
     service: redis
   ports:
    - "6379"

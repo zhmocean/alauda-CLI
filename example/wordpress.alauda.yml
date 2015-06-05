@@ -1,6 +1,6 @@
 wordpress:
   extends:
-    file: wordpress.yml
+    file: ./example/wordpress.yml
     service: wordpress
   links:
    - mysql:mysql
@@ -12,7 +12,7 @@ wordpress:
   - /var/www/html:10
 mysql:
   extends:
-    file: wordpress.yml
+    file: ./example/wordpress.yml
     service: mysql
   expose:
   - "3306"
