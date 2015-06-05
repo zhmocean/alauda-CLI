@@ -106,7 +106,7 @@ optional arguments:
                         Alauda username
   -p PASSWORD, --password PASSWORD
                         Alauda password
-  -c {cn,io}, --cloud {cn,io}
+  -c {cn,io}, --cloud={cn,io}
                         Alauda Cloud to connect to
   -e ENDPOINT, --endpoint ENDPOINT
                         Alauda API endpoint to use
@@ -407,7 +407,7 @@ optional arguments:
   -s, --start-time=""			Logs query start time. e.g. 2015-05-01 12:12:12
   -e, --end-time=""				Logs query end time. e.g. 2015-05-01 12:12:12
 ```
-如果不指定起始和终止时间，那么返回最近一小时以内的日志。如果仅指定起始时间，那么返回给定的起始时间到当前时间的日志，如果只给定终止时间，那么返回终止时间之前一小时以内的日志。
+如果不指定起始和终止时间，那么返回最近一小时以内的日志。如果仅指定起始时间，那么返回指定的起始时间到当前时间的日志，如果只给定终止时间，那么返回终止时间之前一小时以内的日志。
 
 ###instances
 
