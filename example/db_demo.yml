@@ -7,8 +7,8 @@ mysql-demo:
   - MYSQL_DATABASE=demo
   - MYSQL_USER=alauda
   - MYSQL_PASSWORD=alauda
-
-
+  volumes:
+   - /var/lib/mysql:10
 demo:
   image: index.alauda.cn/shaomq/demo:latest
   ports:
@@ -17,6 +17,5 @@ demo:
   - MYSQL_DB: demo 
   - MYSQL_USER: alauda
   - MYSQL_PASSWORD: alauda
-
   links:
   - mysql-demo:mysql

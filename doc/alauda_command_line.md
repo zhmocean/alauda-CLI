@@ -1,5 +1,11 @@
 # Alauda Command Line
 
+##安装
+
+```
+pip install alauda
+```
+
 显示所有支持的命令，执行`alauda`或者`alauda -h`:
 
 ```
