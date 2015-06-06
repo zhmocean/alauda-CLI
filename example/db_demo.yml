@@ -1,0 +1,22 @@
+mysql-demo:
+  image: index.alauda.cn/library/mysql:5.6
+  ports:
+  - "3306"
+  environment:
+  - MYSQL_ROOT_PASSWORD=111111
+  - MYSQL_DATABASE=demo
+  - MYSQL_USER=alauda
+  - MYSQL_PASSWORD=alauda
+
+
+demo:
+  image: index.alauda.cn/shaomq/demo:latest
+  ports:
+  - "80"
+  environment:
+  - MYSQL_DB: demo 
+  - MYSQL_USER: alauda
+  - MYSQL_PASSWORD: alauda
+
+  links:
+  - mysql-demo:mysql
