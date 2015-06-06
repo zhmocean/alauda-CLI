@@ -849,3 +849,21 @@ positional arguments:
 optional arguments:
   -h, --help  show this help message and exit
 ```
+
+##command completion
+
+支持命令补全和查找。例如在输入`alauda`之后，双击`Tab`键，即可看到`alauda`支持的命令。在键入`alauda compse`之后双击`Tab`键，就可以知道`alauda compose` 所支持的命令。 当输出`alauda c`之后，单机`Tab`键，即可得到补全后的命令`alauda compose`
+
+###Debian
+
+只需要将源码包中的`alauda`文件拷贝到/etc/bash_completion.d，然后执行 `. /etc/bash_completion.d/alauda`
+
+###OS X
+
+首先需要安装 bash-completion
+
+```
+$ brew install bash-completion
+$ brew tap homebrew/completions
+```
+然后将源码包中的`alauda`文件拷贝到`/usr/local/etc/bash_completion.d/`,然后执行`. /usr/local/etc/bash_completion.d/alauda`即可。
