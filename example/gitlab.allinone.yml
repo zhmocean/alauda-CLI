@@ -1,5 +1,5 @@
 postgresql:
-  image: index.alauda.cn/shaomq/postgres:9.3
+  image: index.alauda.cn/alauda/postgres:9.3
   expose:
     - "5432"
   volumes:
@@ -9,7 +9,7 @@ postgresql:
     - POSTGRES_PASSWORD=password
     - POSTGRES_DB=gitlabhq_production
 gitlab:
-  image: index.alauda.cn/shaomq/gitlab:7.9.4
+  image: index.alauda.cn/alauda/gitlab:7.9.4
   links:
     - redis:redis
     - postgresql:postgresql
@@ -30,7 +30,7 @@ gitlab:
     - /home/git/data:10
   size: L
 redis:
-  image: index.alauda.cn/shaomq/redis:2.8
+  image: index.alauda.cn/alauda/redis:2.8
   expose:
     - "6379"
   volumes:

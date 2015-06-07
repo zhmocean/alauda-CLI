@@ -10,7 +10,7 @@ mysql-demo:
   volumes:
    - /var/lib/mysql:10
 demo:
-  image: index.alauda.cn/shaomq/demo:latest
+  image: index.alauda.cn/alauda/demo:latest
   ports:
   - "80"
   environment:
