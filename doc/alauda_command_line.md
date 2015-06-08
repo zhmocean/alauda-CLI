@@ -75,8 +75,8 @@ positional arguments:
 
 optional arguments:
   -h, --help            				show this help message and exit
-  -t, --target-num-instances＝1			Target number of instances for the service
-  -s, --instance-size={XS,S,M,L,XL}	Service container size
+  -t, --target-num-instances=1			Target number of instances for the service
+  -s, --instance-size={XS,S,M,L,XL}		Service container size
   -r, --run-command=""					The command used to start the service containers
   -e, --env=[]     						Environment variables, e.g. VAR=value
   -l, --link=[]  						which service to link.
@@ -102,7 +102,7 @@ Alauda login
 optional arguments:
   -h, --help            		show this help message and exit
   -u, --username=""				Alauda username
-  -p, --password＝""			Alauda password
+  -p, --password=""				Alauda password
   -c {cn,io}, --cloud={cn,io}	Alauda Cloud to connect to
   -e, --endpoint=""				Alauda API endpoint to use
 ```
@@ -202,8 +202,8 @@ positional arguments:
 
 optional arguments:
   -h, --help            				show this help message and exit
-  -t, --target-num-instances＝1			Target number of instances for the service
-  -s, --instance-size={XS,S,M,L,XL}	Service container size
+  -t, --target-num-instances=1			Target number of instances for the service
+  -s, --instance-size={XS,S,M,L,XL}		Service container size
   -r, --run-command=""					The command used to start the service containers
   -e, --env=[]     						Environment variables, e.g. VAR=value
   -l, --link=[]  						which service to link.
@@ -237,8 +237,8 @@ positional arguments:
 
 optional arguments:
   -h, --help            				show this help message and exit
-  -t, --target-num-instances＝1			Target number of instances for the service
-  -s, --instance-size={XS,S,M,L,XL}	Service container size
+  -t, --target-num-instances=1			Target number of instances for the service
+  -s, --instance-size={XS,S,M,L,XL}		Service container size
   -r, --run-command=""					The command used to start the service containers
   -e, --env=[]     						Environment variables, e.g. VAR=value
   -l, --link=[]  						which service to link.
@@ -553,9 +553,9 @@ usage: alauda compose up [-h] [-f FILE] [-s]
 Create and start all service containers
 
 optional arguments:
-  -h, --help           show this help message and exit
-  -f, --file=""  		Compose file name
-  -s, --strict=false   Wait for linked services to start
+  -h, --help			show this help message and exit
+  -f, --file=""			Compose file name
+  -s, --strict=false	Wait for linked services to start
 
 ```
 当显示的输入-s 参数时，表示服务需要等到其所link的服务启动之后，才开始启动。
@@ -571,14 +571,14 @@ List services
 
 optional arguments:
   -h, --help            	show this help message and exit
-  -n, --namespace＝""		Service namespace
+  -n, --namespace=""		Service namespace
 bash-3.2# alauda compose ps -h
 usage: alauda compose ps [-h] [-f FILE]
 
 Lists container
 
 optional arguments:
-  -h, --help           show this help message and exit
+  -h, --help			show this help message and exit
   -f, --file=""  		Compose file name
 ```
 
@@ -792,7 +792,7 @@ Alauda organization commands:
 bash-3.2# alauda organization list
      Name           Company              Created time
 -----------------------------------------------------------
-mathildedev      云雀科技研发组    2015-04-25T05:42:00.828Z
+mathildedev      云雀科技研发组		2015-04-25T05:42:00.828Z
 xdzhangcnorg     mathilde          2015-05-19T03:35:29.047Z
 xdzhangcnorg1    mathilde2         2015-05-25T07:38:07.670Z
 
@@ -856,7 +856,10 @@ optional arguments:
 
 ###Debian
 
-只需要将源码包中的`alauda`文件拷贝到/etc/bash_completion.d，然后执行 `. /etc/bash_completion.d/alauda`
+只需要将源码包中的`alauda`文件拷贝到/etc/bash_completion.d，然后执行 
+```
+. /etc/bash_completion.d/alauda
+```
 
 ###OS X
 
@@ -866,4 +869,9 @@ optional arguments:
 $ brew install bash-completion
 $ brew tap homebrew/completions
 ```
-然后将源码包中的`alauda`文件拷贝到`/usr/local/etc/bash_completion.d/`,然后执行`. /usr/local/etc/bash_completion.d/alauda`即可。
+然后将源码包中的`alauda`文件拷贝到`/usr/local/etc/bash_completion.d/`,然后执行
+```
+. /usr/local/etc/bash_completion.d/alauda
+```
+
+即可。
