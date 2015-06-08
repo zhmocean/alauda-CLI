@@ -33,8 +33,8 @@ Alauda CLI commands:
 ```
 bash-3.2# alauda -v
 alauda 0.1.0
-
 ```
+
 在下面所有的参数说明中:
 
 * `-e[]`表示可以指明多次。
@@ -51,9 +51,9 @@ alauda 0.1.0
 
 * `-t=1` 表示所给定的值必须为数字
 
-	例如: `-t=1`
+	例如: `-t 1`
 
-* `-a=false` 表示不输出此参数的情况下，参数的值false，如果显示的列出该参数，则表明改参数的值为true。
+* `-a=false` 表示不显示输出此参数的情况下，参数的值为false即无效状态，如果显示的列出该参数 `-a`，则表明该参数的值为true，即有效状态。
 
 ## Help
 
@@ -74,26 +74,19 @@ positional arguments:
   image                 Docker image used by the service
 
 optional arguments:
-  -h, --help            show this help message and exit
-  -t TARGET_NUM_INSTANCES, --target-num-instances TARGET_NUM_INSTANCES
-                        Target number of instances for the service
-  -s {XS,S,M,L,XL}, --instance-size {XS,S,M,L,XL}
-                        Service container size
-  -r RUN_COMMAND, --run-command RUN_COMMAND
-                        The command used to start the service containers
-  -e ENV, --env ENV     Environment variables, e.g. VAR=value
-  -l LINK, --link LINK  which service to link.
-  -p PUBLISH, --publish PUBLISH
-                        Ports to publish, e.g. 5000/tcp
-  -v VOLUME, --volume VOLUME
-                        Volumes, e.g. /var/lib/mysql:10
-  -n NAMESPACE, --namespace NAMESPACE
-                        Service namespace
-  -a, --autoscale       Enable auto-scaling
-  -f AUTOSCALING_CONFIG, --autoscaling-config AUTOSCALING_CONFIG
-                        Auto-scaling config file name
-  -d DOMAIN, --domain DOMAIN
-                        Custom domain name
+  -h, --help            				show this help message and exit
+  -t, --target-num-instances＝1			Target number of instances for the service
+  -s, --instance-size={XS,S,M,L,XL}	Service container size
+  -r, --run-command=""					The command used to start the service containers
+  -e, --env=[]     						Environment variables, e.g. VAR=value
+  -l, --link=[]  						which service to link.
+  -p, --publish=[]						Ports to publish, e.g. 5000/tcp
+  -ex, --expose=[]						Internal ports, e.g. 5000
+  -v, --volume=[]						Volumes, e.g. /var/lib/mysql:10
+  -n, --namespace=""					Service namespace
+  -a, --autoscale=false			        Enable auto-scaling
+  -f, --autoscaling-config=""			Auto-scaling config file name
+  -d, --domain=""						Custom domain name
 ```
 
 ## Login
@@ -107,15 +100,11 @@ usage: alauda login [-h] [-u USERNAME] [-p PASSWORD] [-c {cn,io}]
 Alauda login
 
 optional arguments:
-  -h, --help            show this help message and exit
-  -u USERNAME, --username USERNAME
-                        Alauda username
-  -p PASSWORD, --password PASSWORD
-                        Alauda password
-  -c {cn,io}, --cloud={cn,io}
-                        Alauda Cloud to connect to
-  -e ENDPOINT, --endpoint ENDPOINT
-                        Alauda API endpoint to use
+  -h, --help            		show this help message and exit
+  -u, --username=""				Alauda username
+  -p, --password＝""			Alauda password
+  -c {cn,io}, --cloud={cn,io}	Alauda Cloud to connect to
+  -e, --endpoint=""				Alauda API endpoint to use
 ```
 
 样例:
@@ -150,7 +139,6 @@ optional arguments:
 bash-3.2# alauda logout
 [alauda] Bye
 [alauda] OK
-
 ```
 
 ## Service
@@ -228,11 +216,11 @@ optional arguments:
   -d, --domain=""						Custom domain name
 ```
 
-* 如果显示的指明了`-a` 参数，则表明讲服务设置为自动调节模式，此模式下需要使用`-f` 来指明自动调节参数配置文件所在路径。
+* 如果显示的指明了`-a` 参数，则表明将服务设置为自动调节模式，此模式下需要使用`-f` 来指明自动调节参数配置文件所在路径。
 
 ###run
 
-用于创建并执行一个服务。并通过参数指明服务的名称，所用镜像名称，以及服务所需容器大小，容器数量等信息。
+用于创建并运行一个服务。并通过参数指明服务的名称，所用镜像名称，以及服务所需容器大小，容器数量等信息。
 
 ```
 usage: alauda service run [-h] [-t TARGET_NUM_INSTANCES] [-s {XS,S,M,L,XL}]
@@ -282,7 +270,7 @@ optional arguments:
 
 ### start
 
-启动一个处于暂停状态的服务
+启动处于暂停状态的服务。
 
 ```
 usage: alauda service start [-h] [-n NAMESPACE] name
@@ -299,7 +287,7 @@ optional arguments:
 
 ###stop
 
-暂停一个处于运行状态的服务
+暂停处于运行状态的服务。
 
 ```
 usage: alauda service stop [-h] [-n NAMESPACE] name
@@ -316,7 +304,7 @@ optional arguments:
 
 ###rm
 
-删除一个已存在的服务
+删除已存在的服务。
 
 ```
 usage: alauda service rm [-h] [-n NAMESPACE] name
@@ -333,11 +321,11 @@ optional arguments:
 
 ###ps
 
-列出当前账户下所有的服务
+列出当前账户下所有的服务。
 
 ###scale
 
-调节当前服务中实例数量
+调节当前服务中实例数量。
 
 ```
 usage: alauda service scale [-h] [-n NAMESPACE] [descriptor [descriptor ...]]
@@ -354,7 +342,7 @@ optional arguments:
 
 ###enable-autoscaling
 
-将当前服务的状态设置为自动调节模式
+将当前服务的状态设置为自动调节模式。
 
 ```
 usage: alauda service enable-autoscaling [-h] [-n NAMESPACE]
@@ -371,11 +359,12 @@ optional arguments:
   -n, --namespace=""				Service namespace
   -f, --autoscaling-config=""		Auto-scaling config file name
 ```
-必须显示指明自动调节配置文件所在位置，如果不指明，则默认当前路径下的`auto-scaling.example`文件为配置文件。
+
+必须显示指明自动调节配置文件所在位置，如果不指明，则默认当前路径下的`auto-scaling.cfg`文件为配置文件。
 
 ###disable-autoscaling
 
-将当前服务的状态设置为人工调节模式
+将当前服务的状态设置为手动调节模式。
 
 ```
 usage: alauda service disable-autoscaling [-h] [-n NAMESPACE]
@@ -392,7 +381,8 @@ optional arguments:
   -n, --namespace=""			Service namespace
   -t, --target-num-instances=1	Target number of instances for the service
 ```
-设置为人工模式的同时，可以使用`-t`指定服务的实例数量，如果不指定，则以自动调节模式的最后实例数量为当前服务的实例数量。
+
+设置为手动模式的同时，可以使用`-t`指定服务的实例数量，如果不指定，则以自动调节模式的最后实例数量为当前服务的实例数量。
 
 ###logs
 
@@ -413,11 +403,12 @@ optional arguments:
   -s, --start-time=""			Logs query start time. e.g. 2015-05-01 12:12:12
   -e, --end-time=""				Logs query end time. e.g. 2015-05-01 12:12:12
 ```
-如果不指定起始和终止时间，那么返回最近一小时以内的日志。如果仅指定起始时间，那么返回指定的起始时间到当前时间的日志，如果只给定终止时间，那么返回终止时间之前一小时以内的日志。
+
+如果不指定起始和终止时间，那么返回最近一小时以内的日志。如果只指定起始时间，那么返回指定的起始时间到当前时间的日志，如果只指定终止时间，那么返回终止时间之前一小时以内的日志。
 
 ###instances
 
-列出服务所有的实例
+列出服务所有的实例。
 
 ```
 usage: alauda service instances [-h] [-n NAMESPACE] name
@@ -434,7 +425,7 @@ optional arguments:
 
 ###instance
 
-查看某一个实例的详细信息
+查看某一个实例的详细信息。
 
 ```
 Get details of a instance
@@ -450,7 +441,7 @@ optional arguments:
 
 ###instance-logs
 
-查看某一实例的日志信息
+查看某一实例的日志信息。
 
 ```
 usage: alauda service instance-logs [-h] [-s START_TIME] [-e END_TIME]
@@ -506,25 +497,25 @@ bash-3.2# alauda compose up -f gitlab.alauda.yml
 
 注意：
 
-* volumes的格式修改为path/size `path`即挂载路径，`size`为挂载卷大小单位为G。例如:
+* volumes的格式修改为path:size `path`即挂载路径，`size`为挂载卷大小单位为G。如果不指定size，则默认挂载卷大小为10G。例如:
 	
 	```
 	volumes:
     - /data:10
-    - /mnt:10
+    - /mnt
 	```
-* ports格式不再支持`port1:port2`。例如:
+* ports格式不再支持`port1:port2`，而如下所示:
 
 	```
 	ports:
 	- "80"
 	- "22"
 	```
-* environment。 支持环境变量的替换。即，某一环境变量可以是其他环境变量赋值或者拼接得到。例如:
+* environment。 支持环境变量的替换。即，某一环境变量可以由当前服务的其他环境变量赋值或者拼接得到。例如:
 
 	```
 	DB_HOST: $POSTGRESQL_PORT_5432_TCP_ADDR
-	DB_HOST的值就是环境变量POSTGRESQL_PORT_5432_TCP_ADDR所指的值。
+	DB_HOST的值就是当前服务中的环境变量POSTGRESQL_PORT_5432_TCP_ADDR所指的值。
 	
 	``` 
 
@@ -533,16 +524,19 @@ bash-3.2# alauda compose up -f gitlab.alauda.yml
 	```
 	size: L
 	```
+	
 * 新增domain。 用于用户指定自己的域名。例如:
 
 	```
 	domain: "www.myself.com"
 	```
+	
 * 新增autoscaling_config。用于指定服务的自动调节模式，以及自动调节模式的配置文件。例如:
 
 	```
 	autoscaling_config: ./autoscaling.cfg
 	```
+	
 * 新增number。用户指定某个服务所开启的实例数量。例如:
 
 	```
@@ -551,7 +545,7 @@ bash-3.2# alauda compose up -f gitlab.alauda.yml
 
 ###up
 
-启动包含多个服务的应用
+启动包含多个服务的应用。
 
 ```
 usage: alauda compose up [-h] [-f FILE] [-s]
@@ -576,9 +570,8 @@ usage: alauda service ps [-h] [-n NAMESPACE]
 List services
 
 optional arguments:
-  -h, --help            show this help message and exit
-  -n NAMESPACE, --namespace NAMESPACE
-                        Service namespace
+  -h, --help            	show this help message and exit
+  -n, --namespace＝""		Service namespace
 bash-3.2# alauda compose ps -h
 usage: alauda compose ps [-h] [-f FILE]
 
@@ -591,7 +584,7 @@ optional arguments:
 
 ###start
 
-启动已经停止的应用
+启动已经停止的应用。
 
 ```
 usage: alauda compose start [-h] [-f FILE] [-s]
@@ -603,11 +596,12 @@ optional arguments:
   -f, --file=""  		Compose file name
   -s, --strict         	Wait for linked services to start
 ```
-`-s`同`up`命令
+
+`-s` 同 `up`命令
 
 ###stop
 
-暂停运行中的应用
+暂停运行中的应用。
 
 ```
 usage: alauda compose stop [-h] [-f FILE]
@@ -621,7 +615,7 @@ optional arguments:
 
 ###restart
 
-重新启动应用
+重新启动应用。
 
 ```
 usage: alauda compose restart [-h] [-f FILE] [-s]
@@ -636,7 +630,7 @@ optional arguments:
 
 ###rm
 
-删除应用
+删除应用。
 
 ```
 usage: alauda compose rm [-h] [-f FILE]
@@ -650,7 +644,7 @@ optional arguments:
 
 ###scale
 
-调节应用中每个服务的实例数量
+调节应用中每个服务的实例数量。
 
 ```
 usage: alauda compose scale [-h] [-f FILE] [descriptor [descriptor ...]]
@@ -702,7 +696,7 @@ bash-3.2# alauda backup create backup1 redis /data
 
 ###create
 
-创建一个备份
+创建备份。
 
 ```
 usage: alauda backup create [-h] [-n NAMESPACE] name service dir
@@ -723,7 +717,7 @@ optional arguments:
 
 ###list
 
-列出当前所有备份
+列出当前所有备份。
 
 ```
 usage: alauda backup list [-h] [-n NAMESPACE]
@@ -737,7 +731,7 @@ optional arguments:
 
 ###inspect
 
-获取某个备份的详细信息
+获取某个备份的详细信息。
 
 ```
 usage: alauda backup inspect [-h] [-n NAMESPACE] id
@@ -756,7 +750,7 @@ optional arguments:
 
 ###rm
 
-删除备份
+删除备份。
 
 ```
 usage: alauda backup rm [-h] [-n NAMESPACE] id
@@ -805,7 +799,7 @@ xdzhangcnorg1    mathilde2         2015-05-25T07:38:07.670Z
 ```
 ###create
 
-创建一个组织
+创建组织。
 
 ```
 usage: alauda organization create [-h] name company
@@ -822,11 +816,11 @@ optional arguments:
 
 ###list
 
-列出当前用户所属的组织
+列出当前用户所属的所有组织。
 
 ###inspect
 
-获取某个组织的详细信息
+获取某个组织的详细信息。
 
 ```
 usage: alauda organization inspect [-h] name
