@@ -529,6 +529,18 @@ bash-3.2# alauda compose up -f gitlab.alauda.yml
 	- "80"
 	- "22"
 	```
+	并且`ports`所映射出的端口是都`external`性质的。
+
+* expose
+
+	expose所暴露出的端口是`internal`性质的。
+	关于`external`和`internal`的详细说明参照在线文档:
+
+	```
+	http://docs.alauda.cn/?page_id=123
+	```
+* 在当前的版本中，所有需要暴露的端口，不论`external`还是`internal`的都需要显示的在yaml文件中声明，仅仅在Dockerfile中使用`EXPOSE`命令来声明端口是无效的。
+
 * environment。 支持环境变量的替换。即，某一环境变量可以由当前服务的其他环境变量赋值或者拼接得到。例如:
 
 	```
