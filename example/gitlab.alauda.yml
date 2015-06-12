@@ -23,7 +23,7 @@ gitlab:
     - REDIS_PORT: $REDIS_PORT_6379_TCP_PORT
   volumes:
     - /home/git/data:10
-  size: L
+  size: S
 redis:
   extends:
     file: ./gitlab.yml
