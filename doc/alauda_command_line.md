@@ -1,5 +1,13 @@
 # Alauda Command Line
 
+##source
+
+开源地址:
+
+```
+https://github.com/alaudacloud/alauda-CLI.git
+```
+
 ##安装
 
 ```
@@ -323,6 +331,16 @@ optional arguments:
 
 列出当前账户下所有的服务。
 
+```
+usage: alauda service ps [-h] [-n NAMESPACE]
+
+List services
+
+optional arguments:
+  -h, --help            	show this help message and exit
+  -n, --namespace=""		Service namespace
+```
+
 ###scale
 
 调节当前服务中实例数量。
@@ -565,14 +583,6 @@ optional arguments:
 列出应用的各个服务信息。
 
 ```
-usage: alauda service ps [-h] [-n NAMESPACE]
-
-List services
-
-optional arguments:
-  -h, --help            	show this help message and exit
-  -n, --namespace=""		Service namespace
-bash-3.2# alauda compose ps -h
 usage: alauda compose ps [-h] [-f FILE]
 
 Lists container
