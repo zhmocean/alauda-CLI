@@ -1,0 +1,143 @@
+#
+#  Completion for alauda:
+#
+#  alauda active [argument]
+#
+_alauda()
+{
+    local cur prev opts
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    opts="login -v -h logout service compose backup organization"
+
+    case "${prev}" in
+        login)
+            local login_args="-u -p -c -e"
+            COMPREPLY=( $(compgen -W "${login_args}" -- ${cur}) )
+            return 0
+            ;;
+       logout)
+#            COMPREPLY=( $(compgen -W "${running}" -- ${cur}) )
+            return 0
+            ;;
+       -v)
+#            COMPREPLY=( $(compgen -W "${running}" -- ${cur}) )
+            return 0
+            ;;
+       -h)
+#            COMPREPLY=( $(compgen -W "${running}" -- ${cur}) )
+            return 0
+            ;;
+       service)
+            local service_args="create run inspect start stop rm ps scale enable-autoscaling disable-autoscaling logs instances instance instance-logs"
+            COMPREPLY=( $(compgen -W "${service_args}" -- ${cur}) )
+            return 0
+            ;;
+       create)
+            local create_args="{name} {image} -t -s -r -e -l -p -v -n -a -f -d"
+            COMPREPLY=( $(compgen -W "${create_args}" -- ${cur}) )
+            return 0
+            ;;
+       run)
+            local run_args="{name} {image} -t -s -r -e -l -p -v -n -a -f -d"
+            COMPREPLY=( $(compgen -W "${run_args}" -- ${cur}) )
+            return 0
+            ;;
+       inspect)
+            local inspect_args="{name/id} -n"
+            COMPREPLY=( $(compgen -W "${inspect_args}" -- ${cur}) )
+            return 0
+            ;;
+       start)
+            local start_args="{name} -n"
+            COMPREPLY=( $(compgen -W "${start_args}" -- ${cur}) )
+            return 0
+            ;;
+       stop)
+            local stop_args="{name} -n"
+            COMPREPLY=( $(compgen -W "${stop_args}" -- ${cur}) )
+            return 0
+            ;;
+       rm)
+            local rm_args="{name} -n"
+            COMPREPLY=( $(compgen -W "${rm_args}" -- ${cur}) )
+            return 0
+            ;;
+       ps)
+            local ps_args="{name} -n"
+            COMPREPLY=( $(compgen -W "${ps_args}" -- ${cur}) )
+            return 0
+            ;;
+       enable-autoscaling)
+            local enable_args="{name} -n -f"
+            COMPREPLY=( $(compgen -W "${enable_args}" -- ${cur}) )
+            return 0
+            ;;
+       disable-autoscaling)
+            local disable_args="{name} -n -t"
+            COMPREPLY=( $(compgen -W "${disable_args}" -- ${cur}) )
+            return 0
+            ;;
+       logs)
+            local logs_args="{name} -n -s -t"
+            COMPREPLY=( $(compgen -W "${logs_args}" -- ${cur}) )
+            return 0
+            ;;
+       instance-logs)
+            local instance_logs_args="{name} {uuid} -n -s -t"
+            COMPREPLY=( $(compgen -W "${instance_logs_args}" -- ${cur}) )
+            return 0
+            ;;
+       instance-metrics)
+            local instance_metrics_args="{name} {uuid} -n -s -t"
+            COMPREPLY=( $(compgen -W "${instance_metrics_args}" -- ${cur}) )
+            return 0
+            ;;
+       compose)
+            local compose_args="up ps start stop restart rm scale"
+            COMPREPLY=( $(compgen -W "${compose_args}" -- ${cur}) )
+            return 0
+            ;;
+       scale)
+            local scale_args="{descriptor} -f"
+            COMPREPLY=( $(compgen -W "${scale_args}" -- ${cur}) )
+            return 0
+            ;;
+       backup)
+            local backup_args="create list inspect rm -n"
+            COMPREPLY=( $(compgen -W "${backup_args}" -- ${cur}) )
+            return 0
+            ;;
+       list)
+            local list_args="{name} -n"
+            COMPREPLY=( $(compgen -W "${list_args}" -- ${cur}) )
+            return 0
+            ;;
+       instance)
+            local instance_args="{name} {uuid} -n"
+            COMPREPLY=( $(compgen -W "${instance_args}" -- ${cur}) )
+            return 0
+            ;;
+       instances)
+            local instances_args="{name} -n"
+            COMPREPLY=( $(compgen -W "${instances_args}" -- ${cur}) )
+            return 0
+            ;;
+       metrics)
+            local metrics_args="{name} -n -s -t"
+            COMPREPLY=( $(compgen -W "${metrics_args}" -- ${cur}) )
+            return 0
+            ;;
+       organization)
+       		local organization_args="create list inspect update"
+       		COMPREPLY=( $(compgen -W "${organization_args}" -- ${cur}) )
+            return 0
+            ;;
+        *)
+        ;;
+    esac
+
+    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+}
+complete -F _alauda alauda
