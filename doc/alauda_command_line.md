@@ -528,12 +528,19 @@ bash-3.2# alauda compose up -f gitlab.alauda.yml
 	ports:
 	- "80"
 	- "22"
+	或者
+	ports:
+	- "80/http"
+	- "22/tcp"
 	```
 	并且`ports`所映射出的端口是都`external`性质的。
 
 * expose
 
 	expose所暴露出的端口是`internal`性质的。
+
+	格式参照参数`ports`
+
 	关于`external`和`internal`的详细说明参照在线文档:
 
 	```
