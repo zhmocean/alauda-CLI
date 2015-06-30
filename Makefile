@@ -1,6 +1,6 @@
 OS = Linux
 
-VERSION = 0.0.1
+VERSION = 0.2.4
 
 CURDIR = $(shell pwd)
 SOURCEDIR = $(CURDIR)
