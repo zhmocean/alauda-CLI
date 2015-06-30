@@ -14,6 +14,14 @@ https://github.com/alaudacloud/alauda-CLI.git
 pip install alauda
 ```
 
+###依赖环境
+python-dev,libffi-dev,libssl-dev
+
+```
+以Debian为例:
+apt-get install python-dev libffi-dev libssl-dev
+```
+
 显示所有支持的命令，执行`alauda`或者`alauda -h`:
 
 ```
