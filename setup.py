@@ -75,7 +75,7 @@ setup(
     # your project is installed. For an analysis of "install_requires" vs pip's
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
-    install_requires=['mock>=1.0.1', 'PyYAML>=3.10', 'pyOpenSSL>=0.13.1', 'requests>=2.4.3', 'requests-oauthlib>=0.4.2'],
+    install_requires=['mock>=1.0.1', 'PyYAML>=3.10', 'pyOpenSSL>=0.14', 'requests>=2.4.3', 'requests-oauthlib>=0.4.2'],
 
     # List additional groups of dependencies here (e.g. development
     # dependencies). You can install these using the following syntax,
