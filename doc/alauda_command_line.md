@@ -8,6 +8,12 @@
 https://github.com/alaudacloud/alauda-CLI.git
 ```
 
+最新版本:
+
+```
+0.2.4
+```
+
 ##安装
 
 ```
