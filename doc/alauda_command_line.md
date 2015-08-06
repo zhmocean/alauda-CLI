@@ -192,7 +192,7 @@ Alauda service commands:
     disable-autoscaling Disable auto-scaling
     logs                Query service log
     instances           List instances
-    instance            Get details of a instance
+    instance            Get details of an instance
     instance-logs       Query instance log
 ```
 
@@ -460,7 +460,7 @@ optional arguments:
 查看某一个实例的详细信息。
 
 ```
-Get details of a instance
+Get details of an instance
 
 positional arguments:
   name                  Service name
