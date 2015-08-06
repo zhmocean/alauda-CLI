@@ -115,7 +115,7 @@ def _add_service_parser(subparsers):
     list_instance_parser.add_argument('name', help='Service name')
     list_instance_parser.add_argument('-n', '--namespace', help='Service namespace')
 
-    inspect_instance_parser = service_subparsers.add_parser('instance', help='Get details of a instance', description='Get details of a instance')
+    inspect_instance_parser = service_subparsers.add_parser('instance', help='Get details of an instance', description='Get details of an instance')
     inspect_instance_parser.add_argument('name', help='Service name')
     inspect_instance_parser.add_argument('id', help='Instance uuid')
     inspect_instance_parser.add_argument('-n', '--namespace', help='Service namespace')

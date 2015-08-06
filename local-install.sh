@@ -10,16 +10,12 @@ sys=`uname -s`
 
 if [ $sys == "Linux" ]
 then
-echo "linux"
 sudo rm /etc/bash_completion.d/alauda
 sudo cp ./alauda /etc/bash_completion.d
 . /etc/bash_completion.d/alauda
 else
-echo "mac"
 sudo rm /usr/local/etc/bash_completion.d/alauda
 sudo cp ./alauda /usr/local/etc/bash_completion.d/
 echo ". /usr/local/etc/bash_completion.d/alauda" >> ~/.bash_profile
 
 fi
-
-echo "Please re-login to finish the install!"
