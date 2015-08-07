@@ -5,6 +5,7 @@ import time
 from exceptions import AlaudaServerError
 
 MAX_CREATE_TIME = 300
+MAX_ERROR_TIME = 30
 
 
 class Project(object):
@@ -118,6 +119,8 @@ class Project(object):
                 elif state == 'Running':
                     print 'Start service {} success!'.format(services[i].name)
                     services.remove(services[i])
+                    continue
+                elif state == 'Stopped' and int(time.time()) - start_time < MAX_ERROR_TIME:
                     continue
                 else:
                     return 'Create/Start {0} fail! State is: {1}'.format(services[i].name, state)
