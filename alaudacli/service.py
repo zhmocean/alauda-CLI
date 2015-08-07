@@ -229,14 +229,7 @@ class Service(object):
 
     def get_state(self):
         data = json.loads(self.details)
-        if data.get('is_deploying'):
-            return 'Deploying'
-        elif data.get('current_num_instances', 0) == data['target_num_instances']:
-            return 'Running'
-        elif data['target_state'] == 'STOPPED':
-            return 'Stopped'
-        else:
-            return 'Error'
+        return data.get('current_status')
 
     def get_ports(self):
         ports = ''
