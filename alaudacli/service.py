@@ -8,7 +8,7 @@ from instance import Instance
 from exceptions import AlaudaServerError
 
 MAX_RETRY_NUM = 10
-INSTANCE_SIZES = ['XS', 'S', 'M', 'L', 'XL']
+INSTANCE_SIZES = ['XXS', 'XS', 'S', 'M', 'L', 'XL']
 
 
 class Service(object):
@@ -23,7 +23,7 @@ class Service(object):
 
         self.instance_size = instance_size
         if instance_size not in INSTANCE_SIZES:
-            raise AlaudaServerError('instance_size must be one of {}'.format(INSTANCE_SIZES))
+            raise AlaudaServerError(400, 'instance_size must be one of {}'.format(INSTANCE_SIZES))
         self.run_command = run_command
         self.instance_envvars = instance_envvars
         self.instance_ports = instance_ports
