@@ -32,8 +32,8 @@ class Project(object):
         for service in self.services[len(self.services) - 1]:
             service.run()
 
-    def ps(self):
-        service_list = self._get_service_list()
+    def ps(self, namespace):
+        service_list = self._get_service_list(namespace)
         util.print_ps_output(service_list)
 
     def start(self):
@@ -90,17 +90,17 @@ class Project(object):
             for service in service_level:
                 Service.remove(service.name)
 
-    def scale(self, scale_dict):
+    def scale(self, scale_dict, namespace):
         for name, number in scale_dict.items():
-            service = Service.fetch(name)
+            service = Service.fetch(name, namespace)
             service.scale(number)
 
-    def _get_service_list(self):
+    def _get_service_list(self, namespace):
         service_list = []
         for service_level in self.services:
             for service in service_level:
                 try:
-                    service_list.append(Service.fetch(service.name))
+                    service_list.append(Service.fetch(service.name, namespace))
                 except AlaudaServerError:
                     continue
         return service_list

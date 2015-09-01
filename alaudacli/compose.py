@@ -7,13 +7,13 @@ from exceptions import AlaudaInputError
 import os
 
 
-def load_project(filepath):
+def load_project(filepath, namespace):
     abspath = os.path.abspath(filepath)
     compose_data = _load_yaml(abspath)
     vertex_list = [abspath]
     edge_list = []
     resolve_extends(compose_data, abspath, vertex_list, edge_list)
-    services = load_services(compose_data)
+    services = load_services(compose_data, namespace)
     project = Project(services)
     return project
 
@@ -64,19 +64,19 @@ def toposort_services(compose_data):
     return sorted_result
 
 
-def load_services(compose_data):
+def load_services(compose_data, namespace):
     sorted_services = []
     sorted_list = toposort_services(compose_data)
     for services in sorted_list:
         service_list = []
         for service_name in services:
-            service = load_service(service_name, compose_data[service_name])
+            service = load_service(service_name, compose_data[service_name], namespace)
             service_list.append(service)
         sorted_services.append(service_list)
     return sorted_services
 
 
-def load_service(service_name, service_data):
+def load_service(service_name, service_data, namespace):
     image = service_data.get('image')
     if not image:
         raise AlaudaInputError('Compose file must specify image')
@@ -99,6 +99,7 @@ def load_service(service_name, service_data):
                       links=links,
                       target_num_instances=instance_num,
                       instance_size=instance_size,
+                      namespace=namespace,
                       scaling_mode=scaling_mode,
                       autoscaling_config=autoscaling_config,
                       custom_domain_name=domain)
