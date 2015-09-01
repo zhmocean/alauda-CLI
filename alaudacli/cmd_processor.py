@@ -52,19 +52,19 @@ def process_cmds(args):
             commands.backup_rm(args.id, args.namespace)
     elif args.cmd == 'compose':
         if args.subcmd == 'up':
-            commands.compose_up(args.file, args.strict)
+            commands.compose_up(args.file, args.strict, args.namespace)
         elif args.subcmd == 'ps':
-            commands.compose_ps(args.file)
+            commands.compose_ps(args.file, args.namespace)
         elif args.subcmd == 'start':
-            commands.compose_start(args.file, args.strict)
+            commands.compose_start(args.file, args.strict, args.namespace)
         elif args.subcmd == 'stop':
-            commands.compose_stop(args.file)
+            commands.compose_stop(args.file, args.namespace)
         elif args.subcmd == 'restart':
-            commands.compose_restart(args.file, args.strict)
+            commands.compose_restart(args.file, args.strict, args.namespace)
         elif args.subcmd == 'rm':
-            commands.compose_rm(args.file)
+            commands.compose_rm(args.file, args.namespace)
         elif args.subcmd == 'scale':
-            commands.compose_scale(args.descriptor, args.file)
+            commands.compose_scale(args.descriptor, args.file, args.namespace)
     elif args.cmd == 'organization':
         if args.subcmd == 'create':
             commands.organization_create(args.name, args.company)

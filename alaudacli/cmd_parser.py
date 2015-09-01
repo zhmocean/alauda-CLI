@@ -157,23 +157,29 @@ def _add_compose_parser(subparsers):
     up_parser = compose_subparsers.add_parser('up', help='Create and start all service containers', description='Create and start all service containers')
     up_parser.add_argument('-f', '--file', help='Compose file name', default='./docker-compose.yml')
     up_parser.add_argument('-s', '--strict', help='Wait for linked services to start', action='store_true')
+    up_parser.add_argument('-n', '--namespace', help='Service namespace')
 
     ps_parser = compose_subparsers.add_parser('ps', help='List containers', description='Lists container')
     ps_parser.add_argument('-f', '--file', help='Compose file name', default='./docker-compose.yml')
+    ps_parser.add_argument('-n', '--namespace', help='Service namespace')
 
     start_parser = compose_subparsers.add_parser('start', help='Start all service containers', description='Start all service containers')
     start_parser.add_argument('-f', '--file', help='Compose file name', default='./docker-compose.yml')
     start_parser.add_argument('-s', '--strict', help='Wait for linked services to start', action='store_true')
+    start_parser.add_argument('-n', '--namespace', help='Service namespace')
 
     stop_parser = compose_subparsers.add_parser('stop', help='Stop all service containers', description='Stop all service containers')
     stop_parser.add_argument('-f', '--file', help='Compose file name', default='./docker-compose.yml')
+    stop_parser.add_argument('-n', '--namespace', help='Service namespace')
 
     restart_parser = compose_subparsers.add_parser('restart', help='Restart all service containers', description='Restart all service containers')
     restart_parser.add_argument('-f', '--file', help='Compose file name', default='./docker-compose.yml')
     restart_parser.add_argument('-s', '--strict', help='Wait for linked services to start', action='store_true')
+    restart_parser.add_argument('-n', '--namespace', help='Service namespace')
 
     rm_parser = compose_subparsers.add_parser('rm', help='Remove all service containers', description='Remove all service containers')
     rm_parser.add_argument('-f', '--file', help='Compose file name', default='./docker-compose.yml')
+    rm_parser.add_argument('-n', '--namespace', help='Service namespace')
 
     scale_parser = compose_subparsers.add_parser(
         'scale',
@@ -181,6 +187,7 @@ def _add_compose_parser(subparsers):
         description='Set number of containers to run for a service')
     scale_parser.add_argument('descriptor', nargs='*', help='E.g. web=2 db=1')
     scale_parser.add_argument('-f', '--file', help='Compose file name', default='./docker-compose.yml')
+    scale_parser.add_argument('-n', '--namespace', help='Service namespace')
 
 
 def _add_organization_parser(subparsers):

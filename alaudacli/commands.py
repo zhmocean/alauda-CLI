@@ -135,49 +135,49 @@ def instance_logs(name, uuid, namespace, start_time=None, end_time=None):
     util.print_logs(result)
 
 
-def compose_up(file, strict):
-    project = compose.load_project(file)
+def compose_up(file, strict, namespace):
+    project = compose.load_project(file, namespace)
     if strict:
         project.strict_up()
     else:
         project.up()
 
 
-def compose_ps(file):
-    project = compose.load_project(file)
-    project.ps()
+def compose_ps(file, namespace):
+    project = compose.load_project(file, namespace)
+    project.ps(namespace)
 
 
-def compose_start(file, strict):
-    project = compose.load_project(file)
+def compose_start(file, strict, namespace):
+    project = compose.load_project(file, namespace)
     if strict:
         project.strict_start()
     else:
         project.start()
 
 
-def compose_stop(file):
-    project = compose.load_project(file)
+def compose_stop(file, namespace):
+    project = compose.load_project(file, namespace)
     project.stop()
 
 
-def compose_restart(file, strict):
-    project = compose.load_project(file)
+def compose_restart(file, strict, namespace):
+    project = compose.load_project(file, namespace)
     if strict:
         project.strict_restart()
     else:
         project.restart()
 
 
-def compose_rm(file):
-    project = compose.load_project(file)
+def compose_rm(file, namespace):
+    project = compose.load_project(file, namespace)
     project.rm()
 
 
-def compose_scale(descriptor, file):
-    project = compose.load_project(file)
+def compose_scale(descriptor, file, namespace):
+    project = compose.load_project(file, namespace)
     scale_dict = util.parse_scale(descriptor)
-    project.scale(scale_dict)
+    project.scale(scale_dict, namespace)
 
 
 def backup_create(name, service_name, mounted_dir, namespace):
