@@ -85,10 +85,10 @@ class Project(object):
         for service in self.services[len(self.services) - 1]:
             service.start()
 
-    def rm(self):
+    def rm(self, namespace):
         for service_level in self.services:
             for service in service_level:
-                Service.remove(service.name)
+                Service.remove(service.name, namespace)
 
     def scale(self, scale_dict, namespace):
         for name, number in scale_dict.items():
