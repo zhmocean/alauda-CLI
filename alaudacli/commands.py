@@ -171,7 +171,7 @@ def compose_restart(file, strict, namespace):
 
 def compose_rm(file, namespace):
     project = compose.load_project(file, namespace)
-    project.rm()
+    project.rm(namespace)
 
 
 def compose_scale(descriptor, file, namespace):
