@@ -35,7 +35,7 @@ def logout():
 
 
 def service_create(image, name, start, target_num_instances, instance_size, run_command, env, ports, exposes,
-                   volumes, links, namespace, scaling_info, custom_domain_name):
+                   volumes, links, namespace, scaling_info, custom_domain_name, region_name):
     image_name, image_tag = util.parse_image_name_tag(image)
     instance_ports, port_list = util.parse_instance_ports(ports)
     expose_list = util.merge_internal_external_ports(port_list, exposes)
@@ -59,7 +59,8 @@ def service_create(image, name, start, target_num_instances, instance_size, run_
                       namespace=namespace,
                       scaling_mode=scaling_mode,
                       autoscaling_config=scaling_cfg,
-                      custom_domain_name=custom_domain_name)
+                      custom_domain_name=custom_domain_name,
+                      region_name=region_name)
     if start:
         service.run()
     else:
@@ -135,8 +136,8 @@ def instance_logs(name, uuid, namespace, start_time=None, end_time=None):
     util.print_logs(result)
 
 
-def compose_up(file, strict, namespace):
-    project = compose.load_project(file, namespace)
+def compose_up(file, strict, namespace, region):
+    project = compose.load_project(file, namespace, region)
     if strict:
         project.strict_up()
     else:
@@ -144,12 +145,12 @@ def compose_up(file, strict, namespace):
 
 
 def compose_ps(file, namespace):
-    project = compose.load_project(file, namespace)
+    project = compose.load_project(file, namespace, None)
     project.ps(namespace)
 
 
 def compose_start(file, strict, namespace):
-    project = compose.load_project(file, namespace)
+    project = compose.load_project(file, namespace, None)
     if strict:
         project.strict_start()
     else:
@@ -157,12 +158,12 @@ def compose_start(file, strict, namespace):
 
 
 def compose_stop(file, namespace):
-    project = compose.load_project(file, namespace)
+    project = compose.load_project(file, namespace, None)
     project.stop()
 
 
 def compose_restart(file, strict, namespace):
-    project = compose.load_project(file, namespace)
+    project = compose.load_project(file, namespace, None)
     if strict:
         project.strict_restart()
     else:
@@ -170,12 +171,12 @@ def compose_restart(file, strict, namespace):
 
 
 def compose_rm(file, namespace):
-    project = compose.load_project(file, namespace)
+    project = compose.load_project(file, namespace, None)
     project.rm(namespace)
 
 
 def compose_scale(descriptor, file, namespace):
-    project = compose.load_project(file, namespace)
+    project = compose.load_project(file, namespace, None)
     scale_dict = util.parse_scale(descriptor)
     project.scale(scale_dict, namespace)
 

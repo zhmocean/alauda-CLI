@@ -54,6 +54,7 @@ def _add_service_parser(subparsers):
     create_parser.add_argument('-a', '--autoscale', help='Enable auto-scaling', action='store_true')
     create_parser.add_argument('-f', '--autoscaling-config', help='Auto-scaling config file name', default='./auto-scaling.cfg')
     create_parser.add_argument('-d', '--domain', help='Custom domain name', default='')
+    create_parser.add_argument('-re', '--region', help='Region name')
 
     run_parser = service_subparsers.add_parser('run', help='Create and start a new service', description='Create and start a new service')
     run_parser.add_argument('name', help='Service name')
@@ -70,6 +71,7 @@ def _add_service_parser(subparsers):
     run_parser.add_argument('-a', '--autoscale', help='Enable auto-scaling', action='store_true')
     run_parser.add_argument('-f', '--autoscaling-config', help='Auto-scaling config file name', default='./auto-scaling.cfg')
     run_parser.add_argument('-d', '--domain', help='Custom domain name', default='')
+    run_parser.add_argument('-re', '--region', help='Region name')
 
     inspect_parser = service_subparsers.add_parser('inspect', help='Get details of a service', description='Get details of a service')
     inspect_parser.add_argument('name', help='Name of the service to retrieve')
@@ -158,6 +160,7 @@ def _add_compose_parser(subparsers):
     up_parser.add_argument('-f', '--file', help='Compose file name', default='./docker-compose.yml')
     up_parser.add_argument('-s', '--strict', help='Wait for linked services to start', action='store_true')
     up_parser.add_argument('-n', '--namespace', help='Service namespace')
+    up_parser.add_argument('-re', '--region', help='Region name')
 
     ps_parser = compose_subparsers.add_parser('ps', help='List containers', description='Lists container')
     ps_parser.add_argument('-f', '--file', help='Compose file name', default='./docker-compose.yml')
