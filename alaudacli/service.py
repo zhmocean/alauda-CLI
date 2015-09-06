@@ -15,7 +15,7 @@ class Service(object):
 
     def __init__(self, name, image_name, image_tag, target_num_instances=1, instance_size='XS', run_command='',
                  instance_ports=[], instance_envvars={}, volumes=[], links=[], details='', namespace=None,
-                 scaling_mode='MANUAL', autoscaling_config={}, custom_domain_name=''):
+                 scaling_mode='MANUAL', autoscaling_config={}, custom_domain_name='', region_name=None):
         self.name = name
         self.image_name = image_name
         self.image_tag = image_tag
@@ -37,6 +37,7 @@ class Service(object):
         self.namespace = namespace or self.username
         self.scaling_mode = scaling_mode
         self.autoscaling_config = autoscaling_config
+        self.region_name = region_name
 
     def _update_envvars_with_links(self, instance_envvars, links, namespace=None):
         linked_to = {}
@@ -95,6 +96,8 @@ class Service(object):
             'autoscaling_config': self.autoscaling_config,
             'custom_domain_name': self.custom_domain_name
         }
+        if self.region_name:
+            payload['region_name'] = self.region_name
         r = requests.post(url, headers=self.headers, data=json.dumps(payload))
         util.check_response(r)
 
