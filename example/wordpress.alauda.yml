@@ -14,7 +14,7 @@ mysql:
   extends:
     file: ./wordpress.yml
     service: mysql
-  ports:
+  expose:
   - "3306"
   size: S
   volumes:

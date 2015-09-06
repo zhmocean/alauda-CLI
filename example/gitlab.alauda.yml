@@ -2,7 +2,7 @@ postgresql:
   extends:
     file: ./gitlab.yml
     service: postgresql
-  ports:
+  expose:
     - "5432"
   volumes:
     - /var/lib/postgresql/data:10
@@ -28,7 +28,7 @@ redis:
   extends:
     file: ./gitlab.yml
     service: redis
-  ports:
+  expose:
     - "6379"
   volumes:
     - /data:10
