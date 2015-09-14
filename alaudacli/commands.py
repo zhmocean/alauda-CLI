@@ -8,6 +8,7 @@ import compose
 from service import Service
 from backup import Backup
 from organization import Organization
+from build import Build
 
 
 def login(username, password, cloud, endpoint):
@@ -221,3 +222,8 @@ def organization_inspect(name):
 def organization_update(name, company):
     orgs = Organization.fetch(name)
     orgs.update(company)
+
+
+def build_create(repo_name, source, namespace, image_tag, commit_id):
+    build = Build()
+    build.create(repo_name, source, namespace, image_tag, commit_id)

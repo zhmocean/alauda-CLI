@@ -20,6 +20,7 @@ def create_parser():
     _add_compose_parser(subparsers)
     _add_backups_parser(subparsers)
     _add_organization_parser(subparsers)
+    _add_build_parser(subparsers)
     return parser
 
 
@@ -209,3 +210,17 @@ def _add_organization_parser(subparsers):
     update_parser = org_subparsers.add_parser('update', help='Update an exist orgnization', description='Update an exist orgnization')
     update_parser.add_argument('name', help='Organization name')
     update_parser.add_argument('company', help='Company name')
+
+
+def _add_build_parser(subparsers):
+    build_parser = subparsers.add_parser('build', help='Build operations', description='Build operations')
+    build_subparsers = build_parser.add_subparsers(title='Alauda build commands', dest='subcmd')
+
+    create_parser = build_subparsers.add_parser(
+        'create', help='Create a build', description='Create a build'
+    )
+    create_parser.add_argument('-p', '--path', help='Source code path', dest='source')
+    create_parser.add_argument('-rn', '--repo-name', help='Repository name', dest='repo_name')
+    create_parser.add_argument('-n', '--namespace', help='Repository namespace', dest='namespace')
+    create_parser.add_argument('-t', '--tag', help='Image tag', dest='image_tag')
+    create_parser.add_argument('-i', '--commit-id', help='Commit id', dest='commit_id')

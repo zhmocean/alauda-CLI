@@ -74,3 +74,9 @@ def process_cmds(args):
             commands.organization_inspect(args.name)
         elif args.subcmd == 'update':
             commands.organization_update(args.name, args.company)
+    elif args.cmd == 'build':
+        if args.subcmd == 'create':
+            commands.build_create(
+                args.repo_name, args.source, args.namespace, args.image_tag,
+                args.commit_id
+            )
