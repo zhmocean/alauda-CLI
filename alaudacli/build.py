@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
+import hashlib
 import json
 import os
 import time
 import zipfile
 
 import requests
-import botocore
 
 import auth
 from exceptions import AlaudaInputError
@@ -17,6 +17,7 @@ import util
 class Build(object):
 
     def __init__(self):
+        self.s3_bucket = settings.S3_BUCKET
         self.api_endpoint, self.token, self.username = auth.load_token()
         self.headers = auth.build_headers(self.token)
 
@@ -135,23 +136,34 @@ class Build(object):
                     )
 
     def _upload(self, namespace, target_path, target_name):
-        print (
-            '[alauda] Uploading {} to {}/{}'
-            .format(target_path, namespace, target_name)
-        )
-        bucket = auth.get_aws_session().resource('s3').Bucket(
-            settings.S3_BUCKET
-        )
-        object_key = '/'.join([namespace, target_name])
+        object_key = '/' + '/'.join([self.s3_bucket, target_name])
+
+        print ('[alauda] Applying to alauda server for aws signature.')
         with open(target_path, 'rb') as data:
-            try:
-                bucket.put_object(Key=object_key, Body=data)
-            except botocore.exceptions.NoCredentialsError:
-                raise AlaudaInputError(
-                    'upload file build feature is not open for all users, if '
-                    'you want to enable this feature please create a ticket to'
-                    'us on our website(www.alauda.cn)'
-                )
+            body = hashlib.sha256(data.read()).hexdigest()
+        params = {
+            'use_querystring_auth': False,
+            'http_uri': object_key,
+            'http_method': 'PUT',
+            'http_headers': json.dumps({'x-amz-content-sha256': body}),
+            'is_http_body_hashed': True,
+            'http_body': body
+        }
+        url = self.api_endpoint + 'aws/build-fileupload/auth'
+        response = requests.get(url, headers=self.headers, params=params)
+        util.check_response(response)
+        aws_headers = json.loads(response.text)
+
+        print (
+            '[alauda] Uploading {} to {}'.format(target_path, object_key)
+        )
+        with open(target_path, 'rb') as data:
+            response = requests.put(
+                'http://{}{}'.format(aws_headers['Host'], object_key),
+                data=data,
+                headers=aws_headers
+            )
+        util.check_response(response)
 
     def _clean(self, target_path):
         print (
@@ -172,7 +184,7 @@ class Build(object):
             'tag': image_tag
         }
         if target_name:
-            payload['code_repo_path'] = '/'.join([namespace, target_name])
+            payload['code_repo_path'] = target_name
         if commit_id:
             payload['code_commit_id'] = commit_id
         response = requests.post(

@@ -1,8 +1,6 @@
 import json
 import os
 
-import boto3
-
 import settings
 from exceptions import AlaudaInputError
 
@@ -49,9 +47,3 @@ def build_headers(token):
         'Content-type': 'application/json'
     }
     return headers
-
-
-def get_aws_session():
-    return boto3.session.Session(
-        region_name=settings.AWS_REGION_NAME
-    )
