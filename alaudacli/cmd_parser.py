@@ -132,6 +132,7 @@ def _add_service_parser(subparsers):
     exec_parser = service_subparsers.add_parser('exec', help='Execute a command for a service', description='Execute a command a service')
     exec_parser.add_argument('container', help='Container instance name, in the form of <service name>.<container number>, where <container number> defaults to 0 if absent')
     exec_parser.add_argument('command', help='Command to execute')
+    exec_parser.add_argument('args', help='Args of command', nargs="*")
     exec_parser.add_argument('-n', '--namespace', help='Service namespace')
 
 

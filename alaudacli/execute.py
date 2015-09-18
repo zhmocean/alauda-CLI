@@ -43,13 +43,13 @@ class Executer(object):
         if self.verbose:
             print(repr(self.client.get_transport()))
 
-    def execute(self, command):
+    def execute(self, command, *args):
         try:
             self.connect()
             transport = self.client.get_transport()
             self.chan = transport.open_session()
             self.chan.get_pty()
-            self.chan.exec_command('{} {}'.format(self.name, command))
+            self.chan.exec_command('{} {} {}'.format(self.name, command, ' '.join(args)))
             interactive.interactive_shell(self.chan)
             self.close()
         except Exception as e:

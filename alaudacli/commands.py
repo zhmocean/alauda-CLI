@@ -116,9 +116,9 @@ def service_logs(name, namespace, start_time, end_time):
     result = service.logs(start_time, end_time)
     util.print_logs(result)
 
-def service_exec(name, namespace, command):
+def service_exec(name, namespace, command, *args):
     executer = Executer.fetch(name, namespace)
-    executer.execute(command)
+    executer.execute(command, *args)
 
 
 def instance_ps(name, namespace):

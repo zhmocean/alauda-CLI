@@ -42,7 +42,7 @@ def process_cmds(args):
         elif args.subcmd == 'instance-logs':
             commands.instance_logs(args.name, args.id, args.namespace, args.start_time, args.end_time)
         elif args.subcmd == 'exec':
-            commands.service_exec(args.name, namespace=args.namespace, command=args.command)
+            commands.service_exec(args.container, args.namespace, args.command, *args.args)
     elif args.cmd == 'backup':
         if args.subcmd == 'create':
             commands.backup_create(args.name, args.service, args.dir, args.namespace)
