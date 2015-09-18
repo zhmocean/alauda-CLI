@@ -17,7 +17,6 @@ import util
 class Build(object):
 
     def __init__(self):
-        self.s3_bucket = settings.S3_BUCKET
         self.api_endpoint, self.token, self.username = auth.load_token()
         self.headers = auth.build_headers(self.token)
 
@@ -46,9 +45,18 @@ class Build(object):
         target_path = os.path.abspath(
             os.path.join(os.path.join(source, '..'), target_name)
         )
+
         self._pack(source, target_path)
+
+        (
+            upload_auth_headers, upload_bucket, upload_object_key
+        ) = self._get_upload_auth_info(target_path)
+
         try:
-            self._upload(namespace, target_path, target_name)
+            self._upload(
+                target_path, upload_auth_headers, upload_bucket,
+                upload_object_key
+            )
         finally:
             self._clean(target_path)
 
@@ -135,33 +143,34 @@ class Build(object):
                         compress_type=zipfile.ZIP_DEFLATED
                     )
 
-    def _upload(self, namespace, target_path, target_name):
-        object_key = '/' + '/'.join([self.s3_bucket, target_name])
-
-        print ('[alauda] Applying to alauda server for aws signature.')
+    def _get_upload_auth_info(self, target_path):
+        print ('[alauda] Applying to upload auth info.')
         with open(target_path, 'rb') as data:
-            body = hashlib.sha256(data.read()).hexdigest()
-        params = {
-            'use_querystring_auth': False,
-            'http_uri': object_key,
-            'http_method': 'PUT',
-            'http_headers': json.dumps({'x-amz-content-sha256': body}),
-            'is_http_body_hashed': True,
-            'http_body': body
-        }
+            fingerprint = hashlib.sha256(data.read()).hexdigest()
+        params = {'fingerprint': fingerprint}
         url = self.api_endpoint + 'aws/build-fileupload/auth'
         response = requests.get(url, headers=self.headers, params=params)
         util.check_response(response)
-        aws_headers = json.loads(response.text)
+        data = json.loads(response.text)
+        return data['auth_headers'], data['bucket'], data['object_key']
 
+    def _upload(
+        self, target_path, upload_auth_headers, upload_bucket,
+        upload_object_key
+    ):
         print (
-            '[alauda] Uploading {} to {}'.format(target_path, object_key)
+            '[alauda] Uploading {} to {}'.format(
+                target_path, upload_object_key
+            )
         )
         with open(target_path, 'rb') as data:
             response = requests.put(
-                'http://{}{}'.format(aws_headers['Host'], object_key),
+                'http://{}/{}/{}'.format(
+                    upload_auth_headers['Host'], upload_bucket,
+                    upload_object_key
+                ),
                 data=data,
-                headers=aws_headers
+                headers=upload_auth_headers
             )
         util.check_response(response)
 

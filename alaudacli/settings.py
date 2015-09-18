@@ -9,9 +9,6 @@ API_ENDPOINTS = {
     'io': 'https://api.alauda.io/v1/'
 }
 
-S3_BUCKET = 'build-file-upload'
-AWS_REGION_NAME = 'cn-north-1'
-
 BUILD_REPO_TYPE = {
     'file': 'FILE',
     'code_repo': 'CODE_REPO',
