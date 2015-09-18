@@ -105,28 +105,28 @@ class ProcessCmdTest(unittest.TestCase):
         argv = ['service', 'create', 'hello', 'index.alauda.io/alauda/hello-world:latest',
                 '-t', '2', '-s', 'XS', '-r', '/run.sh',
                 '-e', 'FOO=bar', '-p', '5000/tcp', '-v', '/var/lib/data1:10', '-l', 'myql:db',
-                '-a', '-f', './auto-scaling.cfg', '-n', 'myns', '-d', 'my.com']
+                '-a', '-f', './auto-scaling.cfg', '-n', 'myns', '-d', 'my.com', '-re', 'myregion']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
         mock_commands.service_create.assert_called_with(image='index.alauda.io/alauda/hello-world:latest',
                                                         name='hello', start=False, target_num_instances=2, instance_size='XS',
                                                         run_command='/run.sh', env=['FOO=bar'], ports=['5000/tcp'], exposes=None,
                                                         volumes=['/var/lib/data1:10'], links=['myql:db'], scaling_info=(True, './auto-scaling.cfg'),
-                                                        namespace='myns', custom_domain_name='my.com')
+                                                        namespace='myns', custom_domain_name='my.com', region_name='myregion')
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_service_run(self, mock_commands):
         argv = ['service', 'run', 'hello', 'index.alauda.io/alauda/hello-world:latest',
                 '-t', '2', '-s', 'XS', '-r', '/run.sh',
                 '-e', 'FOO=bar', '-p', '5000/tcp', '-v', '/var/lib/data1:10', '-l', 'db',
-                '-f', './auto-scaling.cfg', '-n', 'myns', '-d', 'my.com']
+                '-f', './auto-scaling.cfg', '-n', 'myns', '-d', 'my.com', '-re', 'myregion']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
         mock_commands.service_create.assert_called_with(image='index.alauda.io/alauda/hello-world:latest',
                                                         name='hello', start=True, target_num_instances=2, instance_size='XS',
                                                         run_command='/run.sh', env=['FOO=bar'], ports=['5000/tcp'], exposes=None,
                                                         volumes=['/var/lib/data1:10'], links=['db'], scaling_info=(False, './auto-scaling.cfg'),
-                                                        namespace='myns', custom_domain_name='my.com')
+                                                        namespace='myns', custom_domain_name='my.com', region_name='myregion')
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_service_scale(self, mock_commands):
@@ -186,52 +186,52 @@ class ProcessCmdTest(unittest.TestCase):
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_compose_up(self, mock_commands):
-        argv = ['compose', 'up', '-s']
+        argv = ['compose', 'up', '-s', '-n', 'myns', '-re', 'myregion']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.compose_up.assert_called_with('./docker-compose.yml', True)
+        mock_commands.compose_up.assert_called_with('./docker-compose.yml', True, 'myns', 'myregion')
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_compose_ps(self, mock_commands):
-        argv = ['compose', 'ps']
+        argv = ['compose', 'ps', '-n', 'myns']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.compose_ps.assert_called_with('./docker-compose.yml')
+        mock_commands.compose_ps.assert_called_with('./docker-compose.yml', 'myns')
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_compose_start(self, mock_commands):
-        argv = ['compose', 'start']
+        argv = ['compose', 'start', '-n', 'myns']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.compose_start.assert_called_with('./docker-compose.yml', False)
+        mock_commands.compose_start.assert_called_with('./docker-compose.yml', False, 'myns')
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_compose_stop(self, mock_commands):
-        argv = ['compose', 'stop']
+        argv = ['compose', 'stop', '-n', 'myns']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.compose_stop.assert_called_with('./docker-compose.yml')
+        mock_commands.compose_stop.assert_called_with('./docker-compose.yml', 'myns')
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_compose_restart(self, mock_commands):
-        argv = ['compose', 'restart']
+        argv = ['compose', 'restart', '-n', 'myns']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.compose_restart.assert_called_with('./docker-compose.yml', False)
+        mock_commands.compose_restart.assert_called_with('./docker-compose.yml', False, 'myns')
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_compose_rm(self, mock_commands):
-        argv = ['compose', 'rm']
+        argv = ['compose', 'rm', '-n', 'myns']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.compose_rm.assert_called_with('./docker-compose.yml')
+        mock_commands.compose_rm.assert_called_with('./docker-compose.yml', 'myns')
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_compose_scale(self, mock_commands):
-        argv = ['compose', 'scale', 'redis=2 web=3']
+        argv = ['compose', 'scale', 'redis=2 web=3', '-n', 'myns']
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-        mock_commands.compose_scale.assert_called_with(['redis=2 web=3'], './docker-compose.yml')
+        mock_commands.compose_scale.assert_called_with(['redis=2 web=3'], './docker-compose.yml', 'myns')
 
     @mock.patch('alaudacli.cmd_processor.commands')
     def test_process_backup_create(self, mock_commands):
