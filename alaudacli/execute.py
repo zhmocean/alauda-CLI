@@ -68,14 +68,16 @@ class Executer(object):
 
     @classmethod
     def fetch(cls, name, namespace=None):
+        service_name = name.split(".")[0]
+
         api_endpoint, token, username = auth.load_token()
-        url = api_endpoint + 'services/{}/'.format(namespace or username) + name
+        url = api_endpoint + 'services/{}/'.format(namespace or username) + service_name
         headers = auth.build_headers(token)
         r = requests.get(url, headers=headers)
         util.check_response(r)
         data = json.loads(r.text)
         # print r.text
-        executer = cls(name=data['service_name'],
+        executer = cls(name=name,
                        exec_endpoint=data['exec_endpoint'],
                        namespace=data['namespace'])
         return executer
