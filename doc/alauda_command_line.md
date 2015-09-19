@@ -496,6 +496,7 @@ optional arguments:
 
 ##exec
 
+```
 usage: alauda service exec [-h] [-n NAMESPACE]
                            container command [args [args ...]]
 
@@ -512,6 +513,7 @@ optional arguments:
   -h, --help            show this help message and exit
   -n NAMESPACE, --namespace NAMESPACE
                         Service namespace
+```
 
 ##compose
 
