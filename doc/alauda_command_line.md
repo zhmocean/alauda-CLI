@@ -179,12 +179,13 @@ optional arguments:
   -h, --help            show this help message and exit
 
 Alauda service commands:
-  {create,run,inspect,start,stop,rm,ps,scale,enable-autoscaling,disable-autoscaling,logs,instances,instance,instance-logs,instance-metrics}
+  {create,run,inspect,start,stop,exec,rm,ps,scale,enable-autoscaling,disable-autoscaling,logs,instances,instance,instance-logs,instance-metrics}
     create              Create a new service
     run                 Create and start a new service
     inspect             Get details of a service
     start               Start a service
     stop                Stop a service
+    exec                Execute command in container
     rm                  Remove a service
     ps                  List services
     scale               Scale a service
@@ -492,6 +493,25 @@ optional arguments:
   -e, --end-time=""				Logs query end time. e.g. 2015-05-01 12:12:12
   -n, --namespace=""			Service namespace
 ```
+
+##exec
+
+usage: alauda service exec [-h] [-n NAMESPACE]
+                           container command [args [args ...]]
+
+Execute a command a service
+
+positional arguments:
+  container             Container instance name, in the form of <service
+                        name>.<container number>, where <container number>
+                        defaults to 0 if absent
+  command               Command to execute
+  args                  Args of command
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -n NAMESPACE, --namespace NAMESPACE
+                        Service namespace
 
 ##compose
 
