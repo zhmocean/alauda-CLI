@@ -147,8 +147,11 @@ class Build(object):
         print ('[alauda] Applying to upload auth info.')
         with open(target_path, 'rb') as data:
             fingerprint = hashlib.sha256(data.read()).hexdigest()
-        params = {'fingerprint': fingerprint}
-        url = self.api_endpoint + 'aws/build-fileupload/auth'
+        params = {
+            'action': 's3_upload',
+            'fingerprint': fingerprint
+        }
+        url = self.api_endpoint + 'cloud-storage/aws/auth'
         response = requests.get(url, headers=self.headers, params=params)
         util.check_response(response)
         data = json.loads(response.text)
