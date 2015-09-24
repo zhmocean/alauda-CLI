@@ -130,11 +130,12 @@ def _add_service_parser(subparsers):
     logs_instance_parser.add_argument('-n', '--namespace', help='Service namespace')
 
     exec_parser = service_subparsers.add_parser('exec', help='Execute command in container', description='Execute command in container')
-    exec_parser.add_argument('container', help='Container instance name, in the form of <service name>.<container number>, where <container number> defaults to 0 if absent')
+    exec_parser.add_argument(
+        'container',
+        help='Container instance name, in the form of <service name>.<container number>, where <container number> defaults to 0 if absent')
     exec_parser.add_argument('command', help='Command to execute')
     exec_parser.add_argument('args', help='Args of command', nargs="*")
     exec_parser.add_argument('-n', '--namespace', help='Service namespace')
-
 
 
 def _add_backups_parser(subparsers):

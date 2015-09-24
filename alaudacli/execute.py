@@ -1,7 +1,4 @@
-import base64
 import getpass
-import os
-import socket
 import sys
 import traceback
 
@@ -11,6 +8,7 @@ import auth
 import util
 import json
 import requests
+
 
 class Executer(object):
 
