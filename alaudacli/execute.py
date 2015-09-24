@@ -12,11 +12,12 @@ import requests
 
 class Executer(object):
 
-    def __init__(self, name, namespace, exec_endpoint='exec.alauda.cn', port=4022, verbose=False):
-        self.name = name
+    def __init__(self, name, username, namespace, exec_endpoint='exec.alauda.cn', verbose=False):
+        self.name = name if username == namespace else '{}/{}'.format(namespace, name)
         self.namespace = namespace
+        self.username = username
         self.exec_endpoint = exec_endpoint
-        self.port = port
+        self.port = 4022 if username == namespace else 4402
         self.client = None
         self.chan = None
         self.verbose = verbose
@@ -30,10 +31,10 @@ class Executer(object):
         self.client.load_system_host_keys()
         self.client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
-        password = getpass.getpass('Password for %s@%s: ' % (self.namespace, self.exec_endpoint))
+        password = getpass.getpass('Password for %s@%s: ' % (self.username, self.exec_endpoint))
         self.client.connect(self.exec_endpoint,
                             self.port,
-                            username=self.namespace,
+                            username=self.username,
                             password=password,
                             allow_agent=False,
                             look_for_keys=False)
@@ -76,6 +77,7 @@ class Executer(object):
         data = json.loads(r.text)
         # print r.text
         executer = cls(name=name,
+                       username=username,
                        exec_endpoint=data['exec_endpoint'],
                        namespace=data['namespace'])
         return executer
