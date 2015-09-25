@@ -17,7 +17,7 @@ class Executer(object):
         self.namespace = namespace
         self.username = username
         self.exec_endpoint = exec_endpoint
-        self.port = 4022 if username == namespace else 4402
+        self.port = 4022
         self.client = None
         self.chan = None
         self.verbose = verbose
