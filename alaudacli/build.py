@@ -61,7 +61,7 @@ class Build(object):
             self._clean(target_path)
 
         self._trigger_build(
-            repo_name, namespace, image_tag, commit_id, target_name
+            repo_name, namespace, image_tag, commit_id, upload_object_key
         )
         return True
 
@@ -184,7 +184,7 @@ class Build(object):
         os.remove(target_path)
 
     def _trigger_build(
-        self, repo_name, namespace, image_tag, commit_id, target_name=None
+        self, repo_name, namespace, image_tag, commit_id, upload_object_key=None
     ):
         print (
             '[alauda] Triggering a build on alauda'
@@ -195,8 +195,8 @@ class Build(object):
             'repo_name': repo_name,
             'tag': image_tag
         }
-        if target_name:
-            payload['code_repo_path'] = target_name
+        if upload_object_key:
+            payload['code_repo_path'] = upload_object_key
         if commit_id:
             payload['code_commit_id'] = commit_id
         response = requests.post(
