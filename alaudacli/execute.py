@@ -75,7 +75,6 @@ class Executer(object):
         r = requests.get(url, headers=headers)
         util.check_response(r)
         data = json.loads(r.text)
-        # print r.text
         executer = cls(name=name,
                        username=username,
                        exec_endpoint=data['exec_endpoint'],

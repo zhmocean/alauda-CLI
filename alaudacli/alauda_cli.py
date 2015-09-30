@@ -1,5 +1,6 @@
 import sys
 import copy
+import traceback
 
 import cmd_parser
 import cmd_processor
@@ -44,9 +45,11 @@ def main():
         cmd_processor.process_cmds(args)
     except AlaudaInputError as ex:
         print ex
+        traceback.print_exc()
         sys.exit(1)
     except AlaudaServerError as ex:
         print ex
+        traceback.print_exc()
         sys.exit(1)
     print '[alauda] OK'
 

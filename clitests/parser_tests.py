@@ -181,7 +181,6 @@ class ProcessCmdTest(unittest.TestCase):
     def test_process_service_exec(self, mock_commands):
         argv = ['service', 'exec', 'hello', '/bin/ls', '-l']
         args = cmd_parser.parse_cmds(argv)
-        print(args)
         cmd_processor.process_cmds(args)
         mock_commands.service_exec.assert_called_with('hello', None, '/bin/ls', '-l')
 
