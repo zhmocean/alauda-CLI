@@ -1,6 +1,6 @@
 import unittest
 import time
-from alaudacli import cmd_parser, cmd_processor, service
+from alaudacli import cmd_parser, cmd_processor, service, auth
 from alaudacli.service import Service
 
 
@@ -16,6 +16,11 @@ class ServiceTest(unittest.TestCase):
             service.Service.remove('test-mysql')
         except:
             pass
+        api_endpoint, token, username = auth.load_token()
+        if '.io' in api_endpoint:
+            cls.registry = 'index.alauda.io'
+        else:
+            cls.registry = 'index.alauda.cn'
 
     def _create_service(self, name, image, port, start=False, volume='', envvar='', link=''):
         cmd = 'create'
@@ -95,7 +100,7 @@ class ServiceTest(unittest.TestCase):
 
     def test_stateless_service(self):
         name = 'test-hello'
-        image = 'index.alauda.io/alauda/hello-world'
+        image = self.registry + '/alauda/hello-world'
 
         # create service
         self._create_service(name, image, 80)
@@ -134,7 +139,7 @@ class ServiceTest(unittest.TestCase):
 
     def test_stateful_service(self):
         name = 'test-mysql'
-        image = 'index.alauda.io/alauda/mysql'
+        image = self.registry + '/alauda/mysql'
 
         # create service
         self._create_service(name, image, 3306, True,
@@ -154,9 +159,9 @@ class ServiceTest(unittest.TestCase):
 
     def test_service_linking(self):
         db = 'test-mysql'
-        db_image = 'index.alauda.io/alauda/mysql'
+        db_image = self.registry + '/alauda/mysql'
         web = 'test-hello'
-        web_image = 'index.alauda.io/alauda/hello-world'
+        web_image = self.registry + '/alauda/hello-world'
 
         # create db
         self._create_service(db, db_image, 3306, True,
