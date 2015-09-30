@@ -8,6 +8,7 @@ import compose
 from service import Service
 from backup import Backup
 from organization import Organization
+from execute import Executer
 
 
 def login(username, password, cloud, endpoint):
@@ -114,6 +115,11 @@ def service_logs(name, namespace, start_time, end_time):
     service = Service.fetch(name, namespace)
     result = service.logs(start_time, end_time)
     util.print_logs(result)
+
+
+def service_exec(name, namespace, command, *args):
+    executer = Executer.fetch(name, namespace)
+    executer.execute(command, *args)
 
 
 def instance_ps(name, namespace):

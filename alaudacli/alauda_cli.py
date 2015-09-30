@@ -1,5 +1,6 @@
 import sys
 import copy
+import traceback
 
 import cmd_parser
 import cmd_processor
@@ -15,7 +16,7 @@ def patch_argv(argv):
     if len(args) >= 2:
         if args[1] in ['create', 'run', 'scale', 'inspect', 'start', 'stop', 'rm',
                        'enable-autoscaling', 'disable-autoscaling', 'logs', 'ps',
-                       'instances', 'instance', 'instance-logs']:
+                       'instances', 'instance', 'instance-logs', 'exec']:
             args.insert(1, 'service')
 
     if len(args) == 1:
@@ -25,7 +26,7 @@ def patch_argv(argv):
     elif len(args) == 3:
         if args[1] == 'service' and args[2] in ['create', 'run', 'scale', 'inspect', 'start', 'stop', 'rm',
                                                 'enable-autoscaling', 'disable-autoscaling', 'logs',
-                                                'instances', 'instance', 'instance-logs']:
+                                                'instances', 'instance', 'instance-logs', 'exec']:
             args.append('-h')
         elif args[1] == 'compose' and args[2] in ['scale']:
             args.append('-h')
@@ -44,9 +45,11 @@ def main():
         cmd_processor.process_cmds(args)
     except AlaudaInputError as ex:
         print ex
+        traceback.print_exc()
         sys.exit(1)
     except AlaudaServerError as ex:
         print ex
+        traceback.print_exc()
         sys.exit(1)
     print '[alauda] OK'
 
