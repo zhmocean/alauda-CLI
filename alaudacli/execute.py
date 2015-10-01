@@ -1,13 +1,12 @@
 import getpass
-import sys
-import traceback
-
 import paramiko
+import json
+import requests
+
 import interactive
 import auth
 import util
-import json
-import requests
+from exceptions import AlaudaExecError
 
 
 class Executer(object):
@@ -52,13 +51,11 @@ class Executer(object):
             interactive.interactive_shell(self.chan)
             self.close()
         except Exception as e:
-            print('*** Caught exception: %s: %s' % (e.__class__, e))
-            traceback.print_exc()
             try:
                 self.close()
             except:
                 pass
-            sys.exit(1)
+            raise AlaudaExecError('Executing \'{}\' failed with \'{}\''.format(command, e))
 
     def close(self):
         if self.chan:

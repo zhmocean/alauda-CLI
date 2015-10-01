@@ -4,7 +4,7 @@ import traceback
 
 import cmd_parser
 import cmd_processor
-from exceptions import AlaudaInputError, AlaudaServerError
+from exceptions import AlaudaInputError
 
 
 def patch_argv(argv):
@@ -43,11 +43,7 @@ def main():
         argv = patch_argv(sys.argv)
         args = cmd_parser.parse_cmds(argv)
         cmd_processor.process_cmds(args)
-    except AlaudaInputError as ex:
-        print ex
-        traceback.print_exc()
-        sys.exit(1)
-    except AlaudaServerError as ex:
+    except Exception as ex:
         print ex
         traceback.print_exc()
         sys.exit(1)
