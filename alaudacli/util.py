@@ -35,6 +35,9 @@ def parse_instance_ports(port_list):
             raise AlaudaInputError('Invalid port description. (Example of valid description: 80/tcp)')
 
         try:
+            if len(result) == 1 and _port.find(':') > -1:
+                result = _port.split(':')
+                result = [result[0]]
             port = int(result[0])
         except:
             raise AlaudaInputError('Invalid port description. (Example of valid description: 80/tcp)')
