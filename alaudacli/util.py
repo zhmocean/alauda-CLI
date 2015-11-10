@@ -383,11 +383,15 @@ def print_organization_ps_output(orgs):
                                          str(org['created_at']).ljust(max_time_len))
 
 
-def print_logs(logs):
-    entry_list = logs.split('\\r\\n')
+def print_logs(logs, type):
+    entry_list = json.loads(logs.encode('utf-8'))
     print '[alauda] Logs:'
-    for entry in entry_list:
-        print entry
+    if type == 'service':
+        for entry in entry_list:
+            print '{}\t{}\t{}'.format(entry['time'], entry['instance_id'], entry['message'])
+    else:
+        for entry in entry_list:
+            print entry['message']
 
 
 def print_json_result(result):

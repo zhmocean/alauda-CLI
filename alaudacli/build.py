@@ -40,7 +40,7 @@ class Build(object):
                 "your repository's type is FileUpload."
             )
         source = os.path.abspath(source)
-        timestamp = int(time.time()*1000)
+        timestamp = int(time.time() * 1000)
         target_name = '{}_{}.zip'.format(repo_name, timestamp)
         target_path = os.path.abspath(
             os.path.join(os.path.join(source, '..'), target_name)
