@@ -6,8 +6,10 @@ wordpress:
    - mysql:mysql
   ports:
    - "80"
+   - "80/direct"
   environment:
    - WORDPRESS_DB_HOST: $MYSQL_PORT_3306_TCP_ADDR:$MYSQL_PORT_3306_TCP_PORT
+  number: 3
 mysql:
   extends:
     file: ./wordpress.yml

@@ -19,4 +19,3 @@ sudo cp ./alauda /usr/local/etc/bash_completion.d/
 echo ". /usr/local/etc/bash_completion.d/alauda" >> ~/.bash_profile
 
 fi
-

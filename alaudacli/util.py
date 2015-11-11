@@ -35,6 +35,9 @@ def parse_instance_ports(port_list):
             raise AlaudaInputError('Invalid port description. (Example of valid description: 80/tcp)')
 
         try:
+            if len(result) == 1 and _port.find(':') > -1:
+                result = _port.split(':')
+                result = [result[0]]
             port = int(result[0])
         except:
             raise AlaudaInputError('Invalid port description. (Example of valid description: 80/tcp)')
@@ -47,7 +50,7 @@ def parse_instance_ports(port_list):
             else:
                 protocol = 'tcp'
 
-        if protocol not in ['tcp', 'http']:
+        if protocol not in ['tcp', 'http', 'direct', 'internal']:
             raise AlaudaInputError('Invalid port protocal. Supported protocols: {tcp}')
         if port < 0 or port > 65535:
             raise AlaudaInputError('Invalid port number')
@@ -59,7 +62,7 @@ def parse_instance_ports(port_list):
     if port_list is not None:
         for port_desc in port_list:
             port, protocol, port_type = _parse_instance_port(port_desc)
-            result = {"container_port": port, "protocol": 'tcp', 'endpoint_type': 'http-endpoint' if port_type == 'http' else 'tcp-endpoint'}
+            result = {"container_port": port, "protocol": 'tcp', 'endpoint_type': '{}-endpoint'.format(port_type)}
             if result not in parsed_ports:
                 parsed_ports.append(result)
                 ports.append(port)
@@ -269,6 +272,8 @@ def print_ps_output(service_list):
     max_state_len = len('State')
     max_ports_len = len('Ports')
     max_instance_count_len = len('Instance Count')
+    max_iaas_len = len('IaaS')
+    max_region_len = len('Region')
 
     for service in service_list:
         if max_name_len < len(service.name):
@@ -284,14 +289,22 @@ def print_ps_output(service_list):
             max_ports_len = len(ports)
         if max_instance_count_len < len(str(service.target_num_instances)):
             max_instance_count_len = len(str(service.target_num_instances))
+        iaas, region_name = service.get_region_info()
+        if max_iaas_len < len(iaas):
+            max_iaas_len = len(iaas)
+        if max_region_len < len(region_name):
+            max_region_len = len(region_name)
 
-    print '{0}    {1}    {2}    {3}    {4}'.format('Name'.center(max_name_len), 'Command'.center(max_command_len), 'State'.center(max_state_len),
-                                                   'Ports'.center(max_ports_len), 'Instance Count'.center(max_instance_count_len))
-    print '{0}'.format('-' * (max_name_len + max_command_len + max_state_len + max_ports_len + max_instance_count_len + 4 * 4))
+    print '{0}    {1}    {2}    {3}    {4}    {5}    {6}'.format('Name'.center(max_name_len), 'Command'.center(max_command_len), 'State'.center(max_state_len),
+                                                                 'Ports'.center(max_ports_len), 'Instance Count'.center(max_instance_count_len),
+                                                                 'IaaS'.center(max_iaas_len), 'Region'.center(max_region_len))
+    print '{0}'.format('-' * (max_name_len + max_command_len + max_state_len + max_ports_len + max_instance_count_len + max_iaas_len + max_region_len + 6 * 4))
     for service in service_list:
-        print '{0}    {1}    {2}    {3}    {4}'.format(service.name.ljust(max_name_len), service.get_run_command().ljust(max_command_len),
-                                                       service.get_state().ljust(max_state_len), service.get_ports().ljust(max_ports_len),
-                                                       str(service.target_num_instances).ljust(max_instance_count_len))
+        iaas, region_name = service.get_region_info()
+        print '{0}    {1}    {2}    {3}    {4}    {5}    {6}'.format(service.name.ljust(max_name_len), service.get_run_command().ljust(max_command_len),
+                                                                     service.get_state().ljust(max_state_len), service.get_ports().ljust(max_ports_len),
+                                                                     str(service.target_num_instances).ljust(max_instance_count_len),
+                                                                     str(iaas).ljust(max_iaas_len), str(region_name).ljust(max_region_len))
 
 
 def print_backup_ps_output(backup_list):
@@ -373,11 +386,15 @@ def print_organization_ps_output(orgs):
                                          str(org['created_at']).ljust(max_time_len))
 
 
-def print_logs(logs):
-    entry_list = logs.split('\\r\\n')
+def print_logs(logs, type):
+    entry_list = json.loads(logs.encode('utf-8'))
     print '[alauda] Logs:'
-    for entry in entry_list:
-        print entry
+    if type == 'service':
+        for entry in entry_list:
+            print '{}\t{}\t{}'.format(entry['time'], entry['instance_id'], entry['message'])
+    else:
+        for entry in entry_list:
+            print entry['message']
 
 
 def print_json_result(result):

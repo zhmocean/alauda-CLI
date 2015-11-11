@@ -8,6 +8,7 @@ import compose
 from service import Service
 from backup import Backup
 from organization import Organization
+from build import Build
 from execute import Executer
 
 
@@ -114,7 +115,7 @@ def service_disable_autoscaling(name, namespace, target_num_instances):
 def service_logs(name, namespace, start_time, end_time):
     service = Service.fetch(name, namespace)
     result = service.logs(start_time, end_time)
-    util.print_logs(result)
+    util.print_logs(result, 'service')
 
 
 def service_exec(name, namespace, command, *args):
@@ -139,7 +140,7 @@ def instance_logs(name, uuid, namespace, start_time=None, end_time=None):
     service = Service.fetch(name, namespace)
     instance = service.get_instance(uuid)
     result = instance.logs(start_time, end_time)
-    util.print_logs(result)
+    util.print_logs(result, 'instance')
 
 
 def compose_up(file, strict, namespace, region):
@@ -227,3 +228,8 @@ def organization_inspect(name):
 def organization_update(name, company):
     orgs = Organization.fetch(name)
     orgs.update(company)
+
+
+def build_create(repo_name, source, namespace, image_tag, commit_id):
+    build = Build()
+    build.create(repo_name, source, namespace, image_tag, commit_id)

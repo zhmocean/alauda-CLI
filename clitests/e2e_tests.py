@@ -1,5 +1,8 @@
 import unittest
+import uuid
+import shutil
 import time
+import os
 from alaudacli import cmd_parser, cmd_processor, service, auth
 from alaudacli.service import Service
 
@@ -177,3 +180,28 @@ class ServiceTest(unittest.TestCase):
         # remove
         self._remove_service(web)
         self._remove_service(db)
+
+
+class BuildTest(unittest.TestCase):
+
+    def setUp(self):
+        self.repo_name = 'fileupload-test'
+        self.namespace = 'mathildedev'
+
+        self.source_path = '/tmp/alaudacli/{}'.format(uuid.uuid4())
+        os.makedirs(self.source_path)
+        with open(os.path.join(self.source_path, 'Dockerfile'), 'w') as f:
+            f.writelines([
+                'FROM ubuntu:14.04\n', 'CMD ["echo hello"]\n'
+            ])
+
+    def tearDown(self):
+        shutil.rmtree(self.source_path)
+
+    def test_create_build(self):
+        argv = [
+            'build', 'create', '-p', self.source_path, '-rn', self.repo_name,
+            '-n', self.namespace, '-t', 'latest'
+        ]
+        args = cmd_parser.parse_cmds(argv)
+        cmd_processor.process_cmds(args)

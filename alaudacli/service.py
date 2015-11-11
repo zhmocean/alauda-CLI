@@ -223,6 +223,11 @@ class Service(object):
         util.check_response(r)
         return r.text
 
+    def get_region_info(self):
+        data = json.loads(self.details)
+        region_info = data['region']
+        return region_info['IaaS'], region_info['name']
+
     def get_run_command(self):
         data = json.loads(self.details)
         run_command = data['run_command']
