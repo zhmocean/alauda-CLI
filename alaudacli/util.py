@@ -50,7 +50,7 @@ def parse_instance_ports(port_list):
             else:
                 protocol = 'tcp'
 
-        if protocol not in ['tcp', 'http']:
+        if protocol not in ['tcp', 'http', 'direct', 'internal']:
             raise AlaudaInputError('Invalid port protocal. Supported protocols: {tcp}')
         if port < 0 or port > 65535:
             raise AlaudaInputError('Invalid port number')
@@ -62,7 +62,7 @@ def parse_instance_ports(port_list):
     if port_list is not None:
         for port_desc in port_list:
             port, protocol, port_type = _parse_instance_port(port_desc)
-            result = {"container_port": port, "protocol": 'tcp', 'endpoint_type': 'http-endpoint' if port_type == 'http' else 'tcp-endpoint'}
+            result = {"container_port": port, "protocol": 'tcp', 'endpoint_type': '{}-endpoint'.format(port_type)}
             if result not in parsed_ports:
                 parsed_ports.append(result)
                 ports.append(port)
