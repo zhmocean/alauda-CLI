@@ -118,6 +118,11 @@ def service_logs(name, namespace, start_time, end_time):
     util.print_logs(result, 'service')
 
 
+def service_ports(name, namespace):
+    service = Service.fetch(name, namespace)
+    util.print_ports(service)
+
+
 def service_exec(name, namespace, command, *args):
     executer = Executer.fetch(name, namespace)
     executer.execute(command, *args)

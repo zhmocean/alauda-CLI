@@ -35,6 +35,8 @@ def process_cmds(args):
             commands.service_disable_autoscaling(args.name, args.namespace, args.target_num_instances)
         elif args.subcmd == 'logs':
             commands.service_logs(args.name, args.namespace, args.start_time, args.end_time)
+        elif args.subcmd == 'ports':
+            commands.service_ports(args.name, args.namespace)
         elif args.subcmd == 'instances':
             commands.instance_ps(args.name, namespace=args.namespace)
         elif args.subcmd == 'instance':

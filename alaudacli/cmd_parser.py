@@ -114,6 +114,10 @@ def _add_service_parser(subparsers):
     logs_parser.add_argument('-s', '--start-time', help='Logs query start time. e.g. 2015-05-01 12:12:12')
     logs_parser.add_argument('-e', '--end-time', help='Logs query end time. e.g. 2015-05-01 12:12:12')
 
+    ports_parser = service_subparsers.add_parser('ports', help='Query service posts', description='Query service ports')
+    ports_parser.add_argument('name', help='Service name')
+    ports_parser.add_argument('-n', '--namespace', help='Service namespace')
+
     list_instance_parser = service_subparsers.add_parser('instances', help='List instances', description='List instances')
     list_instance_parser.add_argument('name', help='Service name')
     list_instance_parser.add_argument('-n', '--namespace', help='Service namespace')

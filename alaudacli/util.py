@@ -266,6 +266,42 @@ def expand_environment(envvars):
         envvars[key] = expanded
 
 
+def print_ports(service):
+    max_type_len = len('Type')
+    max_container_port_len = len('Container_port')
+    max_service_port_len = len('Service_port')
+    max_ip_len = len('Ip')
+
+    data = json.loads(service.details)
+    instance_ports = data.get('instance_ports')
+    instances = data.get('instances')
+    for instance_port in instance_ports:
+        if max_type_len < len(instance_port.get('endpoint_type')):
+            max_type_len = len((instance_port.get('endpoint_type')))
+        if max_ip_len < len(instance_port.get('ipaddress')):
+            max_ip_len = len(instance_port.get('ipaddress'))
+    if max_type_len < len('direct_endpoint'):
+        max_type_len = len('direct_endpoint')
+    print '{0}    {1}    {2}    {3}'.format('Type'.center(max_type_len),
+                                            'Service_port'.center(max_service_port_len),
+                                            'Container_port'.center(max_container_port_len),
+                                            'Ip'.center(max_ip_len))
+    print '{0}'.format('-' * (max_type_len + max_container_port_len + max_service_port_len + max_ip_len + 3 * 4))
+    for instance_port in instance_ports:
+        print'{0}    {1}    {2}    {3}'.format(str(instance_port.get('endpoint_type')).ljust(max_type_len),
+                                               str(instance_port.get('service_port')).ljust(max_service_port_len),
+                                               str(instance_port.get('container_port')).ljust(max_container_port_len),
+                                               str(instance_port.get('ipaddress')).ljust(max_ip_len))
+    for instance in instances:
+        instance_ports = instance.get('instance_ports')
+        for instance_port in instance_ports:
+            if instance_port.get('service_port', None) is not None:
+                print '{0}    {1}    {2}    {3}'.format('direct_endpoint'.ljust(max_type_len),
+                                                        str(instance_port.get('service_port')).ljust(max_service_port_len),
+                                                        str(instance_port.get('container_port')).ljust(max_container_port_len),
+                                                        '')
+
+
 def print_ps_output(service_list):
     max_name_len = len('Name')
     max_command_len = len('Command')
