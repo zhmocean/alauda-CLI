@@ -175,6 +175,7 @@ def _add_compose_parser(subparsers):
     up_parser.add_argument('-s', '--strict', help='Wait for linked services to start', action='store_true')
     up_parser.add_argument('-n', '--namespace', help='Service namespace')
     up_parser.add_argument('-re', '--region', help='Region name')
+    up_parser.add_argument('-i', '--ignore', help='Ignore exist services', action='store_true')
 
     ps_parser = compose_subparsers.add_parser('ps', help='List containers', description='Lists container')
     ps_parser.add_argument('-f', '--file', help='Compose file name', default='./docker-compose.yml')

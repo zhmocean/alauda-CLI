@@ -149,12 +149,12 @@ def instance_logs(name, uuid, namespace, start_time=None, end_time=None):
     util.print_logs(result, 'instance')
 
 
-def compose_up(file, strict, namespace, region):
+def compose_up(file, strict, namespace, region, ignore):
     project = compose.load_project(file, namespace, region)
     if strict:
-        project.strict_up()
+        project.strict_up(ignore)
     else:
-        project.up()
+        project.up(ignore)
 
 
 def compose_ps(file, namespace):

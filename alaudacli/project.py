@@ -13,16 +13,30 @@ class Project(object):
     def __init__(self, services):
         self.services = services
 
-    def up(self):
+    def up(self, ignore):
         for service_level in self.services:
             for service in service_level:
-                service.run()
+                try:
+                    service.run()
+                except AlaudaServerError as ex:
+                    if str(ex).find('App {} already exists'.format(service.name)) > -1 and ignore:
+                        print 'Ignore exist service -> {}'.format(service.name)
+                        continue
+                    else:
+                        raise AlaudaServerError(400, 'App mysql already exists!')
 
-    def strict_up(self):
+    def strict_up(self, ignore):
         started_list = []
         for i in range(len(self.services) - 1):
             for service in self.services[i]:
-                service.run()
+                try:
+                    service.run()
+                except AlaudaServerError as ex:
+                    if str(ex).find('App {} already exists'.format(service.name)) > -1 and ignore:
+                        continue
+                    else:
+                        print 'error: {}'.format(ex.message)
+                        raise AlaudaServerError(400, 'App mysql already exists!')
             started_list.extend(self.services[i])
             ret = self._wait_services_ready(self.services[i])
             if ret is not None:
@@ -30,7 +44,14 @@ class Project(object):
                     Service.remove(service.name)
                 raise AlaudaServerError(500, ret)
         for service in self.services[len(self.services) - 1]:
-            service.run()
+            try:
+                service.run()
+            except AlaudaServerError as ex:
+                if str(ex).find('App {} already exists'.format(service.name)) > -1 and ignore:
+                    print 'Ignore exist service -> {}'.format(service.name)
+                    continue
+                else:
+                    raise AlaudaServerError(400, 'App mysql already exists!')
 
     def ps(self, namespace):
         service_list = self._get_service_list(namespace)

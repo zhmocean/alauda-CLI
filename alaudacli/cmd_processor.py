@@ -56,7 +56,7 @@ def process_cmds(args):
             commands.backup_rm(args.id, args.namespace)
     elif args.cmd == 'compose':
         if args.subcmd == 'up':
-            commands.compose_up(args.file, args.strict, args.namespace, args.region)
+            commands.compose_up(args.file, args.strict, args.namespace, args.region, args.ignore)
         elif args.subcmd == 'ps':
             commands.compose_ps(args.file, args.namespace)
         elif args.subcmd == 'start':
