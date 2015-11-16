@@ -84,3 +84,16 @@ def process_cmds(args):
                 args.repo_name, args.source, args.namespace, args.image_tag,
                 args.commit_id
             )
+    elif args.cmd == 'app':
+        if args.subcmd == 'create':
+            commands.app_create(args.name, args.namespace, args.region, args.file)
+        if args.subcmd == 'run':
+            commands.app_run(args.name, args.namespace, args.region, args.file)
+        elif args.subcmd == 'inspect':
+            commands.app_inspect(args.name, args.namespace)
+        elif args.subcmd == 'start':
+            commands.app_start(args.name, args.namespace)
+        elif args.subcmd == 'stop':
+            commands.app_stop(args.name, args.namespace)
+        elif args.subcmd == 'rm':
+            commands.app_rm(args.name, args.namespace)

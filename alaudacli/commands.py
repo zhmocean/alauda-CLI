@@ -10,6 +10,7 @@ from backup import Backup
 from organization import Organization
 from build import Build
 from execute import Executer
+from application import Application
 
 
 def login(username, password, cloud, endpoint):
@@ -238,3 +239,35 @@ def organization_update(name, company):
 def build_create(repo_name, source, namespace, image_tag, commit_id):
     build = Build()
     build.create(repo_name, source, namespace, image_tag, commit_id)
+
+
+def app_create(name, namespace, region, file):
+    app = Application(name, region, file, namespace)
+    app.create()
+
+
+def app_run(name, namespace, region, file):
+    app = Application(name, region, file, namespace)
+    app.create()
+    app.start()
+
+
+def app_inspect(name, namespace):
+    app = Application(name, namespace=namespace)
+    services = app.get()
+    util.print_app_output(services)
+
+
+def app_start(name, namespace):
+    app = Application(name, namespace=namespace)
+    app.start()
+
+
+def app_stop(name, namespace):
+    app = Application(name, namespace=namespace)
+    app.stop()
+
+
+def app_rm(name, namespace):
+    app = Application(name, namespace=namespace)
+    app.remove()
