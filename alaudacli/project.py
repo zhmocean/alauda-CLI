@@ -23,7 +23,7 @@ class Project(object):
                         print 'Ignore exist service -> {}'.format(service.name)
                         continue
                     else:
-                        raise AlaudaServerError(400, 'App mysql already exists!')
+                        raise ex
 
     def strict_up(self, ignore):
         started_list = []
@@ -36,7 +36,7 @@ class Project(object):
                         continue
                     else:
                         print 'error: {}'.format(ex.message)
-                        raise AlaudaServerError(400, 'App mysql already exists!')
+                        raise ex
             started_list.extend(self.services[i])
             ret = self._wait_services_ready(self.services[i])
             if ret is not None:
@@ -51,7 +51,7 @@ class Project(object):
                     print 'Ignore exist service -> {}'.format(service.name)
                     continue
                 else:
-                    raise AlaudaServerError(400, 'App mysql already exists!')
+                    raise ex
 
     def ps(self, namespace):
         service_list = self._get_service_list(namespace)
