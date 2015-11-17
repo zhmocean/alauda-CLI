@@ -10,6 +10,7 @@ from backup import Backup
 from organization import Organization
 from build import Build
 from execute import Executer
+from application import Application
 
 
 def login(username, password, cloud, endpoint):
@@ -118,6 +119,11 @@ def service_logs(name, namespace, start_time, end_time):
     util.print_logs(result, 'service')
 
 
+def service_ports(name, namespace):
+    service = Service.fetch(name, namespace)
+    util.print_ports(service)
+
+
 def service_exec(name, namespace, command, *args):
     executer = Executer.fetch(name, namespace)
     executer.execute(command, *args)
@@ -143,12 +149,12 @@ def instance_logs(name, uuid, namespace, start_time=None, end_time=None):
     util.print_logs(result, 'instance')
 
 
-def compose_up(file, strict, namespace, region):
+def compose_up(file, strict, namespace, region, ignore):
     project = compose.load_project(file, namespace, region)
     if strict:
-        project.strict_up()
+        project.strict_up(ignore)
     else:
-        project.up()
+        project.up(ignore)
 
 
 def compose_ps(file, namespace):
@@ -233,3 +239,35 @@ def organization_update(name, company):
 def build_create(repo_name, source, namespace, image_tag, commit_id):
     build = Build()
     build.create(repo_name, source, namespace, image_tag, commit_id)
+
+
+def app_create(name, namespace, region, file):
+    app = Application(name, region, file, namespace)
+    app.create()
+
+
+def app_run(name, namespace, region, file):
+    app = Application(name, region, file, namespace)
+    app.create()
+    app.start()
+
+
+def app_inspect(name, namespace):
+    app = Application(name, namespace=namespace)
+    services = app.get()
+    util.print_app_output(services)
+
+
+def app_start(name, namespace):
+    app = Application(name, namespace=namespace)
+    app.start()
+
+
+def app_stop(name, namespace):
+    app = Application(name, namespace=namespace)
+    app.stop()
+
+
+def app_rm(name, namespace):
+    app = Application(name, namespace=namespace)
+    app.remove()

@@ -35,6 +35,8 @@ def process_cmds(args):
             commands.service_disable_autoscaling(args.name, args.namespace, args.target_num_instances)
         elif args.subcmd == 'logs':
             commands.service_logs(args.name, args.namespace, args.start_time, args.end_time)
+        elif args.subcmd == 'ports':
+            commands.service_ports(args.name, args.namespace)
         elif args.subcmd == 'instances':
             commands.instance_ps(args.name, namespace=args.namespace)
         elif args.subcmd == 'instance':
@@ -54,7 +56,7 @@ def process_cmds(args):
             commands.backup_rm(args.id, args.namespace)
     elif args.cmd == 'compose':
         if args.subcmd == 'up':
-            commands.compose_up(args.file, args.strict, args.namespace, args.region)
+            commands.compose_up(args.file, args.strict, args.namespace, args.region, args.ignore)
         elif args.subcmd == 'ps':
             commands.compose_ps(args.file, args.namespace)
         elif args.subcmd == 'start':
@@ -82,3 +84,16 @@ def process_cmds(args):
                 args.repo_name, args.source, args.namespace, args.image_tag,
                 args.commit_id
             )
+    elif args.cmd == 'app':
+        if args.subcmd == 'create':
+            commands.app_create(args.name, args.namespace, args.region, args.file)
+        if args.subcmd == 'run':
+            commands.app_run(args.name, args.namespace, args.region, args.file)
+        elif args.subcmd == 'inspect':
+            commands.app_inspect(args.name, args.namespace)
+        elif args.subcmd == 'start':
+            commands.app_start(args.name, args.namespace)
+        elif args.subcmd == 'stop':
+            commands.app_stop(args.name, args.namespace)
+        elif args.subcmd == 'rm':
+            commands.app_rm(args.name, args.namespace)

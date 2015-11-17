@@ -21,6 +21,7 @@ def create_parser():
     _add_backups_parser(subparsers)
     _add_organization_parser(subparsers)
     _add_build_parser(subparsers)
+    _add_application_parser(subparsers)
     return parser
 
 
@@ -114,6 +115,10 @@ def _add_service_parser(subparsers):
     logs_parser.add_argument('-s', '--start-time', help='Logs query start time. e.g. 2015-05-01 12:12:12')
     logs_parser.add_argument('-e', '--end-time', help='Logs query end time. e.g. 2015-05-01 12:12:12')
 
+    ports_parser = service_subparsers.add_parser('ports', help='Query service posts', description='Query service ports')
+    ports_parser.add_argument('name', help='Service name')
+    ports_parser.add_argument('-n', '--namespace', help='Service namespace')
+
     list_instance_parser = service_subparsers.add_parser('instances', help='List instances', description='List instances')
     list_instance_parser.add_argument('name', help='Service name')
     list_instance_parser.add_argument('-n', '--namespace', help='Service namespace')
@@ -170,6 +175,7 @@ def _add_compose_parser(subparsers):
     up_parser.add_argument('-s', '--strict', help='Wait for linked services to start', action='store_true')
     up_parser.add_argument('-n', '--namespace', help='Service namespace')
     up_parser.add_argument('-re', '--region', help='Region name')
+    up_parser.add_argument('-i', '--ignore', help='Ignore exist services', action='store_true')
 
     ps_parser = compose_subparsers.add_parser('ps', help='List containers', description='Lists container')
     ps_parser.add_argument('-f', '--file', help='Compose file name', default='./docker-compose.yml')
@@ -232,3 +238,36 @@ def _add_build_parser(subparsers):
     create_parser.add_argument('-n', '--namespace', help='Repository namespace', dest='namespace')
     create_parser.add_argument('-t', '--tag', help='Image tag', dest='image_tag')
     create_parser.add_argument('-i', '--commit-id', help='Commit id', dest='commit_id')
+
+
+def _add_application_parser(subparsers):
+    app_parser = subparsers.add_parser('app', help='Application operations', description='Application operations')
+    app_subparsers = app_parser.add_subparsers(title='Alauda application commands', dest='subcmd')
+
+    create_parser = app_subparsers.add_parser('create', help='Create an application', description='Create an application')
+    create_parser.add_argument('name', help='Application name')
+    create_parser.add_argument('-n', '--namespace', help='Application namespace')
+    create_parser.add_argument('-re', '--region', help='Region name', default='BEIJING1')
+    create_parser.add_argument('-f', '--file', help='Compose file name', default='./docker-compose.yml')
+
+    run_parser = app_subparsers.add_parser('run', help='Run an application', description='Run an application')
+    run_parser.add_argument('name', help='Application name')
+    run_parser.add_argument('-n', '--namespace', help='Application namespace')
+    run_parser.add_argument('-re', '--region', help='Region name', default='BEIJING1')
+    run_parser.add_argument('-f', '--file', help='Compose file name', default='./docker-compose.yml')
+
+    inspect_parser = app_subparsers.add_parser('inspect', help='Inspect an application', description='Inspect an application')
+    inspect_parser.add_argument('name', help='Application name')
+    inspect_parser.add_argument('-n', '--namespace', help='Application namespace')
+
+    start_parser = app_subparsers.add_parser('start', help='Start an application', description='Start an application')
+    start_parser.add_argument('name', help='Application name')
+    start_parser.add_argument('-n', '--namespace', help='Application namespace')
+
+    stop_parser = app_subparsers.add_parser('stop', help='Stop an application', description='Stop an application')
+    stop_parser.add_argument('name', help='Application name')
+    stop_parser.add_argument('-n', '--namespace', help='Application namespace')
+
+    rm_parser = app_subparsers.add_parser('rm', help='Remove an application', description='Remove an application')
+    rm_parser.add_argument('name', help='Application name')
+    rm_parser.add_argument('-n', '--namespace', help='Application namespace')

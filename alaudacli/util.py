@@ -50,7 +50,7 @@ def parse_instance_ports(port_list):
             else:
                 protocol = 'tcp'
 
-        if protocol not in ['tcp', 'http', 'direct', 'internal']:
+        if protocol not in ['tcp', 'http', 'internal']:
             raise AlaudaInputError('Invalid port protocal. Supported protocols: {tcp}')
         if port < 0 or port > 65535:
             raise AlaudaInputError('Invalid port number')
@@ -264,6 +264,82 @@ def expand_environment(envvars):
     for key, value in envvars.items():
         expanded = Template(value).safe_substitute(envvars)
         envvars[key] = expanded
+
+
+def print_ports(service):
+    max_type_len = len('Type')
+    max_container_port_len = len('Container_port')
+    max_service_port_len = len('Service_port')
+    max_ip_len = len('Ip')
+
+    data = json.loads(service.details)
+    status = data['current_status']
+    if status != 'Running':
+        print '{} is not in Running state.Please wait or start it!'.format(data['service_name'])
+        return
+    instance_ports = data.get('instance_ports')
+    instances = data.get('instances')
+    for instance_port in instance_ports:
+        if max_type_len < len(instance_port.get('endpoint_type')):
+            max_type_len = len((instance_port.get('endpoint_type')))
+        if max_ip_len < len(instance_port.get('ipaddress')):
+            max_ip_len = len(instance_port.get('ipaddress'))
+    if max_type_len < len('direct_endpoint'):
+        max_type_len = len('direct_endpoint')
+    print '{0}    {1}    {2}    {3}'.format('Type'.center(max_type_len),
+                                            'Service_port'.center(max_service_port_len),
+                                            'Container_port'.center(max_container_port_len),
+                                            'Ip'.center(max_ip_len))
+    print '{0}'.format('-' * (max_type_len + max_container_port_len + max_service_port_len + max_ip_len + 3 * 4))
+    for instance_port in instance_ports:
+        print'{0}    {1}    {2}    {3}'.format(str(instance_port.get('endpoint_type')).ljust(max_type_len),
+                                               str(instance_port.get('service_port')).ljust(max_service_port_len),
+                                               str(instance_port.get('container_port')).ljust(max_container_port_len),
+                                               str(instance_port.get('ipaddress')).ljust(max_ip_len))
+    for instance in instances:
+        instance_ports = instance.get('instance_ports')
+        for instance_port in instance_ports:
+            if instance_port.get('service_port', None) is not None:
+                print '{0}    {1}    {2}    {3}'.format('direct_endpoint'.ljust(max_type_len),
+                                                        str(instance_port.get('service_port')).ljust(max_service_port_len),
+                                                        str(instance_port.get('container_port')).ljust(max_container_port_len),
+                                                        '')
+
+
+def print_app_output(service_list):
+    def _get_run_command(data):
+        run_command = data['run_command']
+        if not run_command:
+            run_command = ' '
+        return run_command
+
+    max_name_len = len('Name')
+    max_command_len = len('Command')
+    max_state_len = len('State')
+    max_instance_count_len = len('Instance Count')
+    max_link_len = len('Link')
+
+    for service in service_list:
+        if max_name_len < len(service['service_name']):
+            max_name_len = len(service['service_name'])
+        run_command = _get_run_command(service)
+        if max_command_len < len(run_command):
+            max_command_len = len(run_command)
+        if max_state_len < len(service['current_status']):
+            max_state_len = len(service['current_status'])
+        if max_instance_count_len < len(str(service['target_num_instances'])):
+            max_instance_count_len = len(str(service['target_num_instances']))
+        if max_link_len < len(service['linked_to_apps']):
+            max_link_len = len(service['linked_to_apps'])
+    print '{0}    {1}    {2}    {3}    {4}'.format('Name'.center(max_name_len), 'Command'.center(max_command_len), 'State'.center(max_state_len),
+                                                   'Instance Count'.center(max_instance_count_len),
+                                                   'Link'.center(max_link_len))
+    print '{0}'.format('-' * (max_name_len + max_command_len + max_state_len + max_instance_count_len + max_link_len + 4 * 4))
+    for service in service_list:
+        print '{0}    {1}    {2}    {3}    {4}'.format(service['service_name'].ljust(max_name_len), _get_run_command(service).ljust(max_command_len),
+                                                       service['current_status'].ljust(max_state_len),
+                                                       str(service['target_num_instances']).ljust(max_instance_count_len),
+                                                       str(service['linked_to_apps']).ljust(max_link_len))
 
 
 def print_ps_output(service_list):
